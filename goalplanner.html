@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Goal Planner Calculator | WealthRise</title>
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',  // Orange 50
+                            100: '#ffedd5', // Orange 100
+                            300: '#fdba74', // Orange 300
+                            500: '#f97316', // Orange 500 (Primary for this calc)
+                            600: '#ea580c', // Orange 600
+                            800: '#9a3412', // Orange 800
+                        },
+                        success: '#10b981',
+                        danger: '#ef4444',
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hide Number Input Arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Base Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            height: 6px;
+            border-radius: 999px;
+            outline: none;
+            margin: 12px 0;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            border-radius: 999px;
+        }
+
+        /* Custom Orange Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #f97316; /* Orange 500 */
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -9px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.15);
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
+        }
+
+        input:focus-visible {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pt-28 pb-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+
+    <!-- Navigation Header -->
+    <nav class="w-full top-0 left-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+                    </div>
+                    <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors">WealthRise</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="calculators-hub.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Calculators
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] shadow-soft border border-slate-100 max-w-5xl w-full overflow-hidden flex flex-col lg:flex-row mt-4">
+        
+        <!-- LEFT COLUMN: Inputs Section -->
+        <div class="w-full lg:w-3/5 p-6 sm:p-8 lg:p-10 flex flex-col gap-8">
+            
+            <!-- Header -->
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-500 flex items-center justify-center shadow-sm border border-brand-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Goal Planner</h2>
+                    <p class="text-slate-500 mt-1 text-sm sm:text-base">Plan backwards from your financial dreams.</p>
+                </div>
+            </div>
+
+            <!-- Toggle SIP / Lumpsum -->
+            <div class="bg-slate-100 p-1.5 rounded-xl flex w-full relative z-0 shadow-inner-soft">
+                <div id="active-bg" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-sm transition-transform duration-300 ease-out z-[-1]"></div>
+                <button id="btn-sip" class="flex-1 py-2.5 text-sm sm:text-base font-semibold text-brand-600 transition-colors z-10" onclick="setMode('sip')">Monthly SIP</button>
+                <button id="btn-lump" class="flex-1 py-2.5 text-sm sm:text-base font-semibold text-slate-500 transition-colors z-10" onclick="setMode('lumpsum')">Lumpsum</button>
+            </div>
+
+            <div class="space-y-8 mt-2">
+                
+                <!-- Input 1: Target Goal -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Target Goal Amount</label>
+                        <div class="flex items-center bg-brand-50 border border-brand-100 px-3 py-2 rounded-lg transition-colors group-hover:border-brand-300">
+                            <span class="text-brand-600 font-medium mr-1">₹</span>
+                            <input type="number" id="input-goal" class="bg-transparent outline-none w-24 sm:w-28 text-right text-lg font-bold text-brand-600" value="10000000" min="100000" max="100000000" step="100000">
+                        </div>
+                    </div>
+                    <input type="range" id="slider-goal" min="100000" max="100000000" step="100000" value="10000000">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1">
+                        <span>₹1 Lakh</span>
+                        <span>₹10 Cr</span>
+                    </div>
+                </div>
+
+                <!-- Input 2: Current Savings -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Current Savings (Invested)</label>
+                        <div class="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg transition-colors group-hover:border-slate-300">
+                            <span class="text-slate-500 font-medium mr-1">₹</span>
+                            <input type="number" id="input-current" class="bg-transparent outline-none w-20 sm:w-24 text-right text-lg font-bold text-slate-800" value="0" min="0" max="50000000" step="50000">
+                        </div>
+                    </div>
+                    <input type="range" id="slider-current" min="0" max="50000000" step="50000" value="0">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1">
+                        <span>₹0</span>
+                        <span>₹5 Cr</span>
+                    </div>
+                </div>
+
+                <!-- Input 3: Time Horizon -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Time Horizon</label>
+                        <div class="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg transition-colors group-hover:border-slate-300">
+                            <input type="number" id="input-time" class="bg-transparent outline-none w-10 sm:w-12 text-right text-lg font-bold text-slate-800" value="10" min="1" max="40">
+                            <span class="text-slate-500 font-medium ml-1">Yr</span>
+                        </div>
+                    </div>
+                    <input type="range" id="slider-time" min="1" max="40" step="1" value="10">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1">
+                        <span>1 Yr</span>
+                        <span>40 Yrs</span>
+                    </div>
+                </div>
+
+                <!-- Input 4: Rate of Return -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Exp. Return (p.a)</label>
+                        <div class="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg transition-colors group-hover:border-slate-300">
+                            <input type="number" id="input-rate" class="bg-transparent outline-none w-14 sm:w-16 text-right text-lg font-bold text-slate-800" value="12" min="1" max="30" step="0.1">
+                            <span class="text-slate-500 font-medium ml-1">%</span>
+                        </div>
+                    </div>
+                    <input type="range" id="slider-rate" min="1" max="30" step="0.1" value="12">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1 relative">
+                        <span>1%</span>
+                        <span class="absolute left-[17%] -translate-x-1/2 flex flex-col items-center">
+                            <span class="h-1.5 w-[1px] bg-slate-300 mb-0.5"></span>FD (6%)
+                        </span>
+                        <span class="absolute left-[45%] -translate-x-1/2 flex flex-col items-center">
+                            <span class="h-1.5 w-[1px] bg-slate-300 mb-0.5"></span>Nifty (14%)
+                        </span>
+                        <span>30%</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Results Section -->
+        <div class="w-full lg:w-2/5 bg-slate-50 p-6 sm:p-8 lg:p-10 border-t lg:border-t-0 lg:border-l border-slate-100 flex flex-col relative">
+            
+            <div class="mb-6">
+                <p id="label-result-title" class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Required Monthly Investment</p>
+                <h3 id="display-required" class="text-4xl sm:text-5xl font-extrabold text-brand-500 tracking-tight">₹0</h3>
+            </div>
+
+            <!-- Area Chart Container -->
+            <div class="w-full h-[220px] sm:h-[260px] relative mb-6">
+                <canvas id="resultChart"></canvas>
+            </div>
+
+            <!-- Breakdown Stats -->
+            <div class="w-full space-y-3 mb-6">
+                <!-- Target Stat -->
+                <div class="flex justify-between items-center p-3 rounded-xl bg-white border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-slate-800"></div>
+                        <span class="text-slate-600 font-medium text-sm sm:text-base">Target Goal</span>
+                    </div>
+                    <span id="display-target" class="font-bold text-slate-800">₹0</span>
+                </div>
+                
+                <!-- Existing Savings Future Value -->
+                <div class="flex justify-between items-center p-3 rounded-xl bg-white border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-brand-200"></div>
+                        <span class="text-slate-600 font-medium text-sm sm:text-base">Existing Savings (Future Value)</span>
+                    </div>
+                    <span id="display-savings-fv" class="font-bold text-slate-700">₹0</span>
+                </div>
+            </div>
+
+            <!-- INTELLIGENT INSIGHT BOX -->
+            <div id="insight-box" class="flex items-start gap-3 p-3.5 rounded-xl border shadow-sm mb-6 transition-all bg-white">
+                <div id="insight-icon" class="flex-shrink-0 mt-0.5">
+                    <!-- Icon injected by JS -->
+                </div>
+                <div>
+                    <p id="insight-title" class="text-xs font-bold uppercase tracking-wide mb-1">Action Plan</p>
+                    <p id="insight-text" class="text-sm leading-snug">
+                        <!-- Text injected by JS -->
+                    </p>
+                </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <a href="https://wa.me/918669095783?text=Hello%20WealthRise%2C%20I%20just%20used%20the%20Goal%20Planner%20Calculator%20and%20would%20like%20to%20consult%20on%20achieving%20my%20financial%20goals." target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-[0_8px_20px_-6px_rgba(99,102,241,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(99,102,241,0.5)] transform hover:-translate-y-0.5 active:translate-y-0 text-lg mt-auto text-center block">
+                Start My Goal Plan
+            </a>
+            
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const modeSipBtn = document.getElementById('btn-sip');
+        const modeLumpBtn = document.getElementById('btn-lump');
+        const activeBg = document.getElementById('active-bg');
+        const labelResultTitle = document.getElementById('label-result-title');
+
+        const inputGoal = document.getElementById('input-goal');
+        const sliderGoal = document.getElementById('slider-goal');
+        
+        const inputCurrent = document.getElementById('input-current');
+        const sliderCurrent = document.getElementById('slider-current');
+
+        const inputRate = document.getElementById('input-rate');
+        const sliderRate = document.getElementById('slider-rate');
+        
+        const inputTime = document.getElementById('input-time');
+        const sliderTime = document.getElementById('slider-time');
+
+        const displayRequired = document.getElementById('display-required');
+        const displayTarget = document.getElementById('display-target');
+        const displaySavingsFv = document.getElementById('display-savings-fv');
+
+        // Insight Elements
+        const insightBox = document.getElementById('insight-box');
+        const insightIcon = document.getElementById('insight-icon');
+        const insightTitle = document.getElementById('insight-title');
+        const insightText = document.getElementById('insight-text');
+
+        let currentMode = 'sip';
+        let chartInstance = null;
+
+        // Custom Chart.js Plugin to draw the "TARGET GOAL" label above the dashed line
+        const targetLabelPlugin = {
+            id: 'targetLabel',
+            afterDatasetsDraw: function(chart) {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(1); // Dataset 1 is the Target Line
+                if (!meta || !meta.data || meta.data.length === 0) return;
+
+                const yPos = meta.data[0].y;
+                const xPos = chart.chartArea.right - 10; // Align right
+                const labelText = "TARGET GOAL";
+
+                ctx.save();
+                ctx.font = 'bold 10px Inter';
+                ctx.fillStyle = '#ef4444'; // Red color matching dashed line
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(labelText, xPos, yPos - 5);
+                ctx.restore();
+            }
+        };
+        Chart.register(targetLabelPlugin);
+
+        // Number Formatter (Indian Rupee)
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0
+            }).format(num);
+        };
+
+        // Format short scale (e.g. 1.5 Cr, 50 L) for axes
+        const formatShortScale = (num) => {
+            if (num >= 10000000) return (num / 10000000).toFixed(1).replace(/\.0$/, '') + ' Cr';
+            if (num >= 100000) return (num / 100000).toFixed(1).replace(/\.0$/, '') + ' L';
+            return '₹' + num.toLocaleString('en-IN');
+        };
+
+        // Slider Background Sync
+        const updateSliderBackground = (slider) => {
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const val = parseFloat(slider.value);
+            const percentage = ((val - min) / (max - min)) * 100;
+            slider.style.background = `linear-gradient(to right, #f97316 ${percentage}%, #e2e8f0 ${percentage}%)`;
+        };
+
+        const syncInputs = (inputEle, sliderEle) => {
+            inputEle.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (!isNaN(val)) {
+                    let sliderVal = Math.max(sliderEle.min, Math.min(sliderEle.max, val));
+                    sliderEle.value = sliderVal;
+                    updateSliderBackground(sliderEle);
+                    calculate();
+                }
+            });
+
+            inputEle.addEventListener('blur', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val) || val < parseFloat(sliderEle.min)) val = parseFloat(sliderEle.min);
+                if (val > parseFloat(sliderEle.max)) val = parseFloat(sliderEle.max);
+                e.target.value = val;
+                sliderEle.value = val;
+                updateSliderBackground(sliderEle);
+                calculate();
+            });
+
+            sliderEle.addEventListener('input', (e) => {
+                inputEle.value = e.target.value;
+                updateSliderBackground(sliderEle);
+                calculate();
+            });
+            
+            updateSliderBackground(sliderEle);
+        };
+
+        syncInputs(inputGoal, sliderGoal);
+        syncInputs(inputCurrent, sliderCurrent);
+        syncInputs(inputRate, sliderRate);
+        syncInputs(inputTime, sliderTime);
+
+        // Switch between SIP and Lumpsum Modes
+        window.setMode = function(mode) {
+            currentMode = mode;
+            if (mode === 'sip') {
+                activeBg.style.transform = 'translateX(0)';
+                modeSipBtn.classList.replace('text-slate-500', 'text-brand-600');
+                modeLumpBtn.classList.replace('text-brand-600', 'text-slate-500');
+                labelResultTitle.innerText = 'Required Monthly Investment';
+            } else {
+                activeBg.style.transform = 'translateX(100%)';
+                modeLumpBtn.classList.replace('text-slate-500', 'text-brand-600');
+                modeSipBtn.classList.replace('text-brand-600', 'text-slate-500');
+                labelResultTitle.innerText = 'Required One-Time Lumpsum';
+            }
+            calculate();
+        };
+
+        const initChart = () => {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            
+            // Gradient for Growth Trajectory
+            let gradientGrowth = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientGrowth.addColorStop(0, 'rgba(249, 115, 22, 0.4)'); // Orange 500 transparent
+            gradientGrowth.addColorStop(1, 'rgba(249, 115, 22, 0.0)');
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Trajectory',
+                            data: [],
+                            borderColor: '#f97316', // Orange 500
+                            backgroundColor: gradientGrowth,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            order: 2
+                        },
+                        {
+                            label: 'Target Goal',
+                            data: [],
+                            borderColor: '#ef4444', // Red for Target line
+                            borderWidth: 2,
+                            borderDash: [6, 6], // Dashed line
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            padding: 12,
+                            titleFont: { family: 'Inter', size: 13 },
+                            bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 1) return null; // Hide target line from tooltip
+                                    return 'Value: ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8', maxTicksLimit: 6 }
+                        },
+                        y: {
+                            grid: {
+                                color: '#f1f5f9',
+                                drawBorder: false
+                            },
+                            ticks: { 
+                                font: { family: 'Inter', size: 10 }, 
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return formatShortScale(value);
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+
+        const calculate = () => {
+            const G = parseFloat(inputGoal.value) || 0;
+            const Pc = parseFloat(inputCurrent.value) || 0;
+            const t = parseFloat(inputTime.value) || 0;
+            const r = parseFloat(inputRate.value) || 0;
+
+            const n = t * 12; // Total months
+            const i = r / 100 / 12; // Monthly interest rate
+
+            // 1. Calculate Future Value of existing savings
+            let FV_c = 0;
+            if (i === 0) {
+                FV_c = Pc;
+            } else {
+                FV_c = Pc * Math.pow(1 + i, n); // Compounding monthly
+            }
+
+            // 2. Calculate Shortfall (Amount needed to be generated by new investment)
+            const shortfall = G - FV_c;
+            
+            let requiredAmount = 0;
+            let targetMetBySavings = shortfall <= 0;
+
+            if (!targetMetBySavings) {
+                if (currentMode === 'sip') {
+                    // SIP Formula to find P (Monthly Payment): P = Shortfall / [ (((1 + i)^n - 1) / i) * (1 + i) ]
+                    if (i === 0) {
+                        requiredAmount = shortfall / n;
+                    } else {
+                        const compoundFactor = ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+                        requiredAmount = shortfall / compoundFactor;
+                    }
+                } else {
+                    // Lumpsum Formula to find present value: PV = Shortfall / (1 + i)^n
+                    if (i === 0) {
+                        requiredAmount = shortfall;
+                    } else {
+                        requiredAmount = shortfall / Math.pow(1 + i, n);
+                    }
+                }
+            }
+
+            // --- Update UI Numbers ---
+            displayTarget.innerText = formatCurrency(Math.round(G));
+            displaySavingsFv.innerText = formatCurrency(Math.round(FV_c));
+
+            if (targetMetBySavings) {
+                displayRequired.innerText = '₹0';
+                displayRequired.classList.replace('text-brand-500', 'text-success');
+            } else {
+                displayRequired.innerText = formatCurrency(Math.round(requiredAmount));
+                displayRequired.classList.replace('text-success', 'text-brand-500');
+            }
+
+            // --- Build Chart Data ---
+            const chartLabels = [];
+            const trajectoryData = [];
+            const targetData = [];
+
+            for (let year = 0; year <= t; year++) {
+                chartLabels.push(year + ' Yr');
+                targetData.push(G);
+
+                const monthsPassed = year * 12;
+                let currentSavingsGrowth = Pc * Math.pow(1 + i, monthsPassed);
+
+                if (targetMetBySavings) {
+                    trajectoryData.push(currentSavingsGrowth);
+                } else {
+                    if (currentMode === 'sip') {
+                        let newInvestmentGrowth = 0;
+                        if (monthsPassed > 0) {
+                            newInvestmentGrowth = requiredAmount * (((Math.pow(1 + i, monthsPassed) - 1) / i) * (1 + i));
+                        }
+                        trajectoryData.push(currentSavingsGrowth + newInvestmentGrowth);
+                    } else {
+                        let newInvestmentGrowth = requiredAmount * Math.pow(1 + i, monthsPassed);
+                        trajectoryData.push(currentSavingsGrowth + newInvestmentGrowth);
+                    }
+                }
+            }
+
+            if (chartInstance) {
+                chartInstance.data.labels = chartLabels;
+                chartInstance.data.datasets[0].data = trajectoryData;
+                chartInstance.data.datasets[1].data = targetData;
+                
+                // Ensure Y-axis always scales slightly above the Target Goal for visual headroom
+                chartInstance.options.scales.y.max = G * 1.15; 
+                chartInstance.update();
+            }
+
+            // --- Update Insight Box ---
+            if (targetMetBySavings) {
+                insightBox.className = "flex items-start gap-3 p-3.5 rounded-xl bg-green-50 border border-green-100 shadow-sm mb-6 transition-all";
+                insightTitle.className = "text-xs font-bold text-green-800 uppercase tracking-wide mb-1";
+                insightTitle.innerText = "Goal Exceeded!";
+                
+                insightIcon.innerHTML = `<div class="p-1.5 bg-green-100 text-green-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>`;
+                
+                insightText.className = "text-sm text-slate-700 leading-snug";
+                insightText.innerHTML = `Incredible! Your current savings alone will grow to <strong class="text-green-700">${formatCurrency(Math.round(FV_c))}</strong>, successfully surpassing your target without any new investments!`;
+            } else {
+                insightBox.className = "flex items-start gap-3 p-3.5 rounded-xl bg-brand-50 border border-brand-100 shadow-sm mb-6 transition-all";
+                insightTitle.className = "text-xs font-bold text-brand-800 uppercase tracking-wide mb-1";
+                insightTitle.innerText = "Your Action Plan";
+                
+                insightIcon.innerHTML = `<div class="p-1.5 bg-brand-100 text-brand-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>`;
+                
+                insightText.className = "text-sm text-slate-700 leading-snug";
+                if (currentMode === 'sip') {
+                    insightText.innerHTML = `To reach <strong class="text-slate-900">${formatCurrency(G)}</strong> in ${t} years, you need to start a monthly SIP of <strong class="text-brand-700">${formatCurrency(Math.round(requiredAmount))}</strong> immediately.`;
+                } else {
+                    insightText.innerHTML = `To reach <strong class="text-slate-900">${formatCurrency(G)}</strong> in ${t} years, you need to invest a one-time lumpsum of <strong class="text-brand-700">${formatCurrency(Math.round(requiredAmount))}</strong> immediately.`;
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            calculate();
+        });
+
+    </script>
+</body>
+</html>

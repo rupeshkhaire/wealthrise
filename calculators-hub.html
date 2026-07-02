@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculators | WealthRise</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                            cardTop: '#d3cbfd',
+                            cardBottom: '#c4f1f9',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-card {
+            background: linear-gradient(160deg, #d3cbfd 0%, #e0dcfb 30%, #d4f0f7 70%, #c4f1f9 100%);
+            transition: all 0.4s ease;
+        }
+        .gradient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-brand-light text-slate-800 font-sans">
+
+    <!-- Simple Navigation -->
+    <nav class="w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+                    </div>
+                    <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors">WealthRise</a>
+                </div>
+                <div>
+                    <!-- Back to Home Button -->
+                    <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-brand-dark mb-4">Financial Calculators</h1>
+            <p class="text-slate-600 text-lg">Plan your investments and achieve your financial goals with our easy-to-use tools.</p>
+        </div>
+
+        <!-- 6 CALCULATOR BOXES GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Box 1: SIP and Lumpsum Calculator -->
+            <a href="siplumsum.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-chart-line text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">SIP and Lumpsum Calculator</h3>
+                <p class="text-slate-700 text-sm">Calculate the future value of your regular monthly investments.</p>
+            </a>
+
+            <!-- Box 2: Loan Planner Calculator -->
+            <a href="loanplanner.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-sack-dollar text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Loan Planner Calculator</h3>
+                <p class="text-slate-700 text-sm">Check the EMI and possible saving in interest.</p>
+            </a>
+
+            <!-- Box 3: Goal Planner -->
+            <a href="goalplanner.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-bullseye text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Goal Planner</h3>
+                <p class="text-slate-700 text-sm">Find out how much you need to save for your dream house or car.</p>
+            </a>
+
+            <!-- Box 4: Retirement Calculator -->
+            <a href="retirement.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-umbrella-beach text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Retirement Calculator</h3>
+                <p class="text-slate-700 text-sm">Plan a stress-free retirement by calculating the required corpus.</p>
+            </a>
+
+            <!-- Box 5: Child Education -->
+            <a href="educationloan.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-graduation-cap text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Education Calculator</h3>
+                <p class="text-slate-700 text-sm">Secure your child's future by planning for their higher education.</p>
+            </a>
+
+            <!-- Box 6: Step-up SIP -->
+            <a href="stepupsip.html" class="gradient-card group block rounded-2xl p-6 text-center cursor-pointer border border-white/50 relative overflow-hidden">
+                <div class="w-12 h-12 mx-auto rounded-full bg-white/40 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-arrow-trend-up text-xl text-slate-800"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Step-up SIP</h3>
+                <p class="text-slate-700 text-sm">See how increasing your SIP amount every year boosts your wealth.</p>
+            </a>
+
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+    <!DOCTYPE html>
+    <html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mutual Funds Guide | WealthRise</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'],
+                            serif: ['Playfair Display', 'serif'],
+                        },
+                        colors: {
+                            brand: {
+                                dark: '#0f172a',
+                                light: '#f8fafc',
+                                cardTop: '#d3cbfd',
+                                cardBottom: '#c4f1f9',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            .gradient-bg {
+                background: linear-gradient(160deg, rgba(211, 203, 253, 0.3) 0%, rgba(196, 241, 249, 0.3) 100%);
+            }
+            /* Hide scrollbar for tables but allow scrolling */
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            }
+        </style>
+    </head>
+    <body class="bg-brand-light text-slate-800 font-sans">
+
+        <nav class="w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <!-- येथे आपण span ला a मध्ये बदलले आहे आणि href लावला आहे -->
+                        <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors">WealthRise</a>
+                    </div>
+                    <div>
+                        <!-- येथे index.html च्या जागी तुमच्या मुख्य फाईलचे नाव टाका, जर ते वेगळे असेल तर -->
+                        <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="pt-32 pb-16 gradient-bg border-b border-slate-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <span class="inline-block py-1 px-3 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-600 mb-4 shadow-sm">
+                    A Complete Guide for New Investors
+                </span>
+                <h1 class="text-4xl md:text-6xl font-serif font-bold text-brand-dark mb-6 leading-tight">
+                    Mutual Funds for Beginners
+                </h1>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Everything you need to know to start your investment journey, build wealth, and achieve your financial goals.
+                </p>
+            </div>
+        </header>
+
+        <main class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Info Alert -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-12 flex gap-4 items-start">
+                <i class="fa-solid fa-circle-info text-blue-500 text-xl mt-1"></i>
+                <div>
+                    <h3 class="font-semibold text-blue-900 mb-1">How to use this guide</h3>
+                    <p class="text-blue-800 text-sm">Click on any question below to reveal the answer. We've broken down complex financial jargon into simple, easy-to-understand concepts.</p>
+                </div>
+            </div>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-serif font-bold text-brand-dark mb-6 flex items-center gap-3">
+                    <span class="bg-brand-dark text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span> 
+                    Basic Concepts - The Fundamentals
+                </h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    
+                    <!-- Q1 -->
+                    <div class="border-b border-slate-100 last:border-0">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600 transition-colors">Q1: What is a Mutual Fund?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            A mutual fund is a professionally managed investment fund that pools money from many investors to purchase a diversified portfolio of stocks, bonds, or other securities. Think of it as a bucket where thousands of investors put their money together, and a professional fund manager invests that money on their behalf. When you invest ₹5,000 in a mutual fund, you're buying a small ownership stake (called a "unit") in that pool.
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-b border-slate-100 last:border-0">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600 transition-colors">Q2: How Does a Mutual Fund Work?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            Here's the step-by-step process:<br><br>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>You invest money in the mutual fund.</li>
+                                <li>Your money is pooled with other investors' money.</li>
+                                <li>The fund manager uses this pool to buy stocks, bonds, or other securities.</li>
+                                <li>Any profits from these investments are distributed to you.</li>
+                                <li>The fund manager charges a fee (expense ratio) for managing your investment.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-b border-slate-100 last:border-0">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600 transition-colors">Q3: Why Should a Beginner Invest in Mutual Funds?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            Mutual funds are ideal for beginners because:
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li><strong>Professional Management:</strong> You don't need to pick stocks yourself.</li>
+                                <li><strong>Diversification:</strong> Your money is spread across many securities, reducing risk.</li>
+                                <li><strong>Low Minimum Investment:</strong> You can start with as little as ₹500.</li>
+                                <li><strong>Flexibility:</strong> You can withdraw your money anytime (in most cases).</li>
+                                <li><strong>Liquidity:</strong> Easy to buy and sell compared to buying individual stocks.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Q4 & Q5 combined for brevity in code, but keeping content -->
+                    <div class="border-b border-slate-100 last:border-0">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600 transition-colors">Q4 & Q5: What is a Unit and what is NAV?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            <strong>Difference Between Unit and Share:</strong> A unit in a mutual fund is NOT the same as a stock share. When you buy ₹1,000 of a mutual fund with a Net Asset Value (NAV) of ₹100, you get 10 units. With stocks, you buy specific company shares, while with mutual funds, you're buying a slice of a diversified portfolio.<br><br>
+                            <strong>What is NAV?</strong> NAV is the price of one unit of a mutual fund. It's calculated as: (Total Assets - Total Liabilities) ÷ Total Number of Units. The NAV is calculated once per day, usually after market close.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-serif font-bold text-brand-dark mb-6 flex items-center gap-3">
+                    <span class="bg-brand-dark text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span> 
+                    Types of Mutual Funds
+                </h2>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6 overflow-x-auto no-scrollbar">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800">Q6: What Are the Main Types of Mutual Funds?</h3>
+                    <table class="w-full text-sm text-left whitespace-nowrap">
+                        <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">Type</th>
+                                <th class="px-4 py-3 font-semibold">What It Invests In</th>
+                                <th class="px-4 py-3 font-semibold">Risk Level</th>
+                                <th class="px-4 py-3 font-semibold">Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                <td class="px-4 py-3 font-medium text-slate-900">Equity/Stock Funds</td>
+                                <td class="px-4 py-3 text-slate-600">Primarily in stocks</td>
+                                <td class="px-4 py-3 text-red-500 font-medium">High</td>
+                                <td class="px-4 py-3 text-slate-600">Long-term growth (10+ years)</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                <td class="px-4 py-3 font-medium text-slate-900">Debt/Bond Funds</td>
+                                <td class="px-4 py-3 text-slate-600">Corporate & government bonds</td>
+                                <td class="px-4 py-3 text-green-600 font-medium">Low-Medium</td>
+                                <td class="px-4 py-3 text-slate-600">Steady income, conservative</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                <td class="px-4 py-3 font-medium text-slate-900">Balanced/Hybrid</td>
+                                <td class="px-4 py-3 text-slate-600">Mix of stocks and bonds</td>
+                                <td class="px-4 py-3 text-yellow-600 font-medium">Medium</td>
+                                <td class="px-4 py-3 text-slate-600">Balanced risk and return</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                <td class="px-4 py-3 font-medium text-slate-900">Index Funds</td>
+                                <td class="px-4 py-3 text-slate-600">Tracks market index (Nifty)</td>
+                                <td class="px-4 py-3 text-orange-500 font-medium">Medium-High</td>
+                                <td class="px-4 py-3 text-slate-600">Passive market returns</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="border-b border-slate-100">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600">Q7: Difference Between Large, Mid, and Small-Cap?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            <strong>Large-Cap:</strong> Invest in India's top 100 companies (TCS, HDFC, Reliance). Lower risk but slower growth. Best for beginners.<br>
+                            <strong>Mid-Cap:</strong> Invest in companies ranked 101-250. Medium risk and growth. Good for moderate investors.<br>
+                            <strong>Small-Cap:</strong> Invest in companies ranked 251+. Highest risk but highest potential growth. For experienced investors.
+                        </div>
+                    </div>
+                    <div class="border-b border-slate-100">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600">Q8: Active vs. Passive Funds?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            <strong>Active Funds:</strong> Manager actively buys/sells to beat the market. Higher fees. Example: HDFC Growth Fund.<br>
+                            <strong>Passive Funds:</strong> Simply track a market index like Nifty 50. Lower fees. Example: Nifty 50 Index Fund.<br>
+                            <em>Beginner tip: Start with low-cost passive funds or large-cap active funds.</em>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12 bg-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 transform translate-x-1/2 -translate-y-1/2"></div>
+                
+                <h2 class="text-3xl font-serif font-bold mb-8 relative z-10 text-center">Quick Start Guide: 5 Simple Steps</h2>
+                
+                <div class="space-y-6 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">1</div>
+                            <div class="w-0.5 h-full bg-slate-700 my-2"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h3 class="text-xl font-bold mb-1">Decide Your Investment Goal</h3>
+                            <p class="text-slate-400">Why are you saving? Home, education, or retirement? Decide your timeframe.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">2</div>
+                            <div class="w-0.5 h-full bg-slate-700 my-2"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h3 class="text-xl font-bold mb-1">Assess Your Risk Tolerance</h3>
+                            <p class="text-slate-400">Can you handle a 20% market drop without panicking? Yes = Equity. No = Debt/Balanced.</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">3</div>
+                            <div class="w-0.5 h-full bg-slate-700 my-2"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h3 class="text-xl font-bold mb-1">Complete Your KYC</h3>
+                            <p class="text-slate-400">Keep your PAN Card, Aadhaar, and Bank details ready to verify your identity online.</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">4</div>
+                            <div class="w-0.5 h-full bg-slate-700 my-2"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h3 class="text-xl font-bold mb-1">Select Your First Fund</h3>
+                            <p class="text-slate-400">Beginners should look at Nifty 50 Index Funds or Balanced Advantage Funds.</p>
+                        </div>
+                    </div>
+                    <!-- Step 5 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">5</div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-1">Start a SIP</h3>
+                            <p class="text-slate-400">Set up a monthly Systematic Investment Plan (SIP) of ₹1,000-₹5,000. Consistency is key!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-serif font-bold text-brand-dark mb-6 flex items-center gap-3">
+                    <span class="bg-brand-dark text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span> 
+                    Taxation & Portfolio Management
+                </h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    
+                    <!-- SIP vs Lumpsum -->
+                    <div class="border-b border-slate-100">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600">Q24 & Q25: SIP vs. Lump-Sum?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            <strong>Lump-Sum</strong> is investing a large amount all at once. Good if you get a big bonus, but risky if the market crashes the next day.<br><br>
+                            <strong>SIP (Systematic Investment Plan)</strong> is investing a fixed amount monthly. This averages out your cost (buying more units when market is down, fewer when up).<br>
+                            <em>Best for beginners: Start with a monthly SIP. It builds discipline and reduces risk.</em>
+                        </div>
+                    </div>
+
+                    <!-- Taxation -->
+                    <div class="border-b border-slate-100">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600">Q20: How Are Mutual Fund Gains Taxed?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed overflow-x-auto">
+                            <table class="w-full text-sm text-left whitespace-nowrap mt-2 border border-slate-200">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="px-4 py-2 border-b">Fund Type</th>
+                                        <th class="px-4 py-2 border-b">Holding Period</th>
+                                        <th class="px-4 py-2 border-b">Tax Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="px-4 py-2 border-b">Equity Funds</td>
+                                        <td class="px-4 py-2 border-b">Less than 1 year (STCG)</td>
+                                        <td class="px-4 py-2 border-b">15% + Surcharge</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 border-b">Equity Funds</td>
+                                        <td class="px-4 py-2 border-b">More than 1 year (LTCG)</td>
+                                        <td class="px-4 py-2 border-b">10% (on gains > ₹1 lakh)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2">Debt Funds</td>
+                                        <td class="px-4 py-2">Any holding period</td>
+                                        <td class="px-4 py-2">Taxed per income slab</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Fees -->
+                    <div class="border-b border-slate-100">
+                        <button class="w-full text-left px-6 py-5 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                            <span class="font-semibold text-lg text-slate-800 group-hover:text-blue-600">Q16: What is the Expense Ratio & Exit Load?</span>
+                            <i class="fa-solid fa-plus text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-5 text-slate-600 leading-relaxed">
+                            <strong>Expense Ratio:</strong> The annual fee you pay the fund company. Example: 1% expense ratio means if you invest ₹1 Lakh, you pay ₹1,000/year. Lower is better!<br><br>
+                            <strong>Exit Load:</strong> A penalty charge if you sell your mutual fund units too early (usually before 1 year). Usually around 1%.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-serif font-bold text-brand-dark mb-6">Quick Glossary</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-brand-dark block mb-1">AUM</span>
+                        <span class="text-sm text-slate-600">Assets Under Management - Total money managed by the fund.</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-brand-dark block mb-1">CAGR</span>
+                        <span class="text-sm text-slate-600">Compound Annual Growth Rate - Average annualized return.</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-brand-dark block mb-1">SEBI</span>
+                        <span class="text-sm text-slate-600">Securities and Exchange Board of India - The regulatory authority.</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-brand-dark block mb-1">Diversification</span>
+                        <span class="text-sm text-slate-600">Spreading investments across different types to reduce risk.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Message -->
+            <div class="text-center mt-16 p-8 bg-brand-dark rounded-2xl text-white">
+                <h3 class="text-2xl font-serif font-bold mb-3">Ready to start?</h3>
+                <p class="text-slate-300 mb-6 max-w-lg mx-auto">The best time to plant a tree was 20 years ago. The second best time is today. Let compound interest work its magic.</p>
+                <a href="https://wa.me/918669095783" target="_blank" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-brand-dark font-bold hover:bg-slate-100 transition-colors shadow-lg">
+                    <i class="fa-brands fa-whatsapp mr-2 text-green-500 text-xl"></i> Ask an Advisor
+                </a>
+            </div>
+
+        </main>
+
+        <script>
+            // Simple JavaScript to make the FAQ Accordions work (Open/Close on click)
+            function toggleFaq(button) {
+                // Find the answer div directly below the clicked button
+                const content = button.nextElementSibling;
+                // Find the icon inside the button
+                const icon = button.querySelector('i');
+
+                // Toggle visibility
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    content.classList.add('block');
+                    // Change plus to minus
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-minus');
+                    // Optional: add a slight rotation effect
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    content.classList.remove('block');
+                    content.classList.add('hidden');
+                    // Change minus back to plus
+                    icon.classList.remove('fa-minus');
+                    icon.classList.add('fa-plus');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+        </script>
+    </body>
+    </html>

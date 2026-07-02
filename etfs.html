@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian ETF Dashboard | WealthRise</title>
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc; /* brand-light */
+        }
+        .gradient-bg {
+            background: linear-gradient(160deg, rgba(211, 203, 253, 0.3) 0%, rgba(196, 241, 249, 0.3) 100%);
+        }
+        
+        /* Smooth Animation for Cards */
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .etf-card {
+            opacity: 0;
+            animation: floatUp 0.5s ease-out forwards;
+        }
+
+        /* Staggered animation delays for the grid */
+        .etf-grid > button:nth-child(1) { animation-delay: 0.05s; }
+        .etf-grid > button:nth-child(2) { animation-delay: 0.10s; }
+        .etf-grid > button:nth-child(3) { animation-delay: 0.15s; }
+        .etf-grid > button:nth-child(4) { animation-delay: 0.20s; }
+        .etf-grid > button:nth-child(5) { animation-delay: 0.25s; }
+        .etf-grid > button:nth-child(6) { animation-delay: 0.30s; }
+        .etf-grid > button:nth-child(7) { animation-delay: 0.35s; }
+        .etf-grid > button:nth-child(8) { animation-delay: 0.40s; }
+        .etf-grid > button:nth-child(9) { animation-delay: 0.45s; }
+        .etf-grid > button:nth-child(10) { animation-delay: 0.50s; }
+        .etf-grid > button:nth-child(11) { animation-delay: 0.55s; }
+        .etf-grid > button:nth-child(12) { animation-delay: 0.60s; }
+        .etf-grid > button:nth-child(13) { animation-delay: 0.65s; }
+        .etf-grid > button:nth-child(14) { animation-delay: 0.70s; }
+        .etf-grid > button:nth-child(15) { animation-delay: 0.75s; }
+        .etf-grid > button:nth-child(16) { animation-delay: 0.80s; }
+        .etf-grid > button:nth-child(17) { animation-delay: 0.85s; }
+        .etf-grid > button:nth-child(18) { animation-delay: 0.90s; }
+
+        /* Custom Scrollbar for Modal */
+        .modal-scroll::-webkit-scrollbar { width: 6px; }
+        .modal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .modal-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 font-sans antialiased">
+
+    <nav class="w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <!-- Home Link -->
+                    <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors">WealthRise</a>
+                </div>
+                <div>
+                    <!-- Back to Home -->
+                    <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 gradient-bg border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-600 mb-4 shadow-sm">
+                Live ETF Tracking
+            </span>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-brand-dark mb-4 leading-tight">
+                Indian ETF Dashboard
+            </h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                Click on any ETF below to learn more about its investment aim, purpose, and top company holdings.
+            </p>
+        </div>
+    </header>
+
+    <main class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- ETF Button Grid -->
+        <div class="etf-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-5">
+            <!-- Buttons styled to match WealthRise theme -->
+            <button id="CPSEETF" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">CPSEETF</button>
+            <button id="TNIDETF" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">TNIDETF</button>
+            <button id="INFRAIETF" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">INFRAIETF</button>
+            <button id="SILVERIETF" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">SILVERIETF</button>
+            <button id="ESG" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">ESG</button>
+            <button id="MAHKTECH" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">MAHKTECH</button>
+            <button id="INFRABEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">INFRABEES</button>
+            <button id="CONSUMIETF" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">CONSUMIETF</button>
+            <button id="HNGSNGBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">HNGSNGBEES</button>
+            <button id="MON100" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">MON100</button>
+            <button id="BFSI" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">BFSI</button>
+            <button id="MAFANG" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">MAFANG</button>
+            <button id="MIDCAP" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">MIDCAP</button>
+            <button id="JUNIORBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">JUNIORBEES</button>
+            <button id="GOLDBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">GOLDBEES</button>
+            <button id="NIFTYBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">NIFTYBEES</button>
+            <button id="BANKBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">BANKBEES</button>
+            <button id="ITBEES" class="etf-card bg-white border border-slate-200 rounded-xl py-4 px-2 text-sm font-bold text-slate-700 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-700 transition-all duration-300">ITBEES</button>
+        </div>
+
+    </main>
+
+    <!-- Tailwind styled Modal -->
+    <div id="etfModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-opacity">
+        <!-- Modal Content Box -->
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative max-h-[90vh] flex flex-col transform transition-transform scale-95" id="modalContent">
+            
+            <!-- Close Button -->
+            <button id="closeModalBtn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="p-6 md:p-8 border-b border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                </div>
+                <h2 id="modalTitle" class="text-2xl md:text-3xl font-serif font-bold text-brand-dark">ETF Title</h2>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 md:p-8 overflow-y-auto modal-scroll text-slate-600 space-y-6">
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-blue-500"></i> Aim
+                    </h3>
+                    <p id="modalAim" class="leading-relaxed"></p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-yellow-500"></i> Purpose
+                    </h3>
+                    <p id="modalPurpose" class="leading-relaxed"></p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-briefcase text-purple-500"></i> Top Holdings
+                    </h3>
+                    <ul id="modalHoldings" class="list-none space-y-2">
+                        <!-- Holdings populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ETF Data (From your original code) ---
+        const etfData = {
+            'CPSEETF': {
+                title: 'Nippon India ETF (CPSEETF)',
+                aim: 'To provide returns that correspond to the total returns of the Nifty CPSE Index, before expenses.',
+                purpose: 'Invests in securities of Central Public Sector Enterprises (CPSEs) in the same proportion as the index. It is often used as a tool for the Government of India to disinvest its stake in these companies.',
+                holdings: ['NTPC Ltd.', 'Power Grid Corporation of India Ltd.', 'Oil & Natural Gas Corporation Ltd. (ONGC)', 'Coal India Ltd.', 'Bharat Electronics Ltd.']
+            },
+            'TNIDETF': {
+                title: 'Tata Nifty India Digital ETF (TNIDETF)',
+                aim: 'To provide returns that correspond to the total returns of the Nifty India Digital Index, subject to tracking error.',
+                purpose: 'Invests in companies that are part of the growing digital space in India. This includes "Digital Change Agents" (transforming traditional businesses) and "Digital Enablers" (like IT companies).',
+                holdings: ['Tata Consultancy Services Ltd.', 'HCL Technologies Ltd.', 'Bharti Airtel Ltd.', 'Infosys Ltd.']
+            },
+            'INFRAIETF': {
+                title: 'ICICI Prudential Nifty Infrastructure ETF (INFRAIETF)',
+                aim: 'To replicate the price and yield performance of the Nifty Infrastructure Index, subject to tracking errors.',
+                purpose: 'Invests in a portfolio of Indian infrastructure companies, providing exposure to sectors like energy, transportation, and construction.',
+                holdings: ['Reliance Industries Ltd.', 'Bharti Airtel Ltd.', 'Larsen & Toubro Ltd. (L&T)', 'NTPC Ltd.', 'UltraTech Cement Ltd.']
+            },
+            'SILVERIETF': {
+                title: 'ICICI Prudential Silver ETF (SILVERIETF)',
+                aim: 'To provide returns that track the domestic price of physical silver, subject to tracking error.',
+                purpose: 'Invests in physical silver bars of 99.9% purity. It allows investors to gain exposure to silver prices without the hassle of physical ownership, storage, or insurance.',
+                holdings: ['Physical Silver Bullion']
+            },
+            'ESG': {
+                title: 'ESG ETF (e.g., Mirae Asset ESG Sector Leaders ETF)',
+                aim: 'To invest in companies that meet specific Environmental, Social, and Governance (ESG) criteria.',
+                purpose: 'Allows investors to align their investments with their values by supporting sustainable and ethically-run businesses. It tracks an ESG-focused index.',
+                holdings: ['Infosys Ltd.', 'HDFC Bank Ltd.', 'Reliance Industries Ltd.', 'Tata Consultancy Services Ltd. (Holdings vary by specific ESG fund)']
+            },
+            'MAHKTECH': {
+                title: 'Mirae Asset Hang Seng TECH ETF (MAHKTECH)',
+                aim: 'To generate returns commensurate with the performance of the Hang Seng TECH Total Return Index, subject to tracking error and forex movement.',
+                purpose: 'Invests in the 30 largest technology-themed companies listed in Hong Kong, providing exposure to the Chinese tech sector.',
+                holdings: ['Alibaba Group', 'Xiaomi Corporation', 'Tencent Holdings', 'Meituan', 'Kuaishou Technology', 'JD.com Inc.']
+            },
+            'INFRABEES': {
+                title: 'Nippon India ETF Nifty Infrastructure BeES (INFRABEES)',
+                aim: 'To provide returns that correspond to the total returns of the Nifty Infrastructure Index, before expenses.',
+                purpose: 'Invests in securities representing the Nifty Infrastructure Index. "BeES" (Benchmark Exchange Traded Scheme) is a brand name for Nippon India ETFs.',
+                holdings: ['Reliance Industries Ltd.', 'Bharti Airtel Ltd.', 'Larsen & Toubro Ltd.', 'NTPC Ltd.', 'Power Grid Corp.']
+            },
+            'CONSUMIETF': {
+                title: 'ICICI Prudential Nifty India Consumption ETF (CONSUMIETF)',
+                aim: 'To provide returns that correspond to the Nifty India Consumption Index, subject to tracking error.',
+                purpose: 'Invests in a portfolio of companies that represent the domestic consumption sector in India, including consumer goods, automobiles, and telecommunication.',
+                holdings: ['ITC Ltd.', 'Bharti Airtel Ltd.', 'Mahindra & Mahindra Ltd.', 'Hindustan Unilever Ltd.', 'Maruti Suzuki India Ltd.']
+            },
+            'HNGSNGBEES': {
+                title: 'Nippon India ETF Hang Seng BeES (HNGSNGBEES)',
+                aim: 'To provide returns that correspond to the total returns of the Hang Seng Index (Hong Kong), before expenses.',
+                purpose: 'Invests in the securities that constitute the main Hang Seng Index, providing broad exposure to the Hong Kong stock market.',
+                holdings: ['Alibaba Group', 'Tencent Holdings', 'HSBC Holdings PLC', 'Xiaomi Corp', 'China Construction Bank']
+            },
+            'MON100': {
+                title: 'Motilal Oswal Nasdaq 100 ETF (MON100)',
+                aim: 'To provide returns that correspond to the performance of the NASDAQ-100 Index, subject to tracking error.',
+                purpose: 'Invests in the 100 largest non-financial companies listed on the Nasdaq Stock Market, offering exposure to the US tech sector.',
+                holdings: ['NVIDIA Corp.', 'Microsoft Corp.', 'Apple Inc.', 'Amazon.com Inc.', 'Tesla Inc.', 'Meta Platforms Inc.']
+            },
+            'BFSI': {
+                title: 'Mirae Asset Nifty Financial Services ETF (BFSI)',
+                aim: 'To generate returns commensurate with the performance of the Nifty Financial Services Total Return Index, subject to tracking error.',
+                purpose: 'Invests in stocks from the Nifty Financial Services Index, covering banks, financial institutions (NBFCs), and insurance companies.',
+                holdings: ['HDFC Bank Ltd.', 'ICICI Bank Ltd.', 'Kotak Mahindra Bank Ltd.', 'Bajaj Finance Ltd.', 'Axis Bank Ltd.']
+            },
+            'MAFANG': {
+                title: 'Mirae Asset NYSE FANG+ ETF (MAFANG)',
+                aim: 'To generate returns commensurate with the performance of the NYSE FANG+ Total Return Index, subject to tracking error and forex movement.',
+                purpose: 'A concentrated ETF investing in 10 highly-traded, high-growth technology and tech-enabled companies listed in the US.',
+                holdings: ['Tesla Inc.', 'Apple Inc.', 'NVIDIA Corp.', 'Meta Platforms Inc.', 'Microsoft Corp.', 'Alphabet Inc. (Google)', 'Amazon.com Inc.', 'Netflix Inc.']
+            },
+            'MIDCAP': {
+                title: 'ICICI Prudential BSE Midcap Select ETF (MIDCAP)',
+                aim: 'To provide returns that correspond to the total returns of the S&P BSE Mid-Cap Select Index, subject to tracking errors.',
+                purpose: 'Invests in a selection of mid-sized Indian companies, offering a balance between the stability of large-caps and the growth potential of small-caps.',
+                holdings: ['Persistent Systems Ltd.', 'Cummins India Ltd.', 'The Federal Bank Ltd.', 'Lupin Ltd.', 'Dixon Technologies']
+            },
+            'JUNIORBEES': {
+                title: 'Nippon India ETF Nifty Next 50 (JUNIORBEES)',
+                aim: 'To provide returns that correspond to the returns of securities as represented by the Nifty Next 50 Index, subject to tracking error.',
+                purpose: 'Invests in the 50 companies that are next in line after the Nifty 50, representing emerging blue-chip companies.',
+                holdings: ['Trent Ltd.', 'Bharat Electronics Ltd.', 'Hindustan Aeronautics Ltd.', 'InterGlobe Aviation Ltd. (IndiGo)', 'Power Finance Corporation Ltd.']
+            },
+            'GOLDBEES': {
+                title: 'Nippon India ETF Gold BeES (GOLDBEES)',
+                aim: 'To provide returns that correspond to the returns provided by the domestic price of physical gold.',
+                purpose: 'Invests in physical gold of 99.5% purity. Each unit represents a certain weight of gold (e.g., 0.01 gram). It allows investing in gold without physical storage issues.',
+                holdings: ['Physical Gold Bullion']
+            },
+            'NIFTYBEES': {
+                title: 'Nippon India ETF Nifty 50 BeES (NIFTYBEES)',
+                aim: 'To provide investment returns that, before expenses, closely correspond to the total returns of the Nifty 50 Index.',
+                purpose: 'This is India\'s first ETF and it tracks the Nifty 50 index. It\'s a simple way to invest in India\'s top 50 blue-chip companies, offering broad market diversification at a low cost.',
+                holdings: ['HDFC Bank Ltd.', 'ICICI Bank Ltd.', 'Reliance Industries Ltd.', 'Infosys Ltd.', 'Bharti Airtel Ltd.', 'Larsen & Toubro Ltd.']
+            },
+            'BANKBEES': {
+                title: 'Nippon India ETF Nifty Bank BeES (BANKBEES)',
+                aim: 'To provide returns that, before expenses, closely correspond to the total returns of the Nifty Bank Index.',
+                purpose: 'This ETF invests in the 12 largest and most liquid banking stocks in India. It\'s a way to get focused exposure to the Indian banking sector.',
+                holdings: ['HDFC Bank Ltd.', 'ICICI Bank Ltd.', 'State Bank of India (SBI)', 'Kotak Mahindra Bank Ltd.', 'Axis Bank Ltd.', 'IndusInd Bank Ltd.']
+            },
+            'ITBEES': {
+                title: 'Nippon India ETF Nifty IT (ITBEES)',
+                aim: 'To provide investment returns closely corresponding to the total returns of the securities as represented by the NIFTY IT Index, subject to tracking errors.',
+                purpose: 'This ETF invests in the stocks that constitute the Nifty IT Index, providing exposure to the Indian information technology sector.',
+                holdings: ['Infosys Ltd.', 'Tata Consultancy Services Ltd. (TCS)', 'HCL Technologies Ltd.', 'Wipro Ltd.', 'Tech Mahindra Ltd.', 'Mphasis Ltd.']
+            }
+        };
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('etfModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        
+        // Data elements
+        const modalTitle = document.getElementById('modalTitle');
+        const modalAim = document.getElementById('modalAim');
+        const modalPurpose = document.getElementById('modalPurpose');
+        const modalHoldings = document.getElementById('modalHoldings');
+
+        // Function to Open Modal
+        function openModal(etfKey) {
+            const data = etfData[etfKey];
+            if (!data) return;
+
+            // Fill data
+            modalTitle.textContent = data.title;
+            modalAim.textContent = data.aim;
+            modalPurpose.textContent = data.purpose;
+            
+            // Clear and fill holdings with Tailwind styling
+            modalHoldings.innerHTML = ''; 
+            data.holdings.forEach(holding => {
+                const li = document.createElement('li');
+                li.className = "flex items-start gap-2 bg-slate-50 p-2 rounded-lg border border-slate-100 text-sm";
+                li.innerHTML = `<i class="fa-solid fa-check text-green-500 mt-1 flex-shrink-0"></i> <span>${holding}</span>`;
+                modalHoldings.appendChild(li);
+            });
+
+            // Show Modal with animation
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Small delay to allow display:flex to apply before scaling up
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        // Function to Close Modal
+        function closeModal() {
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200); // Wait for transition to finish
+        }
+
+        // Add Click Listeners to all ETF Buttons
+        document.querySelectorAll('.etf-card').forEach(button => {
+            button.addEventListener('click', () => {
+                openModal(button.id);
+            });
+        });
+
+        // Close when clicking the X button
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close when clicking outside the modal content box
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close on Escape key press
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+    </script>
+</body>
+</html>

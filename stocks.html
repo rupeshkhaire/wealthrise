@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India's Future Growth Sectors 2024-2034 | WealthRise Academy</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: { dark: '#0f172a', light: '#f8fafc' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; }
+        .gradient-bg {
+            background: linear-gradient(160deg, rgba(211, 203, 253, 0.4) 0%, rgba(196, 241, 249, 0.4) 100%);
+        }
+        
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .sector-card {
+            opacity: 0;
+            animation: floatUp 0.6s ease-out forwards;
+            transition: all 0.3s ease;
+        }
+        .sector-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .sector-grid > div:nth-child(1) { animation-delay: 0.1s; }
+        .sector-grid > div:nth-child(2) { animation-delay: 0.2s; }
+        .sector-grid > div:nth-child(3) { animation-delay: 0.3s; }
+        .sector-grid > div:nth-child(4) { animation-delay: 0.4s; }
+        .sector-grid > div:nth-child(5) { animation-delay: 0.5s; }
+        .sector-grid > div:nth-child(6) { animation-delay: 0.6s; }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 8px 20px -6px rgba(59, 130, 246, 0.15);
+        }
+
+        .modal-scroll::-webkit-scrollbar { width: 6px; }
+        .modal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .modal-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .chart-container {
+            position: relative;
+            height: 320px;
+            margin: 20px 0;
+        }
+
+        .metric-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(34, 197, 94, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #1e40af;
+        }
+
+        .catalyst-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1e40af;
+            margin: 4px 4px 4px 0;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .company-card {
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        .company-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .investment-thesis {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(34, 197, 94, 0.05));
+            border-left: 4px solid #6366f1;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .highlight-item {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1));
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #22c55e;
+            text-align: center;
+        }
+
+        .highlight-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .highlight-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-sans antialiased">
+
+    <nav class="w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2 flex items-center">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+                    </div>
+                    <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors ml-2">WealthRise</a>
+                </div>
+                <div class="flex items-center gap-6">
+                    <span class="text-xs font-semibold px-3 py-1 bg-amber-100 text-amber-800 rounded-full">📚 Educational</span>
+                    <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-36 pb-16 gradient-bg border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="inline-block py-2 px-4 rounded-full bg-white border border-slate-200 text-xs font-bold uppercase tracking-wider text-blue-600 mb-6 shadow-sm">
+                    📊 10-Year Outlook Analysis
+                </span>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-dark mb-6 leading-tight">
+                    India's<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"> High-Growth Sectors</span> 2024-2034
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+                    A comprehensive educational analysis of the sectors transforming India's economy. Explore market fundamentals, growth catalysts, and key players reshaping the nation's future.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="stat-card text-center">
+                    <p class="text-sm text-slate-600 font-medium mb-2">Total Market Opportunity</p>
+                    <p class="text-3xl font-bold text-blue-600">$500B+</p>
+                    <p class="text-xs text-slate-500 mt-1">By 2034</p>
+                </div>
+                <div class="stat-card text-center">
+                    <p class="text-sm text-slate-600 font-medium mb-2">Avg Sector Growth</p>
+                    <p class="text-3xl font-bold text-green-600">12-18% CAGR</p>
+                    <p class="text-xs text-slate-500 mt-1">2024-2034</p>
+                </div>
+                <div class="stat-card text-center">
+                    <p class="text-sm text-slate-600 font-medium mb-2">Jobs to be Created</p>
+                    <p class="text-3xl font-bold text-purple-600">50M+</p>
+                    <p class="text-xs text-slate-500 mt-1">Direct & Indirect</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- STRICT SEBI COMPLIANCE DISCLAIMER -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-6 mb-12 shadow-sm">
+            <div class="flex gap-4 items-start">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-2xl mt-1 flex-shrink-0"></i>
+                <div>
+                    <h3 class="font-semibold text-amber-900 mb-2 text-base">⚠️ Regulatory Disclaimer & Disclosure</h3>
+                    <p class="text-amber-800 text-sm leading-relaxed mb-2">
+                        <strong>For Educational & Research Purposes Only:</strong> This is a comprehensive educational analysis prepared for learning and market understanding. I am a Mutual Fund Distributor (MFD), <strong>NOT</strong> a SEBI-Registered Investment Advisor (RIA). 
+                    </p>
+                    <p class="text-amber-800 text-sm leading-relaxed">
+                        <strong>Disclosure:</strong> The sectors and companies listed are strictly for educational case studies and market analysis. This is <strong>NOT</strong> a stock recommendation to buy, sell, or hold. Stock market investments carry market risks. Past performance is not indicative of future results. Please consult a SEBI-registered financial advisor before making any direct equity or mutual fund investment decisions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sectors Grid -->
+        <div class="sector-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            
+            <!-- Sector 1: Renewable Energy -->
+            <div onclick="openSectorModal('renewable')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-bolt"></i> 15% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-green-600 transition-colors">Renewable Energy</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">Solar, wind, green hydrogen powering India's net-zero transition with ₹1.5L Cr+ capex planned.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-green-600"></i> Market Size: $50B (2024) → $150B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-green-600"></i> 500 GW renewable capacity target
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sector 2: Defence & Aerospace -->
+            <div onclick="openSectorModal('defence')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-jet-fighter"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-rocket"></i> 18% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">Defence & Aerospace</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">Atmanirbhar Bharat push creating ₹25,000 Cr defense procurement pipeline.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-slate-700"></i> Market Size: $30B (2024) → $100B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-slate-700"></i> Domestic defense production target: 70%
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sector 3: EV & Auto Ancillaries -->
+            <div onclick="openSectorModal('ev')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-car-battery"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-bolt-lightning"></i> 22% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">Electric Vehicles</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">ICE to EV shift with battery manufacturing becoming critical choke point.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-blue-600"></i> Market Size: $8B (2024) → $65B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-blue-600"></i> 2M+ EV sales target by 2030
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sector 4: Infrastructure & Railways -->
+            <div onclick="openSectorModal('infra')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bridge-water"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-hammer"></i> 14% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">Infrastructure</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">Record ₹10+ Lakh Cr capex on roads, railways, ports, and logistics.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-orange-600"></i> Market Size: $120B (2024) → $280B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-orange-600"></i> 3,600 km national highway per year
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sector 5: AI & IT -->
+            <div onclick="openSectorModal('ai')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-brain"></i> 16% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors">AI & Digital India</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">AI adoption, cloud migration, and digital transformation reshaping enterprises.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-purple-600"></i> Market Size: $200B (2024) → $400B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-purple-600"></i> AI services growing at 28% annually
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sector 6: Healthcare & Pharma -->
+            <div onclick="openSectorModal('pharma')" class="sector-card bg-white border border-slate-200 rounded-2xl p-7 cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-14 h-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-staff-snake"></i>
+                    </div>
+                    <span class="metric-badge"><i class="fa-solid fa-pill"></i> 11% CAGR</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-rose-600 transition-colors">Healthcare & Pharma</h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">China+1 strategy + aging demographics driving API & hospital expansion.</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-chart-line text-rose-600"></i> Market Size: $60B (2024) → $130B+ (2034)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fa-solid fa-industry text-rose-600"></i> Health insurance penetration growing 25%+ annually
+                    </div>
+                </div>
+                <div class="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Deep Dive <i class="fa-solid fa-arrow-right text-xs"></i>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Detailed Sector Modal -->
+    <div id="sectorModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4 transition-opacity duration-300 opacity-0">
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl relative max-h-[92vh] flex flex-col transform transition-transform scale-95 duration-300" id="modalContent">
+            
+            <button onclick="closeSectorModal()" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors z-10 group">
+                <i class="fa-solid fa-xmark text-xl group-hover:rotate-90 transition-transform"></i>
+            </button>
+
+            <div class="p-8 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-blue-50 rounded-t-2xl relative overflow-hidden">
+                <div id="modalIcon" class="absolute -right-6 -bottom-6 text-9xl opacity-8 text-slate-200">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <span id="modalCategory" class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-3 block">📊 Sector Deep Dive</span>
+                <h2 id="modalTitle" class="text-4xl font-serif font-bold text-brand-dark mb-4 relative z-10">Sector Title</h2>
+                <p id="modalWhy" class="text-slate-600 text-base leading-relaxed relative z-10 max-w-2xl"></p>
+            </div>
+
+            <div class="p-8 overflow-y-auto modal-scroll bg-white flex-1">
+                
+                <!-- Investment Thesis -->
+                <div class="investment-thesis mb-8">
+                    <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-yellow-500"></i> Investment Thesis
+                    </h3>
+                    <p id="modalThesis" class="text-sm text-slate-700 leading-relaxed"></p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar text-blue-600"></i> Market Overview (2024-2034)
+                    </h3>
+                    <div class="highlights" id="modalMetrics">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Key Catalysts -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-orange-500"></i> Key Growth Catalysts
+                    </h3>
+                    <div id="modalCatalysts" class="flex flex-wrap gap-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Market Size Chart -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-slate-900 mb-4">Market Growth Projection</h3>
+                    <div class="chart-container">
+                        <canvas id="marketChart" role="img" aria-label="Market size projection"></canvas>
+                    </div>
+                </div>
+
+                <!-- Key Players -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-building text-slate-600"></i> Key Companies in Watchlist
+                    </h3>
+                    <div class="company-grid" id="modalCompanies">
+                        <!-- Companies populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Footer Disclaimer -->
+                <div class="mt-10 pt-6 border-t border-slate-200 text-center bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg">
+                    <p class="text-xs text-slate-600 uppercase tracking-wider font-semibold mb-2">📋 Educational Disclosure</p>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Companies listed above are for educational case-study and market analysis purposes only. This is <strong>NOT</strong> investment advice. Conduct your own research and consult a SEBI-registered advisor before investing.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sectorData = {
+            'renewable': {
+                title: 'Renewable Energy & Green Tech',
+                iconClass: 'fa-leaf',
+                why: 'India has committed to 500 GW renewable capacity by 2030 (vs 180 GW currently). This is backed by ₹1.5 lakh crore capex, global ESG mandates, and declining solar/wind costs making renewable energy cheaper than coal. PLI schemes and Production-Linked Incentives are attracting manufacturers.',
+                thesis: 'As renewable energy costs fall 60-70% over the decade, India will transition from coal (70% of energy) to renewables (50%+). This creates a multi-trillion-rupee opportunity across solar panels, wind turbines, energy storage (batteries), green hydrogen, and smart grid infrastructure. Companies manufacturing locally will capture significant upside due to import tariffs and supply chain resilience.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$50B' },
+                    { label: 'Market Size (2034)', value: '$150B+' },
+                    { label: 'Expected CAGR', value: '15%' },
+                    { label: 'Target Capacity', value: '500 GW' }
+                ],
+                catalysts: [
+                    'Government PLI scheme for solar equipment',
+                    'National Green Hydrogen Mission (₹19,500 Cr)',
+                    'Battery manufacturing PLI (₹18,100 Cr)',
+                    'Energy Storage Systems becoming critical',
+                    'Global ESG fund flows into India',
+                    'Coal power phase-out acceleration'
+                ],
+                companies: [
+                    { 
+                        name: 'Tata Power Co. Ltd.',
+                        description: '10+ GW renewable capacity under development. Major renewable-to-thermal transition underway.',
+                        expertise: 'Solar, Wind, Energy Storage'
+                    },
+                    { 
+                        name: 'Adani Green Energy Ltd.',
+                        description: 'India\'s largest renewable energy company with 10 GW operational. ₹5,000+ Cr capex planned.',
+                        expertise: 'Solar Parks, Wind Energy'
+                    },
+                    { 
+                        name: 'Suzlon Energy Ltd.',
+                        description: 'Wind turbine manufacturer. 1 GW+ annual capacity. Benefiting from domestic and export demand.',
+                        expertise: 'Wind Turbine Manufacturing'
+                    },
+                    { 
+                        name: 'Borosil Renewables Ltd.',
+                        description: 'India\'s only solar glass manufacturer. Rising solar installation = rising demand for this critical input.',
+                        expertise: 'Solar Glass Production'
+                    },
+                    { 
+                        name: 'NHPC Ltd.',
+                        description: 'Expanding into 30 GW renewables. Government backing and capex allocation.',
+                        expertise: 'Hydel, Solar, Wind'
+                    },
+                    { 
+                        name: 'Waaree Energies Ltd.',
+                        description: 'Solar panel manufacturer with 1.5 GW manufacturing capacity under PLI scheme.',
+                        expertise: 'Solar Panel Manufacturing'
+                    }
+                ]
+            },
+            'defence': {
+                title: 'Defence & Aerospace',
+                iconClass: 'fa-jet-fighter',
+                why: 'India\'s defense budget is ₹71,000 Cr annually with 60% allocated to capital spending on new weapons systems. PM Modi\'s "Atmanirbhar Bharat" policy restricts imports and forces local manufacturing. Export opportunities are opening as global supply chains diversify away from China.',
+                thesis: 'Defense procurement will grow at 10-12% CAGR as India modernizes its 3+ million-strong armed forces. Rather than importing ₹50,000 Cr of defense goods annually, India will manufacture domestically. This creates demand for jet engines, radars, missiles, warships, and electronic systems. Defense contractors have 5-10 year order visibility, ensuring stable revenue.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$30B' },
+                    { label: 'Market Size (2034)', value: '$100B+' },
+                    { label: 'Expected CAGR', value: '18%' },
+                    { label: 'Defense Budget (Annual)', value: '₹71,000 Cr' }
+                ],
+                catalysts: [
+                    'Atmanirbhar Bharat policy (70% domestic sourcing)',
+                    '₹25,000 Cr defense procurement pipeline',
+                    'INS Vikrant carrier commissions 2024-2025',
+                    'Tejas fighter jet mass production ramping',
+                    'Export orders from ASEAN, Africa, Middle East',
+                    'Electronics manufacturing (radar, comms)'
+                ],
+                companies: [
+                    { 
+                        name: 'Hindustan Aeronautics Ltd. (HAL)',
+                        description: 'Manufactures HAL Tejas fighter jets (500+ planned), helicopters, and aerospace systems. Government-backed with decades of tech expertise.',
+                        expertise: 'Fighter Jets, Helicopters, Aerospace'
+                    },
+                    { 
+                        name: 'Bharat Electronics Ltd. (BEL)',
+                        description: 'Core electronics for defense: radars, fire control systems, sonar, missiles. ₹27,000 Cr of order backlog.',
+                        expertise: 'Defense Electronics, Radars'
+                    },
+                    { 
+                        name: 'Mazagon Dock Shipbuilders Ltd.',
+                        description: 'Building Scorpene submarines and stealth frigates. 3+ year order pipeline worth ₹35,000+ Cr.',
+                        expertise: 'Warship, Submarine Manufacturing'
+                    },
+                    { 
+                        name: 'Data Patterns (India) Ltd.',
+                        description: 'Indigenous electronic systems for defense/space. High-margin specialized products. ₹500+ Cr revenue.',
+                        expertise: 'Specialized Defense Electronics'
+                    },
+                    { 
+                        name: 'Paras Defence & Space Technologies',
+                        description: 'Composite manufacturing for defense/space. Strategic tier-1 supplier position.',
+                        expertise: 'Advanced Composites'
+                    },
+                    { 
+                        name: 'Cochin Shipyard Ltd.',
+                        description: 'Building Coast Guard vessels, naval tankers, and exporting ship components globally.',
+                        expertise: 'Naval & Commercial Shipbuilding'
+                    }
+                ]
+            },
+            'ev': {
+                title: 'Electric Vehicles & Auto Ancillaries',
+                iconClass: 'fa-car-battery',
+                why: 'Tata Motors has 60% EV market share in India. Tesla entry is imminent. SIAM projects 2M+ EV sales by 2030 (from 300K in 2024). Battery costs are falling 15% annually. Charging infrastructure is growing. This is a 10-year secular growth story.',
+                thesis: 'As EV prices reach parity with ICE (2025-2027), mass adoption accelerates. This benefits not just automakers but entire supply chains: battery makers, charging companies, motor manufacturers, and semiconductor suppliers (ADAS, autonomous driving). Battery manufacturing is becoming strategic—companies with lithium-ion cell capacity will have fortress economics.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$8B' },
+                    { label: 'Market Size (2034)', value: '$65B+' },
+                    { label: 'Expected CAGR', value: '22%' },
+                    { label: 'Sales Target (2030)', value: '2M+ units' }
+                ],
+                catalysts: [
+                    'EV prices reaching parity with ICE by 2026-27',
+                    'PLI scheme for battery manufacturing (₹18,100 Cr)',
+                    'Fast charging infrastructure expanding 5x',
+                    'Battery cost decline to $80-90/kWh globally',
+                    'OEM supply contracts securing 5+ years',
+                    'Govt fleet electrification orders'
+                ],
+                companies: [
+                    { 
+                        name: 'Tata Motors Ltd.',
+                        description: '60% EV market share with Nexon EV. Launch of affordable ₹10L EV expected. ₹10,000+ Cr capex on EVs through 2030.',
+                        expertise: 'Passenger EVs, Batteries'
+                    },
+                    { 
+                        name: 'Olectra Greentech Ltd.',
+                        description: 'India\'s leading electric bus manufacturer. 2,000+ buses delivered. Massive state transport corporation orders (₹10,000+ Cr).',
+                        expertise: 'Electric Buses'
+                    },
+                    { 
+                        name: 'Sona BLW Precision Forgings',
+                        description: 'Differential gears, EV motor shafts for global OEMs (Tesla, Hyundai). EV transition will drive 30%+ growth.',
+                        expertise: 'Auto Components, EV Motors'
+                    },
+                    { 
+                        name: 'Amara Raja Energy & Mobility',
+                        description: 'Transitioning from lead-acid to lithium-ion. Building 5 GWh battery manufacturing capacity. Strategic deals with automakers.',
+                        expertise: 'Lithium-Ion Batteries'
+                    },
+                    { 
+                        name: 'Exicom Tele Systems',
+                        description: 'EV charging infrastructure leader. 1,000+ charging points across India. Expanding 10x in next 5 years.',
+                        expertise: 'EV Charging Infrastructure'
+                    },
+                    { 
+                        name: 'Emkay Global Financial Services',
+                        description: 'Fleet management and financing for EVs. Benefiting from commercial EV adoption.',
+                        expertise: 'EV Fleet Solutions, Financing'
+                    }
+                ]
+            },
+            'infra': {
+                title: 'Infrastructure, Railways & Capital Goods',
+                iconClass: 'fa-bridge-water',
+                why: 'India allocated ₹10+ lakh crore capex over FY2024-26 on infrastructure. National Highway Authority building 3,600 km roads annually. Railways modernizing 2,600 km tracks yearly. Ports, airports, and logistics hubs are expanding. This is structural mega-trend.',
+                thesis: 'Infrastructure is the backbone of economic growth. ₹10+ lakh crore capex over 3-5 years ensures continuous demand for cement, steel, equipment, and construction services. Unlike consumption (cyclical), infrastructure is counter-cyclical and government-backed. Capital goods companies have decade-long order pipelines.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$120B' },
+                    { label: 'Market Size (2034)', value: '$280B+' },
+                    { label: 'Expected CAGR', value: '14%' },
+                    { label: 'Capex Allocated', value: '₹10+ Lakh Cr' }
+                ],
+                catalysts: [
+                    'National Master Plan 2024-2026 (₹10L Cr capex)',
+                    'National Highway Authority building 3,600 km/year',
+                    'High-speed rail projects (Delhi-Agra, Mumbai-Ahmedabad)',
+                    'Port capacity expansion doubling by 2030',
+                    'Metro expansion in 100+ tier-2 cities',
+                    'Smart Cities Mission (100 cities)'
+                ],
+                companies: [
+                    { 
+                        name: 'Larsen & Toubro Ltd. (L&T)',
+                        description: 'India\'s largest infrastructure conglomerate. ₹2 lakh+ Cr of projects across highways, metros, railways, power plants.',
+                        expertise: 'All Infrastructure Segments'
+                    },
+                    { 
+                        name: 'Rail Vikas Nigam Ltd. (RVNL)',
+                        description: 'Railway project execution. 2,600 km track modernization annually. High-margin projects. Govt-backed.',
+                        expertise: 'Railway Infrastructure'
+                    },
+                    { 
+                        name: 'Siemens India Ltd.',
+                        description: 'Railway signaling, industrial automation, IoT for smart cities. Critical tech supplier for mega projects.',
+                        expertise: 'Industrial Automation, Smart Solutions'
+                    },
+                    { 
+                        name: 'UltraTech Cement Ltd.',
+                        description: 'India\'s largest cement maker. 30M+ tons capacity. Infrastructure boom = cement demand surge.',
+                        expertise: 'Cement Manufacturing'
+                    },
+                    { 
+                        name: 'Godrej & Boyce Manufacturing',
+                        description: 'Heavy engineering, capital equipment for railways and industries. Multi-decade order pipeline.',
+                        expertise: 'Heavy Engineering Equipment'
+                    },
+                    { 
+                        name: 'Escorts Group',
+                        description: 'Construction equipment, engines for infrastructure machinery. High-double-digit growth expected.',
+                        expertise: 'Construction Equipment'
+                    }
+                ]
+            },
+            'ai': {
+                title: 'Artificial Intelligence & Digital India',
+                iconClass: 'fa-microchip',
+                why: 'Indian IT services are evolving from back-office support to high-margin AI, cloud, and cybersecurity work. Enterprise AI adoption is accelerating (GenAI spending up 50% YoY). Digital transformation of Indian businesses is mandatory post-COVID. 1 million new tech jobs expected by 2030.',
+                thesis: 'AI and cloud are structural shifts, not cyclical trends. Every enterprise will need to modernize to AI-first architecture. Indian IT companies are winning because they have domain expertise, cost advantage, and scale. Cloud infrastructure, data analytics, and AI-as-a-service are highest-margin businesses.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$200B' },
+                    { label: 'Market Size (2034)', value: '$400B+' },
+                    { label: 'Expected CAGR', value: '16%' },
+                    { label: 'AI Services Growth', value: '28% CAGR' }
+                ],
+                catalysts: [
+                    'Enterprise GenAI spending growing 50% annually',
+                    'Digital India government projects acceleration',
+                    'Data localization mandates (MeitY)',
+                    'Cloud adoption by 1M+ SMEs',
+                    'Fintech, healthtech digitalization boom',
+                    'Semiconductor fabs planned in India (₹1L Cr)'
+                ],
+                companies: [
+                    { 
+                        name: 'Tata Consultancy Services (TCS)',
+                        description: 'India\'s largest IT firm with 600K+ workforce. Leading in cloud, AI, and digital transformation for Fortune 500 clients.',
+                        expertise: 'Enterprise IT, AI, Cloud'
+                    },
+                    { 
+                        name: 'Tata Elxsi Ltd.',
+                        description: 'Product engineering, automotive software (autonomous driving), IoT solutions. High-margin niche plays.',
+                        expertise: 'Automotive Software, IoT'
+                    },
+                    { 
+                        name: 'KPIT Technologies Ltd.',
+                        description: 'Automotive software specialist (ADAS, connected cars). EV transition will drive 40%+ growth.',
+                        expertise: 'Automotive Software, Autonomous Driving'
+                    },
+                    { 
+                        name: 'CDSL (Central Depository Services)',
+                        description: 'Financial market infrastructure. 15M+ new demat accounts opened annually. Stock market digitalization proxy.',
+                        expertise: 'Financial Digital Infrastructure'
+                    },
+                    { 
+                        name: 'Mphasis Ltd.',
+                        description: 'Digital transformation, cloud, data analytics. Serving financial services and telecom sectors.',
+                        expertise: 'Digital Services, Cloud'
+                    },
+                    { 
+                        name: 'HCL Technologies',
+                        description: '210K+ workforce. Specializing in infrastructure services, cloud, and digital engineering.',
+                        expertise: 'Infra IT, Digital Engineering'
+                    }
+                ]
+            },
+            'pharma': {
+                title: 'Healthcare & Pharmaceuticals',
+                iconClass: 'fa-staff-snake',
+                why: 'India is the pharmacy of the world (20% global pharma supply). "China+1" geopolitical risk is shifting API manufacturing from China to India. Global population aging = rising pharmaceutical demand. Indian healthcare insurance penetration is growing 25%+ annually.',
+                thesis: 'Three secular drivers: (1) Global API demand from drug manufacturers shifting away from China, (2) Domestic healthcare insurance allowing middle-class to afford quality healthcare, (3) Hospital consolidation enabling scale & efficiency. Companies with API manufacturing, specialty drugs, or hospital networks will see 15%+ growth.',
+                metrics: [
+                    { label: 'Market Size (2024)', value: '$60B' },
+                    { label: 'Market Size (2034)', value: '$130B+' },
+                    { label: 'Expected CAGR', value: '11%' },
+                    { label: 'Global API Supply', value: '20%' }
+                ],
+                catalysts: [
+                    'China+1 geopolitical strategy shifting APIs to India',
+                    'Health insurance penetration growing from 15% to 35%',
+                    'Aging Indian population (60+ = 200M by 2030)',
+                    'Specialty drugs & biologics becoming 40% of pharma',
+                    'Hospital networks consolidating for scale',
+                    'Drug discovery spending rising'
+                ],
+                companies: [
+                    { 
+                        name: 'Sun Pharmaceutical Industries',
+                        description: 'India\'s largest pharma company. Specialty drugs in US market. 100+ drugs in pipeline. ₹30,000+ Cr revenue.',
+                        expertise: 'Specialty Drugs, US Pharma'
+                    },
+                    { 
+                        name: 'Divi\'s Laboratories Ltd.',
+                        description: 'Global leader in API (Active Pharmaceutical Ingredients) and custom synthesis. China+1 beneficiary. 30%+ margins.',
+                        expertise: 'API Manufacturing'
+                    },
+                    { 
+                        name: 'Apollo Hospitals Enterprise',
+                        description: 'India\'s largest hospital chain with 11,000+ beds. Rapidly expanding Apollo 24/7 digital health platform.',
+                        expertise: 'Hospital Services, Telemedicine'
+                    },
+                    { 
+                        name: 'Syngene International Ltd.',
+                        description: 'Contract Research Organization (CRO) for global pharma drug discovery. 100+ ongoing projects. High growth.',
+                        expertise: 'Drug Discovery, CRO Services'
+                    },
+                    { 
+                        name: 'Natco Pharma Ltd.',
+                        description: 'Generics and API manufacturer. Specialty generics in oncology and immunology. Export-focused.',
+                        expertise: 'Generics, Oncology APIs'
+                    },
+                    { 
+                        name: 'Dr. Reddy\'s Laboratories',
+                        description: 'Global pharma company with API, generics, and biosimilars. ₹45,000+ Cr revenue. US market leader.',
+                        expertise: 'APIs, Generics, Biosimilars'
+                    }
+                ]
+            }
+        };
+
+        const modal = document.getElementById('sectorModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function openSectorModal(sectorKey) {
+            const data = sectorData[sectorKey];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalWhy').textContent = data.why;
+            document.getElementById('modalThesis').textContent = data.thesis;
+            document.getElementById('modalIcon').innerHTML = `<i class="fa-solid ${data.iconClass}"></i>`;
+
+            // Metrics
+            const metricsDiv = document.getElementById('modalMetrics');
+            metricsDiv.innerHTML = '';
+            data.metrics.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'highlight-item';
+                div.innerHTML = `<div class="highlight-value">${m.value}</div><div class="highlight-label">${m.label}</div>`;
+                metricsDiv.appendChild(div);
+            });
+
+            // Catalysts
+            const catalystsDiv = document.getElementById('modalCatalysts');
+            catalystsDiv.innerHTML = '';
+            data.catalysts.forEach(catalyst => {
+                const tag = document.createElement('span');
+                tag.className = 'catalyst-tag';
+                tag.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${catalyst}`;
+                catalystsDiv.appendChild(tag);
+            });
+
+            // Companies
+            const companiesDiv = document.getElementById('modalCompanies');
+            companiesDiv.innerHTML = '';
+            data.companies.forEach(company => {
+                const card = document.createElement('div');
+                card.className = 'company-card';
+                card.innerHTML = `
+                    <h4 class="font-bold text-slate-800 text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-trend-up text-green-500"></i> ${company.name}
+                    </h4>
+                    <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2">${company.expertise}</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">${company.description}</p>
+                `;
+                companiesDiv.appendChild(card);
+            });
+
+            // Chart
+            setTimeout(() => createMarketChart(data), 100);
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSectorModal() {
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function createMarketChart(data) {
+            const ctx = document.getElementById('marketChart');
+            if (!ctx || window.currentChart) return;
+            
+            if (window.currentChart) window.currentChart.destroy();
+            
+            const startValue = parseInt(data.metrics[0].value.replace(/[^\d]/g, ''));
+            const endValue = parseInt(data.metrics[1].value.replace(/[^\d]/g, ''));
+            const cagr = parseFloat(data.metrics[2].value);
+            
+            const years = Array.from({length: 11}, (_, i) => 2024 + i);
+            const values = years.map((_, i) => Math.round(startValue * Math.pow(1 + cagr/100, i)));
+            
+            window.currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Market Size (Billion USD)',
+                        data: values,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true, position: 'top' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeSectorModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeSectorModal();
+            }
+        });
+    </script>
+</body>
+</html>

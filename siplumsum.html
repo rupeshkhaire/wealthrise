@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SIP & Lumpsum Calculator | WealthRise</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6', // Primary Blue
+                            600: '#2563eb', // Hover Blue
+                        },
+                        success: '#10b981', // Green for returns
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hide Number Input Arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Premium Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            height: 6px;
+            border-radius: 999px;
+            outline: none;
+            margin: 12px 0; /* Better touch area on mobile */
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            border-radius: 999px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #3b82f6;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -9px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.15);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        input[type=range]::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Focus ring for accessibility without ruining design */
+        input:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+    </style>
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pt-28 pb-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+
+    <!-- Navigation Header -->
+    <nav class="w-full top-0 left-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 fixed shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+                    </div>
+                    <a href="index.html" class="font-serif font-bold text-2xl text-brand-dark hover:text-blue-600 transition-colors">WealthRise</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="calculators-hub.html" class="text-sm font-medium text-slate-600 hover:text-brand-dark flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Calculators
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] shadow-soft border border-slate-100 max-w-5xl w-full overflow-hidden flex flex-col lg:flex-row mt-4">
+        
+        <!-- LEFT COLUMN: Inputs Section -->
+        <div class="w-full lg:w-3/5 p-6 sm:p-8 lg:p-10 flex flex-col gap-8">
+            
+            <!-- Header -->
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Investment Return Calculator</h2>
+                <p class="text-slate-500 mt-1 text-sm sm:text-base">Calculate returns on your monthly investments.</p>
+            </div>
+
+            <!-- Toggle SIP / Lumpsum -->
+            <div class="bg-slate-100 p-1.5 rounded-xl flex w-full relative z-0 shadow-inner-soft">
+                <div id="active-bg" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-sm transition-transform duration-300 ease-out z-[-1]"></div>
+                <button id="btn-sip" class="flex-1 py-2.5 text-sm sm:text-base font-semibold text-brand-600 transition-colors z-10" onclick="setMode('sip')">Monthly SIP</button>
+                <button id="btn-lump" class="flex-1 py-2.5 text-sm sm:text-base font-semibold text-slate-500 transition-colors z-10" onclick="setMode('lumpsum')">Lumpsum</button>
+            </div>
+
+            <div class="space-y-8">
+                
+                <!-- Input 1: Amount -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label id="label-amount" class="text-sm font-semibold text-slate-700">Monthly Investment</label>
+                        <div class="flex items-center bg-brand-50 border border-brand-100 px-3 py-2 rounded-lg transition-colors group-hover:border-brand-300">
+                            <span class="text-brand-600 font-medium mr-1">₹</span>
+                            <input type="number" id="input-amount" class="bg-transparent outline-none w-20 sm:w-28 text-right text-lg font-bold text-brand-600" value="10000" min="500" max="100000">
+                        </div>
+                    </div>
+                    <input type="range" id="slider-amount" min="500" max="100000" step="500" value="10000">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1">
+                        <span id="min-amount-label">₹500</span>
+                        <span id="max-amount-label">₹1L</span>
+                    </div>
+                </div>
+
+                <!-- Input 2: Rate of Return -->
+                <div class="group">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Return Rate (p.a)</label>
+                        <div class="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg transition-colors group-hover:border-slate-300">
+                            <input type="number" id="input-rate" class="bg-transparent outline-none w-14 sm:w-16 text-right text-lg font-bold text-slate-800" value="12" min="1" max="30" step="0.1">
+                            <span class="text-slate-500 font-medium ml-1">%</span>
+                        </div>
+                    </div>
+                    <input type="range" id="slider-rate" min="1" max="30" step="0.1" value="12">
+                    <!-- Contextual Benchmarks -->
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1 relative">
+                        <span>1%</span>
+                        <span class="absolute left-[17%] -translate-x-1/2 flex flex-col items-center">
+                            <span class="h-1.5 w-[1px] bg-slate-300 mb-0.5"></span>FD (6%)
+                        </span>
+                        <span class="absolute left-[45%] -translate-x-1/2 flex flex-col items-center">
+                            <span class="h-1.5 w-[1px] bg-slate-300 mb-0.5"></span>Nifty (14%)
+                        </span>
+                        <span class="absolute left-[65%] -translate-x-1/2 flex flex-col items-center">
+                            <span class="h-1.5 w-[1px] bg-slate-300 mb-0.5"></span>Small Cap (20%)
+                        </span>
+                        <span>30%</span>
+                    </div>
+                </div>
+
+                <!-- Input 3: Time Period -->
+                <div class="group mt-10">
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-sm font-semibold text-slate-700">Time Period</label>
+                        <div class="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg transition-colors group-hover:border-slate-300">
+                            <input type="number" id="input-time" class="bg-transparent outline-none w-10 sm:w-12 text-right text-lg font-bold text-slate-800" value="10" min="1" max="40">
+                            <span class="text-slate-500 font-medium ml-1">Yr</span>
+                        </div>
+                    </div>
+                    <input type="range" id="slider-time" min="1" max="40" step="1" value="10">
+                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-1">
+                        <span>1 Yr</span>
+                        <span>40 Yrs</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Results Section -->
+        <div class="w-full lg:w-2/5 bg-slate-50 p-6 sm:p-8 lg:p-10 border-t lg:border-t-0 lg:border-l border-slate-100 flex flex-col items-center justify-center relative">
+            
+            <!-- Chart Container -->
+            <div class="w-full max-w-[280px] aspect-square relative mb-8">
+                <canvas id="resultChart"></canvas>
+                <!-- We will use a ChartJS plugin to draw the total value in the center -->
+                <!-- Hidden element to hold formatted total for the canvas to read -->
+                <span id="hidden-total" class="hidden">₹0</span> 
+            </div>
+
+            <!-- Breakdown Stats -->
+            <div class="w-full max-w-sm space-y-3 mb-8">
+                <!-- Invested -->
+                <div class="flex justify-between items-center p-3 rounded-xl bg-white border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-[#E2E8F0]"></div>
+                        <span class="text-slate-600 font-medium">Total Invested</span>
+                    </div>
+                    <span id="display-invested" class="font-bold text-slate-800">₹ 0</span>
+                </div>
+                
+                <!-- Returns -->
+                <div class="flex justify-between items-center p-3 rounded-xl bg-white border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-[#3b82f6]"></div>
+                        <span class="text-slate-600 font-medium">Est. Returns</span>
+                    </div>
+                    <span id="display-returns" class="font-bold text-success">₹ 0</span>
+                </div>
+
+                <!-- Absolute Return -->
+                <div class="flex justify-between items-center p-3 rounded-xl bg-white border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-purple-500"></div>
+                        <span class="text-slate-600 font-medium">Absolute Return</span>
+                    </div>
+                    <span id="display-absolute-return" class="font-bold text-purple-600">0%</span>
+                </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <a href="https://wa.me/918669095783?text=Hello%20WealthRise%2C%20I%20just%20calculated%20my%20returns%20using%20the%20SIP%20and%20Lumpsum%20Calculator%20and%20would%20like%20to%20consult%20on%20my%20portfolio." target="_blank" class="w-full max-w-sm bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-[0_8px_20px_-6px_rgba(99,102,241,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(99,102,241,0.5)] transform hover:-translate-y-0.5 active:translate-y-0 text-lg text-center block">
+                Start Investing Now
+            </a>
+            
+            <p class="text-center text-xs text-slate-400 mt-4 max-w-xs mx-auto">
+                Returns are indicative and not guaranteed. Inflation is not adjusted.
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const modeSipBtn = document.getElementById('btn-sip');
+        const modeLumpBtn = document.getElementById('btn-lump');
+        const activeBg = document.getElementById('active-bg');
+        const labelAmount = document.getElementById('label-amount');
+        const minAmountLabel = document.getElementById('min-amount-label');
+        const maxAmountLabel = document.getElementById('max-amount-label');
+
+        const inputAmount = document.getElementById('input-amount');
+        const sliderAmount = document.getElementById('slider-amount');
+        
+        const inputRate = document.getElementById('input-rate');
+        const sliderRate = document.getElementById('slider-rate');
+        
+        const inputTime = document.getElementById('input-time');
+        const sliderTime = document.getElementById('slider-time');
+
+        const displayInvested = document.getElementById('display-invested');
+        const displayReturns = document.getElementById('display-returns');
+        const displayAbsoluteReturn = document.getElementById('display-absolute-return');
+        const hiddenTotal = document.getElementById('hidden-total'); // Read by ChartJS
+
+        let currentMode = 'sip';
+        let chartInstance = null;
+
+        // Custom Chart.js Plugin to draw text in the center
+        const centerTextPlugin = {
+            id: 'centerText',
+            beforeDraw: function(chart) {
+                if (chart.config.type !== 'doughnut') return;
+                
+                const ctx = chart.ctx;
+                const width = chart.width;
+                const height = chart.height;
+
+                ctx.restore();
+                
+                // Draw "Total Value" Label
+                const labelFontSize = (height / 220).toFixed(2);
+                ctx.font = `500 ${labelFontSize}em Inter, sans-serif`;
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#64748b"; // slate-500
+                const labelText = "Total Value";
+                const labelX = Math.round((width - ctx.measureText(labelText).width) / 2);
+                const labelY = height / 2 - 15;
+                ctx.fillText(labelText, labelX, labelY);
+
+                // Draw Actual Value
+                const valueFontSize = (height / 120).toFixed(2);
+                ctx.font = `bold ${valueFontSize}em Inter, sans-serif`;
+                ctx.fillStyle = "#0f172a"; // slate-900
+                const valueText = hiddenTotal.innerText; // Get formatted string
+                const valueX = Math.round((width - ctx.measureText(valueText).width) / 2);
+                const valueY = height / 2 + 15;
+                ctx.fillText(valueText, valueX, valueY);
+                
+                ctx.save();
+            }
+        };
+
+        // Register Plugin
+        Chart.register(centerTextPlugin);
+
+        // Number Formatter (Indian Rupee)
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0
+            }).format(num);
+        };
+
+        // Update CSS gradient for sliders to show progress dynamically
+        const updateSliderBackground = (slider) => {
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const val = parseFloat(slider.value);
+            const percentage = ((val - min) / (max - min)) * 100;
+            slider.style.background = `linear-gradient(to right, #3b82f6 ${percentage}%, #e2e8f0 ${percentage}%)`;
+        };
+
+        // Sync Input and Slider seamlessly
+        const syncInputs = (inputEle, sliderEle) => {
+            inputEle.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (!isNaN(val)) {
+                    // Restrict within bounds visually on slider
+                    let sliderVal = Math.max(sliderEle.min, Math.min(sliderEle.max, val));
+                    sliderEle.value = sliderVal;
+                    updateSliderBackground(sliderEle);
+                    calculate();
+                }
+            });
+
+            // Enforce limits on blur (when user clicks away from input)
+            inputEle.addEventListener('blur', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val) || val < parseFloat(sliderEle.min)) val = parseFloat(sliderEle.min);
+                if (val > parseFloat(sliderEle.max)) val = parseFloat(sliderEle.max);
+                e.target.value = val;
+                sliderEle.value = val;
+                updateSliderBackground(sliderEle);
+                calculate();
+            });
+
+            sliderEle.addEventListener('input', (e) => {
+                inputEle.value = e.target.value;
+                updateSliderBackground(sliderEle);
+                calculate();
+            });
+            
+            updateSliderBackground(sliderEle);
+        };
+
+        syncInputs(inputAmount, sliderAmount);
+        syncInputs(inputRate, sliderRate);
+        syncInputs(inputTime, sliderTime);
+
+        // Switch between SIP and Lumpsum
+        window.setMode = function(mode) {
+            currentMode = mode;
+            if (mode === 'sip') {
+                activeBg.style.transform = 'translateX(0)';
+                modeSipBtn.classList.replace('text-slate-500', 'text-brand-600');
+                modeLumpBtn.classList.replace('text-brand-600', 'text-slate-500');
+                
+                labelAmount.innerText = 'Monthly Investment';
+                sliderAmount.max = 100000;
+                sliderAmount.step = 500;
+                minAmountLabel.innerText = '₹500';
+                maxAmountLabel.innerText = '₹1L';
+                if(inputAmount.value > 100000) {
+                    inputAmount.value = 25000;
+                    sliderAmount.value = 25000;
+                }
+            } else {
+                activeBg.style.transform = 'translateX(100%)';
+                modeLumpBtn.classList.replace('text-slate-500', 'text-brand-600');
+                modeSipBtn.classList.replace('text-brand-600', 'text-slate-500');
+                
+                labelAmount.innerText = 'Total Investment';
+                sliderAmount.max = 10000000; // 1 Crore
+                sliderAmount.step = 10000;
+                minAmountLabel.innerText = '₹500';
+                maxAmountLabel.innerText = '₹1Cr';
+                if(inputAmount.value < 10000) {
+                    inputAmount.value = 100000;
+                    sliderAmount.value = 100000;
+                }
+            }
+            updateSliderBackground(sliderAmount);
+            calculate();
+        };
+
+        // Initialize Donut Chart
+        const initChart = () => {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Total Invested', 'Est. Returns'],
+                    datasets: [{
+                        data: [50, 50], // Dummy initial data
+                        backgroundColor: ['#E2E8F0', '#3b82f6'],
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%', // Thinner ring for premium look
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            padding: 12,
+                            titleFont: { family: 'Inter', size: 13 },
+                            bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Core Calculation Logic
+        const calculate = () => {
+            const P = parseFloat(inputAmount.value) || 0;
+            const r = parseFloat(inputRate.value) || 0;
+            const t = parseFloat(inputTime.value) || 0;
+
+            let totalInvested = 0;
+            let expectedReturn = 0;
+            let totalValue = 0;
+
+            if (currentMode === 'sip') {
+                // SIP Calculation: M = P × ({[1 + i]^n - 1} / i) × (1 + i)
+                const i = r / 100 / 12; // monthly rate
+                const n = t * 12; // total months
+                totalInvested = P * n;
+                
+                if (i === 0) {
+                    totalValue = totalInvested;
+                } else {
+                    totalValue = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+                }
+            } else {
+                // Lumpsum Calculation: A = P(1+r/100)^t
+                totalInvested = P;
+                totalValue = P * Math.pow(1 + (r / 100), t);
+            }
+
+            expectedReturn = totalValue - totalInvested;
+            if(expectedReturn < 0) expectedReturn = 0;
+
+            // Calculate Absolute Return Percentage
+            let absoluteReturnPercentage = totalInvested > 0 ? (expectedReturn / totalInvested) * 100 : 0;
+
+            // Update DOM Values
+            displayInvested.innerText = formatCurrency(Math.round(totalInvested));
+            displayReturns.innerText = formatCurrency(Math.round(expectedReturn));
+            displayAbsoluteReturn.innerText = absoluteReturnPercentage.toFixed(1) + '%';
+            
+            // Update hidden total for chart center text plugin
+            hiddenTotal.innerText = formatCurrency(Math.round(totalValue));
+
+            // Update Chart Data
+            if (chartInstance) {
+                chartInstance.data.datasets[0].data = [Math.round(totalInvested), Math.round(expectedReturn)];
+                chartInstance.update();
+            }
+        };
+
+        // Initialize on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            calculate();
+        });
+
+    </script>
+</body>
+</html>
