@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derivatives — A Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- Layout shell ---------- */
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  /* ---------- Sidebar contents ---------- */
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1rem 1.15rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.35rem; font-size:.95rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+
+  /* ---------- Lifecycle steps ---------- */
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.92rem;}
+
+  /* ---------- Player chain ---------- */
+  .chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .chain .node{
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; padding:.55rem .8rem;
+    font-size:.82rem; font-weight:600; flex:1 1 130px; text-align:center;
+  }
+  .chain .arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.87rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.65rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  /* ---------- Card grid & CA cards ---------- */
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:.95rem;}
+  .ca-dates{display:flex; flex-wrap:wrap; align-items:stretch; gap:.4rem; margin:1rem 0;}
+  .date-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 130px;
+  }
+  .dc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .v-voluntary .dc-label{color:var(--teal);}
+  .v-choice .dc-label{color:var(--red);}
+  .dc-desc{display:block; font-size:.78rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35;}
+  .dc-arrow{align-self:center; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-top:.3rem;}
+  .ca-grid h4{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.1rem; padding:.75rem .95rem; background:var(--surface-2); border-radius:8px;
+    font-size:.86rem; color:var(--ink-soft);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.4rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Glossary ---------- */
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem;}
+  .g-item{padding:.85rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem; color:var(--brass); display:block; margin-bottom:.2rem;}
+  .g-def{font-size:.86rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--ink-soft);}
+  .legend-dot{width:12px; height:12px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.8rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+
+  /* ---------- Additions for Fixed Income Products doc ---------- */
+  .fact-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 140px;
+  }
+  .fc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .fc-desc{display:block; font-size:.8rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35; font-weight:600;}
+  .fact-row{display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0;}
+
+  .waterfall{list-style:none; margin:1.25rem 0; padding:0; counter-reset:wf;}
+  .waterfall li{
+    counter-increment:wf; position:relative; padding:.7rem 1rem .7rem 3rem; margin-bottom:.5rem;
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; font-size:.9rem;
+  }
+  .waterfall li::before{
+    content:counter(wf); position:absolute; left:.9rem; top:50%; transform:translateY(-50%);
+    width:1.6rem; height:1.6rem; border-radius:50%; background:var(--brass); color:var(--surface);
+    font-family:'IBM Plex Mono',monospace; font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.8rem;
+  }
+  .waterfall li b{display:block; color:var(--ink);}
+  .waterfall li span{color:var(--ink-soft); font-size:.82rem;}
+
+
+  /* ---------- Additions for Derivatives doc ---------- */
+  .payoff-badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:.66rem; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--teal-soft); color:var(--teal); margin-left:.4rem;
+  }
+  .payoff-badge.nonlinear{background:var(--red-soft); color:var(--red);}
+
+</style></head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Derivatives</p>
+        <p class="brand-sub">A Field Guide</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search products, terms…">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Foundations</p>
+      <a href="#what-is">What Is a Derivative</a>
+      <a href="#exchange-otc">Exchange-Traded vs OTC</a>
+      <a href="#isda">ISDA Master Agreement &amp; CSA</a>
+      <a href="#clearing">Central Clearing &amp; CCPs</a>
+      <a href="#margin">Margin &amp; the Uncleared Margin Rules</a>
+      <a href="#settlement-type">Physical vs Cash Settlement</a>
+      <a href="#trade-life">The Life of a Derivatives Trade</a>
+
+      <p class="toc-group-label">I · Linear (Forward-Type)</p>
+      <a href="#forward">Forward Contracts</a>
+      <a href="#future">Futures Contracts</a>
+      <a href="#fra">Forward Rate Agreements</a>
+      <a href="#irs">Interest Rate Swaps</a>
+      <a href="#ois">Overnight Index Swaps</a>
+      <a href="#basis-swap">Basis Swaps</a>
+      <a href="#xccy">Cross-Currency Swaps</a>
+      <a href="#asset-swap">Asset Swaps</a>
+
+      <p class="toc-group-label">II · Equity &amp; Commodity</p>
+      <a href="#eq-trs">Equity / Total Return Swaps</a>
+      <a href="#cfd">Contracts for Difference</a>
+      <a href="#comm-fut">Commodity Futures &amp; Forwards</a>
+      <a href="#comm-swap">Commodity Swaps</a>
+
+      <p class="toc-group-label">III · Options &amp; Optionality</p>
+      <a href="#vanilla">Vanilla Options</a>
+      <a href="#cap-floor">Caps &amp; Floors</a>
+      <a href="#collar">Collars</a>
+      <a href="#swaption">Swaptions</a>
+      <a href="#barrier">Barrier Options</a>
+      <a href="#asian">Asian Options</a>
+      <a href="#digital">Digital / Binary Options</a>
+      <a href="#lookback">Lookback &amp; Basket Options</a>
+
+      <p class="toc-group-label">IV · Credit Derivatives</p>
+      <a href="#cds">Single-Name CDS</a>
+      <a href="#cds-index">CDS Indices</a>
+      <a href="#credit-trs">Total Return Swaps (Credit)</a>
+      <a href="#cln">Credit Linked Notes</a>
+
+      <p class="toc-group-label">V · FX Derivatives</p>
+      <a href="#fx-fwd">FX Forwards</a>
+      <a href="#fx-swap">FX Swaps</a>
+      <a href="#ndf">Non-Deliverable Forwards</a>
+      <a href="#fx-opt">FX Options</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#compare">Comparison Tables</a>
+      <a href="#blowups">Notable Derivatives Episodes</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Study material · Part 4 · Investment Banking Operations</span>
+      <h1>Derivatives, Every Angle</h1>
+      <p class="lead">The full landscape — linear (forwards, futures, swaps), optional (vanilla and exotic), credit, and FX — plus the operational infrastructure underneath all of it: ISDA documentation, clearing, margin, and how a derivative trade actually moves from execution to maturity. This is the layer that sits on top of the cash instruments covered in the earlier parts of this study set.</p>
+      <div class="hero-tags">
+        <span>28 instrument types</span>
+        <span>ISDA / CSA / UMR explained</span>
+        <span>Central clearing mechanics</span>
+        <span>5 real derivatives blow-ups</span>
+      </div>
+    </header>
+
+    <!-- ============ WHAT IS A DERIVATIVE ============ -->
+    <section id="what-is">
+      <h2 class="section-title">What is a derivative?</h2>
+      <p>A derivative is a financial contract whose value is <em>derived</em> from the price of something else — an underlying asset, rate, or index — rather than having independent value of its own. The underlying can be almost anything with an observable price: a stock, a bond, an interest rate, a currency pair, a commodity, or even another derivative.</p>
+      <div class="callout">
+        <h4>Notional vs. market value — the distinction interviewers love</h4>
+        <p>The <strong>notional amount</strong> is the reference size a derivative's payments are calculated on — it's not an amount either party actually owes. The <strong>market value</strong> (fair value, or mark-to-market value) is what the contract is actually worth today, which is typically a small fraction of notional — sometimes even zero at inception for a swap, since both legs are priced to be equal in value at the start. Headline figures for "the size of the derivatives market" almost always quote gross notional, which vastly overstates the actual economic risk outstanding.</p>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <caption>Linear vs. non-linear payoff</caption>
+        <thead><tr><th>Type</th><th>Payoff behaviour</th><th>Examples in this guide</th></tr></thead>
+        <tbody>
+          <tr><td><span class="payoff-badge">Linear</span></td><td>Value changes proportionally, symmetrically, with the underlying — equal-sized gains and losses for equal-sized moves</td><td>Forwards, futures, swaps, FRAs</td></tr>
+          <tr><td><span class="payoff-badge nonlinear">Non-linear</span></td><td>Asymmetric payoff — the buyer's downside is capped (at the premium paid) while upside is not, or vice versa for the seller</td><td>Options and every exotic-option variant</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ EXCHANGE VS OTC ============ -->
+    <section id="exchange-otc">
+      <h2 class="section-title">Exchange-traded vs. OTC</h2>
+      <p>This is the single most consequential structural distinction in the whole derivatives landscape — it determines counterparty risk, price transparency, and the entire operational workflow around a trade.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Exchange-Traded</th><th>OTC (Over-the-Counter)</th></tr></thead>
+        <tbody>
+          <tr><td>Standardization</td><td>Fully standardized contract size, expiry, and terms</td><td>Fully negotiable — customized to the two counterparties' needs</td></tr>
+          <tr><td>Counterparty</td><td>A central counterparty (CCP), via novation</td><td>Bilateral by default; increasingly cleared for standardized products</td></tr>
+          <tr><td>Price transparency</td><td>High — publicly quoted, continuous</td><td>Lower — dealer-quoted, less pre-trade transparency</td></tr>
+          <tr><td>Margining</td><td>Daily, mandatory, via the exchange's clearing house</td><td>Per the governing CSA's terms (if any exist at all)</td></tr>
+          <tr><td>Typical examples</td><td>Futures, listed options</td><td>Swaps, forwards, most exotic options, CDS</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ ISDA ============ -->
+    <section id="isda">
+      <h2 class="section-title">The ISDA Master Agreement &amp; CSA</h2>
+      <p>Virtually every OTC derivative relationship between two institutions is governed by a single <strong>ISDA Master Agreement</strong> — a standardized legal framework, negotiated once between two counterparties, that then governs every individual trade ("confirmation") they do with each other. Without it, every single swap or forward would need its own full legal negotiation.</p>
+      <div class="ca-grid">
+        <div><h4>What the Master Agreement does</h4><p>Sets out events of default, termination rights, and — critically — <strong>close-out netting</strong>: if one party defaults, every outstanding trade between the two parties collapses into a single net amount rather than being settled trade-by-trade. This single feature dramatically reduces gross exposure between two active counterparties.</p></div>
+        <div><h4>The CSA (Credit Support Annex)</h4><p>The collateral annex to the Master Agreement, specifying how margin is exchanged to cover current mark-to-market exposure — thresholds, minimum transfer amounts, eligible collateral types, and calculation frequency. This is what makes bilateral OTC trading meaningfully safer than an unmargined handshake deal.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ CLEARING ============ -->
+    <section id="clearing">
+      <h2 class="section-title">Central clearing &amp; CCPs</h2>
+      <p>Following the 2008 financial crisis, the G20's 2009 Pittsburgh commitment required standardized OTC derivatives to move to central clearing wherever possible — a structural shift that reshaped derivatives operations industry-wide.</p>
+      <div class="ca-grid">
+        <div><h4>Novation</h4><p>When a trade is cleared, the original bilateral trade is legally replaced ("novated") with two new trades — each original counterparty now faces the CCP instead of facing each other directly. The CCP becomes the buyer to every seller and the seller to every buyer.</p></div>
+        <div><h4>Why it helps</h4><p>Mutualized default risk (via the CCP's default fund and loss-allocation waterfall), multilateral netting across all participants rather than just two, and standardized daily margining — collectively reducing systemic bilateral counterparty risk across the market.</p></div>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-soft)">Major CCPs by product: <strong>LCH</strong> (interest rate swaps, London), <strong>CME</strong> (futures and increasingly OTC clearing, Chicago), <strong>ICE Clear Credit</strong> (CDS). A trade that isn't standardized enough to clear — most exotic options, for instance — remains bilateral and CSA-margined instead.</p>
+    </section>
+
+    <!-- ============ MARGIN & UMR ============ -->
+    <section id="margin">
+      <h2 class="section-title">Margin: Initial vs. Variation, and the Uncleared Margin Rules</h2>
+      <div class="ca-grid">
+        <div><h4>Variation Margin (VM)</h4><p>Collateral posted to cover the current mark-to-market change in a position's value — settled daily, or even intraday for cleared trades, reflecting gains and losses that have already happened.</p></div>
+        <div><h4>Initial Margin (IM)</h4><p>Collateral posted upfront and held — typically segregated with a third-party custodian — to cover the <em>potential future</em> exposure that could arise in the time it takes to close out a defaulted position. A buffer against the risk that markets move sharply between the last VM exchange and actually reacting to a default.</p></div>
+      </div>
+      <div class="callout red">
+        <h4>Uncleared Margin Rules (UMR)</h4>
+        <p>The same post-2008 G20/BCBS-IOSCO reform effort extended margin requirements to bilateral, non-centrally-cleared derivatives too — not just cleared ones. Variation margin became mandatory for all market participants by 2017; initial margin phased in across six progressive phases from September 2016 through the final phase in September 2022, which alone brought over 1,000 additional smaller counterparties into scope. Whether a firm is in scope for a given phase is determined by its <strong>Average Aggregate Notional Amount (AANA)</strong> of non-centrally-cleared derivatives — the higher a firm's uncleared derivatives activity, the earlier it was brought into scope.</p>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-soft)">Operationally, UMR was a major buildout across the industry: firms newly in scope needed segregated custodian accounts, new IM-specific collateral documentation, and daily initial-margin calculation capability — for trades that, by definition, would never be centrally cleared.</p>
+    </section>
+
+    <!-- ============ SETTLEMENT TYPE ============ -->
+    <section id="settlement-type">
+      <h2 class="section-title">Physical vs. cash settlement</h2>
+      <div class="ca-grid">
+        <div><h4>Physical settlement</h4><p>The actual underlying asset changes hands — a bond delivered against a bond forward, currency actually delivered under an FX forward, shares delivered upon an option's exercise. Requires the full custody and delivery infrastructure covered in Parts I–III of this study set.</p></div>
+        <div><h4>Cash settlement</h4><p>Only the monetary difference between the contract price and the market price at settlement changes hands — no underlying asset moves at all. A simple payment, operationally far lighter than physical delivery.</p></div>
+      </div>
+      <p>Which one applies is specified in the trade's confirmation and documentation at inception, and the choice matters hugely operationally — it's the difference between running a full securities settlement process and simply moving cash.</p>
+    </section>
+
+    <!-- ============ TRADE LIFECYCLE ============ -->
+    <section id="trade-life">
+      <h2 class="section-title">The life of a derivatives trade</h2>
+      <p>A derivatives-specific parallel to the corporate action lifecycle covered in Part 2 of this study set — the same instinct for "what actually happens, in order" applies here too.</p>
+      <ol class="lifecycle">
+        <li><h4>1. Trade Execution</h4><p>Agreed bilaterally, via a broker, or on an electronic platform — for many standardized swaps, execution is mandated onto a <strong>Swap Execution Facility (SEF)</strong> under post-Dodd-Frank rules.</p></li>
+        <li><h4>2. Confirmation</h4><p>The economic terms are matched and legally confirmed between both counterparties (or against the CCP, if cleared) — typically same-day or T+1 for standardized products.</p></li>
+        <li><h4>3. Clearing <span style="font-weight:400;color:var(--ink-faint);font-size:.8rem">(if applicable)</span></h4><p>The trade is novated to a CCP, replacing bilateral exposure on both sides with exposure to the clearing house instead.</p></li>
+        <li><h4>4. Collateralization</h4><p>Initial margin is posted where required, and variation margin begins being exchanged — daily for most products — as the trade's mark-to-market value moves.</p></li>
+        <li><h4>5. Lifecycle Events</h4><p>Rate resets (floating-rate fixings), coupon or premium payments, corporate-action-driven adjustments (an equity option's strike adjusts for a stock split), novations (transferring the trade to a new counterparty), and compressions (netting down offsetting trades to reduce gross notional outstanding without changing net risk).</p></li>
+        <li><h4>6. Maturity, Exercise, or Early Termination</h4><p>The trade reaches its final cash flow, an option is exercised or expires worthless, or the position is closed out early — via an offsetting trade, a negotiated termination, or a counterparty default.</p></li>
+      </ol>
+    </section>
+    <!-- ============ PART I: LINEAR ============ -->
+    <div class="part-heading"><h2>Part I — Linear (Forward-Type) Derivatives</h2><span class="part-count">8 instruments</span></div>
+    <section id="linear-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="forward">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Forward Contracts</h3></div><span class="ca-code">OTC · Bilateral</span></div>
+          <p class="ca-def">A bilateral OTC agreement to buy or sell an underlying at a fixed price on a specified future date — the simplest derivative structure. No cash changes hands until settlement; unlike an option there's no premium, and unlike a future there's no daily margining.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical or cash, at maturity</span></div>
+            <div class="fact-chip"><span class="fc-label">Standardization</span><span class="fc-desc">Fully customized</span></div>
+            <div class="fact-chip"><span class="fc-label">Counterparty risk</span><span class="fc-desc">Bilateral</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Fully negotiable terms (notional, underlying, settlement date, price), typically documented under an ISDA Master Agreement. No upfront payment; value moves with the underlying's price relative to the locked-in forward price.</p></div>
+            <div><h4>Risk Profile</h4><p>Full bilateral counterparty credit risk — with no CCP and no daily margin exchange (absent a CSA), a forward carries meaningful "will they actually pay me" risk that a cleared future doesn't.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>FX forwards (Part V) are the highest-volume forward type, used extensively by corporates to hedge known future foreign-currency cash flows.</p>
+        </article>
+
+        <article class="ca-card" id="future">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Futures Contracts</h3></div><span class="ca-code">Exchange-Traded</span></div>
+          <p class="ca-def">The exchange-traded, standardized version of a forward — same basic idea, but with standardized sizes and expiries, and a central counterparty (CCP) that becomes the buyer to every seller and seller to every buyer, eliminating bilateral counterparty risk.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">Exchange</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical or cash, standardized dates</span></div>
+            <div class="fact-chip"><span class="fc-label">Standardization</span><span class="fc-desc">Fully standardized</span></div>
+            <div class="fact-chip"><span class="fc-label">Counterparty risk</span><span class="fc-desc">Novated to CCP</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Marked-to-market daily — gains and losses settle in cash every day through the exchange's clearing house, rather than accumulating until maturity. This daily variation margin exchange is the defining operational difference from a forward.</p></div>
+            <div><h4>Risk Profile</h4><p>Minimal counterparty risk given CCP novation and daily margining, but real liquidity/margin-call risk — a large adverse move requires posting more margin immediately, and failing a call triggers forced liquidation.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Nick Leeson's unauthorized, concentrated trading in Nikkei 225 futures and options at Barings Bank's Singapore office produced losses of roughly $1.3 billion, collapsing the 233-year-old bank in 1995 — still one of the most-cited lessons on position limits and separating trading from settlement duties.</p>
+        </article>
+
+        <article class="ca-card" id="fra">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Forward Rate Agreements (FRAs)</h3></div><span class="ca-code">OTC · Rate Lock</span></div>
+          <p class="ca-def">An OTC contract to lock in an interest rate for a specific future period on a notional amount — the simplest possible interest rate derivative, and conceptually the building block for an interest rate swap (which is essentially a strip of FRAs).</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash, single date</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A future interest rate period</span></div>
+            <div class="fact-chip"><span class="fc-label">Counterparty risk</span><span class="fc-desc">Bilateral</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>At settlement, the difference between the agreed fixed FRA rate and the actual reference rate observed that day is settled in cash on the notional — no principal ever moves, only the interest differential.</p></div>
+            <div><h4>Risk Profile</h4><p>Bilateral counterparty risk like a forward, but typically low exposure relative to size given cash-only settlement of just the rate differential.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Corporate treasurers use FRAs extensively to hedge a known future borrowing or lending rate — for instance, locking in the rate on a loan drawdown expected in three months.</p>
+        </article>
+
+        <article class="ca-card" id="irs">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Interest Rate Swaps (IRS)</h3></div><span class="ca-code">Largest Derivatives Market</span></div>
+          <p class="ca-def">An agreement to exchange a stream of fixed-rate interest payments for a stream of floating-rate payments (or vice versa) on a common notional over an agreed term — by outstanding notional, the single largest derivatives market in the world.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC, largely CCP-cleared</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Fixed vs floating rate</span></div>
+            <div class="fact-chip"><span class="fc-label">Notional</span><span class="fc-desc">Largest by far</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>At each payment date, only the net difference between legs is exchanged. The floating leg resets against a reference rate — now predominantly SOFR/€STR/SONIA post-LIBOR. Since Dodd-Frank/EMIR, most standardized IRS are mandatorily cleared through a CCP.</p></div>
+            <div><h4>Risk Profile</h4><p>Interest-rate risk mirrors an equivalent fixed-rate bond for the fixed-rate payer; counterparty risk is now largely mitigated for cleared trades via CCP novation, though legacy/non-standard swaps can remain bilateral and CSA-margined.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A corporate borrower with a floating-rate loan commonly enters a pay-fixed/receive-floating IRS to convert its exposure to a predictable fixed rate — one of the most common corporate hedging applications of any derivative.</p>
+        </article>
+
+        <article class="ca-card" id="ois">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Overnight Index Swaps (OIS)</h3></div><span class="ca-code">Discounting Benchmark</span></div>
+          <p class="ca-def">A swap exchanging a fixed rate for a floating rate based on the compounded overnight rate (SOFR, €STR, SONIA) over the term — distinct from a standard IRS, which typically references a term rate. OIS has become the dominant reference for discounting derivative cash flows industry-wide.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC, CCP-cleared</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Compounded overnight rate vs fixed</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Discounting benchmark</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>The floating leg compounds the overnight rate daily over the period rather than resetting to a forward-looking term rate — a structural difference central to the industry-wide shift to "risk-free rate" (RFR) benchmarks after LIBOR's cessation.</p></div>
+            <div><h4>Risk Profile</h4><p>Very low credit-spread risk given the overnight rate closely tracks central bank policy; used for precise short-term rate hedging and, critically, as the standard discount curve for valuing collateralized derivatives ("OIS discounting").</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>The industry-wide shift to OIS discounting for collateralized derivatives after 2008 was a major valuation methodology change, since posting cash collateral overnight effectively funds a position at the overnight rate, not a term rate.</p>
+        </article>
+
+        <article class="ca-card" id="basis-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Basis Swaps</h3></div><span class="ca-code">Float-vs-Float</span></div>
+          <p class="ca-def">A swap exchanging two different floating-rate exposures against each other — for instance, 3-month SOFR versus 6-month SOFR — rather than fixed-for-floating like a standard IRS.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Two different floating reference rates</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Reference-rate mismatch management</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Both legs float, each resetting against its own reference rate and tenor; the swap isolates and prices purely the spread ("basis") between the two floating exposures.</p></div>
+            <div><h4>Risk Profile</h4><p>Lower interest-rate risk than a fixed-floating IRS since both legs move with rates; the primary risk is the basis itself widening or narrowing unexpectedly.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A bank funding itself with 3-month liabilities but lending on a 6-month-reset basis has a natural mismatch a basis swap can hedge precisely, without taking outright interest-rate direction risk.</p>
+        </article>
+
+        <article class="ca-card" id="xccy">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Cross-Currency Swaps</h3></div><span class="ca-code">Principal + Interest, 2 Currencies</span></div>
+          <p class="ca-def">A swap exchanging interest payments — and, unlike most swaps, principal — in two different currencies over the trade's life, used to convert a liability or asset from one currency into another on a fully hedged basis.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic + principal exchange</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Interest in two currencies</span></div>
+            <div class="fact-chip"><span class="fc-label">Notional</span><span class="fc-desc">Exchanged at start &amp; end</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Principal is exchanged at inception (at the prevailing spot rate) and re-exchanged at maturity at that <em>same original rate</em>, not the future spot rate — this re-exchange is what actually hedges the FX risk on the principal itself, distinguishing it from a simple FX forward.</p></div>
+            <div><h4>Risk Profile</h4><p>Meaningful counterparty risk given the principal exchange at both ends of a potentially long-dated trade; also carries cross-currency basis risk — pricing deviating from simple covered interest rate parity, reflecting funding-currency demand imbalances.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A European corporate issuing a USD bond to access deeper US capital markets will typically enter a cross-currency swap to convert proceeds and coupon obligations back into EUR, eliminating FX risk on the whole financing.</p>
+        </article>
+
+        <article class="ca-card" id="asset-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Asset Swaps</h3></div><span class="ca-code">Bond + Swap Package</span></div>
+          <p class="ca-def">A package combining a fixed-rate bond with an interest rate swap that converts the bond's fixed coupon into a floating-rate cash flow — letting an investor hold a specific bond's credit exposure while receiving a floating return.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A specific bond's cash flows</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Converts bond economics to floating</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>The investor buys the bond and simultaneously swaps to pay the bond's fixed coupon and receive floating plus a spread (the "asset swap spread") — a widely used, standardized measure of a bond's credit risk relative to the swap curve.</p></div>
+            <div><h4>Risk Profile</h4><p>The investor retains the bond's full credit/default risk (the swap doesn't protect against that), while interest-rate risk is effectively hedged out by the swap leg.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>The asset swap spread is one of the most common ways credit traders quote and compare bond value across different coupons and maturities, isolating credit risk from distortions a simple yield comparison can introduce.</p>
+        </article>
+
+      </div>
+    </section>
+    <!-- ============ PART II: EQUITY & COMMODITY ============ -->
+    <div class="part-heading"><h2>Part II — Equity &amp; Commodity Derivatives</h2><span class="part-count">4 instruments</span></div>
+    <section id="eqcomm-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="eq-trs">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Equity / Total Return Swaps</h3></div><span class="ca-code">Synthetic Exposure</span></div>
+          <p class="ca-def">A swap where one party pays the total return (price appreciation plus dividends) of a stock, basket, or index, and receives a floating funding rate in return — giving the receiver synthetic, leveraged exposure without ever owning the underlying directly.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A stock, basket, or index's total return</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Synthetic exposure, leverage</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>The "return payer" (typically a prime broker) usually hedges by actually buying the underlying shares, so the swap effectively finances the counterparty's economic position without it appearing on the counterparty's own books or disclosure filings.</p></div>
+            <div><h4>Risk Profile</h4><p>For the receiver, full leveraged market risk plus counterparty risk on the bank; for the bank, counterparty/margin risk on the client — severe if the position is highly concentrated and the client can't meet margin calls.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Archegos Capital Management used total return swaps with several prime brokers to build roughly $20 billion of concentrated, leveraged, largely undisclosed exposure to a handful of stocks. When positions fell in March 2021, forced liquidation produced roughly $10 billion of combined bank losses — Credit Suisse alone lost about $5.5 billion — one of the starkest illustrations of how synthetic exposure can hide real economic risk from regulators and even other counterparties.</p>
+        </article>
+
+        <article class="ca-card" id="cfd">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Contracts for Difference (CFDs)</h3></div><span class="ca-code">Retail Leveraged</span></div>
+          <p class="ca-def">An OTC contract paying the difference between an asset's price at opening and closing, letting a trader take leveraged directional views on virtually any asset — equities, indices, commodities, FX — without ever owning the underlying.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC, retail-focused</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash only</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Almost any tradable asset</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Leveraged directional exposure</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Cash-settled only, with the provider (typically a specialist CFD broker) as counterparty to every client position; margined similarly to futures with daily or continuous mark-to-market.</p></div>
+            <div><h4>Risk Profile</h4><p>High leverage magnifies gains and losses; CFDs are banned or heavily restricted for retail investors in several jurisdictions, including the US, specifically because of the leverage and total-loss risk for unsophisticated participants.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>CFDs are a dominant retail trading product in the UK, Australia, and much of Europe, precisely because they're prohibited for US retail investors — a clear illustration of how derivatives regulation varies sharply by jurisdiction.</p>
+        </article>
+
+        <article class="ca-card" id="comm-fut">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Commodity Futures &amp; Forwards</h3></div><span class="ca-code">Physical or Cash</span></div>
+          <p class="ca-def">A future or forward on a physical commodity — oil, natural gas, gold, wheat, and hundreds of other underlyings — used by producers and consumers to lock in prices, and by speculators to take a view on price direction.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">Exchange (futures) or OTC (forwards)</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical or cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">Energy, metals, agriculture</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Hedging &amp; speculation</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Exchange-traded commodity futures are standardized and marked-to-market daily like financial futures; physical delivery is contractually possible but most contracts are closed out or rolled before expiry rather than actually delivered.</p></div>
+            <div><h4>Risk Profile</h4><p>Genuine roll risk — the cost or benefit of rolling an expiring contract into the next month's, driven by whether the curve is in contango (upward-sloping) or backwardation (downward-sloping), which can materially affect returns even if spot is flat.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Metallgesellschaft's US oil subsidiary lost roughly $1.3 billion in the early 1990s from a large short-dated futures hedging programme against long-term supply contracts, when the curve moved from backwardation into contango and generated large, unexpected margin calls the parent could not sustain — a classic lesson in roll risk and liquidity mismatch between a hedge's cash-flow timing and the exposure it's meant to protect.</p>
+        </article>
+
+        <article class="ca-card" id="comm-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Commodity Swaps</h3></div><span class="ca-code">Multi-Period Price Lock</span></div>
+          <p class="ca-def">A swap exchanging a fixed commodity price for a floating (market-referenced) price over multiple periods — letting a producer or consumer lock in an effective price across a longer horizon than a single futures contract typically covers.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A commodity price index vs fixed</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Multi-period price hedging</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Settled in cash only against a published commodity price index — no physical delivery obligation at all, unlike a forward. Commonly used alongside, or instead of, a strip of futures contracts.</p></div>
+            <div><h4>Risk Profile</h4><p>Counterparty risk (OTC, though increasingly cleared for standardized commodities) plus basis risk if the referenced index doesn't perfectly match the hedger's actual physical delivery point or grade.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>An airline hedging jet fuel costs, or a mining company hedging copper output, will commonly use a series of commodity swaps to lock in effective prices across future quarters as part of a broader hedging programme.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART III: OPTIONS ============ -->
+    <div class="part-heading"><h2>Part III — Options &amp; Optionality</h2><span class="part-count">8 instruments</span></div>
+    <section id="options-section">
+      <div class="card-grid">
+
+        <article class="ca-card v-choice" id="vanilla">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Vanilla Options (Calls &amp; Puts)</h3></div><span class="ca-code">American / European</span></div>
+          <p class="ca-def">A contract giving the buyer the right, but not the obligation, to buy (call) or sell (put) the underlying at a fixed strike, for an upfront premium — the defining feature separating options from every linear derivative above: the payoff is asymmetric, not symmetric.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">Exchange or OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical or cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Style</span><span class="fc-desc">American (any time) or European (expiry only)</span></div>
+            <div class="fact-chip"><span class="fc-label">Premium</span><span class="fc-desc">Paid upfront by buyer</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>American-style options can be exercised any time up to expiry; European-style only at expiry. Buyer's maximum loss is capped at the premium; the seller's (writer's) risk is theoretically unlimited (call) or very large (put) — why uncovered option writing carries much higher margin than buying.</p></div>
+            <div><h4>Risk Profile</h4><p>For the buyer: limited, known downside with asymmetric upside. For the seller: the reverse — limited upside against potentially large downside, a fundamentally different risk character from buying.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Equity index options (on the S&amp;P 500, for instance) are among the most liquid derivatives in the world, used simultaneously for hedging, income generation (covered call writing), and outright speculation.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="cap-floor">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Interest Rate Caps &amp; Floors</h3></div><span class="ca-code">Strip of Rate Options</span></div>
+          <p class="ca-def">A cap is a strip of call options on an interest rate (caplets), paying out whenever the reference rate exceeds the strike on each reset date — protecting a floating-rate borrower against rates rising, while letting them benefit if rates fall. A floor is the mirror image (floorlets), protecting a lender against rates falling too low.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic cash, if in-the-money</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Strip of interest rate options</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">One-sided rate protection</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Priced as a portfolio of individual caplets/floorlets, one per reset period across the deal's life, each valued like an individual option on the rate for that specific future period.</p></div>
+            <div><h4>Risk Profile</h4><p>Buyer's risk capped at the premium paid — a much cheaper way to get one-sided rate protection than an outright swap, since the buyer retains the upside if rates move favourably.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A property developer with a floating-rate construction loan will often buy an interest rate cap rather than swap into fixed, protecting against a rate spike during construction while still benefiting if rates fall.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="collar">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Interest Rate Collars</h3></div><span class="ca-code">Cap + Sold Floor</span></div>
+          <p class="ca-def">A combination of buying a cap and simultaneously selling a floor (or vice versa) — the premium received from selling the floor partially or entirely offsets the cap's premium, creating a "collar" that locks the effective rate into a band.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Buy a cap + sell a floor</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Low/zero-cost rate protection</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Struck so cap and floor premiums approximately net to zero ("zero-cost collar") is a common goal, though the strikes — and the width of the resulting band — adjust to hit that target.</p></div>
+            <div><h4>Risk Profile</h4><p>Gives up some upside benefit of falling rates (the sold floor obligates a payment if rates fall below its strike) in exchange for cheaper, often free, protection against rising rates.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Corporate treasurers frequently use zero-cost collars specifically because "no premium outlay" is an easy internal approval to secure, even though it means genuinely giving up some upside if rates move favourably.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="swaption">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Swaptions</h3></div><span class="ca-code">Option on a Swap</span></div>
+          <p class="ca-def">An option granting the right, but not the obligation, to enter a specified interest rate swap at a pre-agreed fixed rate on a future date. A "payer swaption" is the right to become the fixed-rate payer (bet on/hedge rising rates); a "receiver swaption" the right to become the fixed-rate receiver (bet on/hedge falling rates).</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Entry into a swap, or cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">An interest rate swap</span></div>
+            <div class="fact-chip"><span class="fc-label">Style</span><span class="fc-desc">Payer or Receiver</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Priced using an interest-rate volatility model referencing the underlying swap curve; upon exercise, the holder enters the underlying swap directly or receives cash equal to the swap's value, depending on documentation.</p></div>
+            <div><h4>Risk Profile</h4><p>Buyer's risk limited to premium paid, like a vanilla option; the underlying is itself a derivative, so pricing embeds both rate-level risk and rate-volatility risk.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A company planning to issue a fixed-rate bond in six months, worried rates might rise before pricing, can buy a payer swaption to lock in protection against that scenario without committing to any swap today.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="barrier">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Barrier Options</h3></div><span class="ca-code">Knock-In / Knock-Out</span></div>
+          <p class="ca-def">An option whose existence depends on the underlying touching (or not touching) a specified barrier price during its life — a "knock-in" only comes into existence if the barrier is hit; a "knock-out" is extinguished if the barrier is hit.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC (mostly)</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash or physical, conditional</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Vanilla option + a trigger price</span></div>
+            <div class="fact-chip"><span class="fc-label">Category</span><span class="fc-desc">Exotic / path-dependent</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Cheaper than an equivalent vanilla option since the payoff is conditional — the seller takes on a narrower range of scenarios; requires continuous or discretely observed monitoring against the barrier throughout the option's life.</p></div>
+            <div><h4>Risk Profile</h4><p>Path-dependency introduces discontinuous ("jump") value changes exactly at the barrier, creating hedging challenges for the seller right around that price — sometimes called "barrier risk" or "pin risk" near the trigger.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A knock-out barrier option is commonly used by a corporate wanting cheaper FX hedging, willing to accept the protection disappears entirely if the currency moves favourably past a certain point.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="asian">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Asian Options</h3></div><span class="ca-code">Average Price</span></div>
+          <p class="ca-def">An option whose payoff depends on the average price of the underlying over a specified period, rather than its price at a single point — smoothing out the effect of any single day's price spike or dip.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Payoff based on an average price</span></div>
+            <div class="fact-chip"><span class="fc-label">Category</span><span class="fc-desc">Exotic / path-dependent</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Averaging can apply to the underlying's price ("average rate") or the strike used in the payoff ("average strike"); typically cheaper than an equivalent vanilla option since averaging reduces effective volatility.</p></div>
+            <div><h4>Risk Profile</h4><p>Lower volatility exposure than a vanilla option given the smoothing effect — a natural fit for hedging a cash flow that itself accrues gradually over a period rather than at one point in time.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A commodity importer paying for shipments continuously through a quarter will often use an Asian option to hedge its average purchase price, matching the hedge's payoff to its actual, spread-out cash flow.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="digital">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Digital / Binary Options</h3></div><span class="ca-code">All-or-Nothing</span></div>
+          <p class="ca-def">An option paying a fixed, pre-agreed cash amount if the underlying is above (or below) the strike at expiry, and nothing otherwise — an "all-or-nothing" payoff, unlike a vanilla option's payoff, which scales continuously with how far in-the-money it finishes.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC &amp; some exchange</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash, fixed amount</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">All-or-nothing payoff</span></div>
+            <div class="fact-chip"><span class="fc-label">Category</span><span class="fc-desc">Exotic</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Priced based on the probability of finishing in-the-money, rather than the magnitude of how far past the strike it might finish, since the payoff doesn't scale with magnitude at all.</p></div>
+            <div><h4>Risk Profile</h4><p>Extreme "pin risk" right at the strike near expiry — a tiny price move can be the entire difference between full payout and zero, making these notoriously difficult to hedge cleanly right around expiry.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Retail-marketed "binary options" platforms — promising a fixed payout on a simple yes/no market bet — have faced extensive regulatory restriction and outright bans in several jurisdictions due to poor risk disclosure to unsophisticated traders.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="lookback">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Lookback &amp; Basket Options</h3></div><span class="ca-code">Path- / Correlation-Dependent</span></div>
+          <p class="ca-def">A lookback option's payoff is based on the most favourable price the underlying reached at any point during its life — letting the holder "look back" and effectively exercise at the optimal historical price. A basket option's payoff instead depends on a weighted combination of several underlyings rather than just one.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Payoff on best/worst price, or a basket</span></div>
+            <div class="fact-chip"><span class="fc-label">Category</span><span class="fc-desc">Exotic</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Lookback options price significantly higher than vanilla equivalents, since the holder is guaranteed the single best outcome across the whole period; basket options are typically cheaper than buying options on each underlying separately, since diversification reduces overall volatility.</p></div>
+            <div><h4>Risk Profile</h4><p>Lookbacks carry the highest premium cost of the exotics covered here, reflecting the seller's worst-case exposure; baskets carry correlation risk specifically — value sensitive to how the underlyings move together, not just each one's own volatility.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Basket options are commonly used to hedge a portfolio's exposure to a defined group of related assets — a handful of correlated currencies, or a small custom equity basket — more cost-effectively than hedging each position individually.</p>
+        </article>
+
+      </div>
+    </section>
+    <!-- ============ PART IV: CREDIT ============ -->
+    <div class="part-heading"><h2>Part IV — Credit Derivatives</h2><span class="part-count">4 instruments</span></div>
+    <section id="credit-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="cds">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Single-Name CDS</h3></div><span class="ca-code">Insurance-Like</span></div>
+          <p class="ca-def">A contract where the protection buyer pays a periodic premium (the "CDS spread") to the protection seller, who agrees to compensate the buyer if a specified credit event (default, bankruptcy, or a defined restructuring) occurs on a specific reference entity's debt — functionally, insurance against a specific issuer defaulting.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC, increasingly cleared</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Auction-based (post-2009)</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A specific issuer's credit risk</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Insurance-like</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Following a credit event, settlement today is almost always via an industry-standard ISDA credit event auction, establishing a market recovery price used to cash-settle all outstanding CDS on that entity — replacing the older, operationally cumbersome physical-delivery method.</p></div>
+            <div><h4>Risk Profile</h4><p>For the protection seller, effectively a leveraged short position in the reference entity's credit — potentially unlimited exposure relative to premium received if a major default occurs; a large concentrated net-short CDS book can create systemic risk disproportionate to the seller's capital.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>CDS spreads are among the most closely watched real-time indicators of a company's or sovereign's perceived credit risk, often reacting faster to negative news than the underlying bond's own price.</p>
+        </article>
+
+        <article class="ca-card" id="cds-index">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>CDS Indices (CDX / iTraxx)</h3></div><span class="ca-code">Basket Credit Exposure</span></div>
+          <p class="ca-def">A standardized CDS contract referencing a basket of typically 100–125 investment-grade or high-yield corporate names rather than a single issuer — CDX covers North American and EM names, iTraxx covers European and Asian names, with a new "series" issued roughly every six months.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC, standardized, liquid</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">~100–125 reference entities</span></div>
+            <div class="fact-chip"><span class="fc-label">Series</span><span class="fc-desc">New series roughly every 6 months</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Broad credit exposure/hedging</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Functions like a single CDS on the whole basket — the buyer pays a standardized coupon and is compensated pro-rata if any constituent defaults, with that name then removed going forward; far more liquid than most single-name CDS.</p></div>
+            <div><h4>Risk Profile</h4><p>Diversified credit risk across the basket rather than concentrated single-name risk, but aggregate notional can still reach a size where one large position materially distorts pricing and liquidity across the underlying constituents.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>JPMorgan's Chief Investment Office, run by trader Bruno Iksil ("the London Whale"), built an outsized position in the CDX.NA.IG.9 index in 2012 that grew so large it distorted the index's own pricing relative to its constituents; unwinding it produced losses that grew from an initially disclosed $2 billion to roughly $6.2 billion in total.</p>
+        </article>
+
+        <article class="ca-card" id="credit-trs">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Total Return Swaps (Credit)</h3></div><span class="ca-code">Synthetic Bond/Loan Exposure</span></div>
+          <p class="ca-def">The fixed income counterpart to the equity TRS in Part II — one party pays the total return (price change plus coupon income) of a bond or loan, and receives a floating funding rate, giving the receiver synthetic exposure without directly owning or funding the underlying.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Periodic net cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A bond or loan's total return</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Synthetic credit exposure</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Commonly used by leveraged credit investors to gain exposure to loans or bonds that might be operationally difficult or capital-inefficient to hold directly, effectively financing the position through the swap counterparty.</p></div>
+            <div><h4>Risk Profile</h4><p>Combines the underlying credit's default/spread risk with counterparty risk on the swap provider — the same fundamental "hidden leverage" characteristics that made the equity TRS structure so consequential in the Archegos case.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Total return swaps on leveraged loans let credit hedge funds get loan-like exposure without the operational burden of direct loan ownership (assignment processes, agency notices) — a structure that grew substantially alongside the CLO market.</p>
+        </article>
+
+        <article class="ca-card" id="cln">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Credit Linked Notes (CLNs)</h3></div><span class="ca-code">Funded Credit Derivative</span></div>
+          <p class="ca-def">A funded credit derivative structured as a bond — the investor buys the note (paying full principal upfront) and receives an enhanced coupon in exchange for taking on the credit risk of a specified reference entity; a credit event reduces or forfeits the investor's principal.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">Issued as securities (funded)</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Principal at risk</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">A reference entity's credit</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Bond + embedded CDS</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Economically equivalent to buying a risk-free bond and simultaneously selling CDS protection on the reference entity, packaged into a single security — useful for investors who can't or don't want to enter derivatives directly but can buy bonds.</p></div>
+            <div><h4>Risk Profile</h4><p>Full principal at risk if the reference entity suffers a credit event; the "funded" structure mainly changes who bears counterparty risk on whom, not the fundamental credit exposure itself.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>CLNs are frequently used by banks to transfer credit risk off their balance sheets while raising funding at the same time — a structure that ties directly back to the CLOs covered in the Fixed Income Products guide.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART V: FX ============ -->
+    <div class="part-heading"><h2>Part V — FX Derivatives</h2><span class="part-count">4 instruments</span></div>
+    <section id="fx-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="fx-fwd">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>FX Forwards</h3></div><span class="ca-code">Highest-Volume FX Derivative</span></div>
+          <p class="ca-def">An agreement to exchange two currencies at a fixed rate on a specified future date — the most straightforward, highest-volume FX derivative, overwhelmingly used by corporates to hedge a known future foreign-currency receivable or payable.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical (delivery) at maturity</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Hedge a known future FX cash flow</span></div>
+            <div class="fact-chip"><span class="fc-label">Notional</span><span class="fc-desc">Largest FX derivative segment</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>The forward rate is derived from the spot rate adjusted for the interest-rate differential between the two currencies (covered interest rate parity) — a higher-rate currency trades at a forward discount to a lower-rate one, and vice versa.</p></div>
+            <div><h4>Risk Profile</h4><p>Bilateral counterparty risk like any OTC forward; the hedger locks in a rate and forgoes benefit if spot moves favourably before maturity, in exchange for eliminating the downside.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>An exporter expecting a EUR 10 million receivable in three months will typically sell EUR forward against its own currency today, locking in the rate and removing FX uncertainty from budgeted revenue.</p>
+        </article>
+
+        <article class="ca-card" id="fx-swap">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>FX Swaps</h3></div><span class="ca-code">Short-Term FX Funding</span></div>
+          <p class="ca-def">Not to be confused with a cross-currency swap — an FX swap combines a spot FX transaction with an equal and opposite forward transaction in the same currency pair, functioning as a short-term collateralized FX funding tool rather than a directional bet or long-term hedge.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical, at both legs</span></div>
+            <div class="fact-chip"><span class="fc-label">Structure</span><span class="fc-desc">Spot + offsetting forward</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Short-term funding, not directional</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>A bank needing short-term USD funding but holding EUR will sell EUR/buy USD spot and simultaneously agree to buy EUR/sell USD forward — economically similar to a repo, but across two currencies instead of cash-for-securities.</p></div>
+            <div><h4>Risk Profile</h4><p>Very low net FX risk since spot and forward legs offset by design; the primary risk is counterparty risk on the forward leg and, systemically, funding/liquidity risk if FX swap markets seize up (as happened acutely in 2008, when USD funding via FX swaps became severely strained for non-US banks).</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>FX swaps are one of the highest-volume instruments in the entire FX market by turnover, reflecting constant use by banks globally for everyday short-term currency funding, distinct from corporate hedging activity.</p>
+        </article>
+
+        <article class="ca-card" id="ndf">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>Non-Deliverable Forwards (NDFs)</h3></div><span class="ca-code">Restricted-Currency Hedge</span></div>
+          <p class="ca-def">An FX forward on a currency that's restricted or not freely convertible (many EM currencies), settled entirely in cash in a freely convertible currency (usually USD) based on the difference between the agreed forward rate and actual spot at maturity — no actual delivery of the restricted currency occurs.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Cash only, in a convertible currency</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Hedging restricted/non-convertible currencies</span></div>
+            <div class="fact-chip"><span class="fc-label">Underlying</span><span class="fc-desc">EM currency pairs</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Priced similarly to a deliverable forward using an implied rate differential, but since there's no physical exchange of the restricted currency, NDFs can be traded and settled entirely offshore, outside the restricted currency's home jurisdiction.</p></div>
+            <div><h4>Risk Profile</h4><p>Same bilateral counterparty risk as any OTC forward, plus regulatory/convertibility risk — the product exists specifically because the underlying currency can't move freely, and the rules governing that restriction can themselves change.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>NDFs on currencies like the Indian rupee, Chinese renminbi (for offshore participants), Brazilian real, and Korean won are heavily used by international investors and corporates hedging exposure without being able to freely trade the underlying currency.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fx-opt">
+          <div class="ca-head"><div><span class="ca-class">FX · Non-Linear</span><h3>FX Options</h3></div><span class="ca-code">Asymmetric FX Hedging</span></div>
+          <p class="ca-def">An option giving the right, but not the obligation, to exchange one currency for another at a fixed rate by (or at) a specified date — used when a hedger wants downside protection while retaining upside, unlike a forward which locks in the rate either way.</p>
+          <div class="fact-row">
+            <div class="fact-chip"><span class="fc-label">Market</span><span class="fc-desc">OTC &amp; exchange</span></div>
+            <div class="fact-chip"><span class="fc-label">Settlement</span><span class="fc-desc">Physical or cash</span></div>
+            <div class="fact-chip"><span class="fc-label">Style</span><span class="fc-desc">Mostly European</span></div>
+            <div class="fact-chip"><span class="fc-label">Use</span><span class="fc-desc">Asymmetric FX hedging</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Structure &amp; Mechanics</h4><p>Priced using FX-specific volatility surfaces accounting for the two-currency nature of the underlying (both currencies have their own rate, both contribute volatility); commonly combined into risk reversals (buy a call, sell a put, or vice versa) to reduce net premium.</p></div>
+            <div><h4>Risk Profile</h4><p>Buyer's risk limited to premium paid; increasingly subject to the Uncleared Margin Rules if traded bilaterally above relevant thresholds, since FX options are explicitly within UMR's scope alongside NDFs and physically-settled FX forwards.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A corporate bidding on a foreign-currency contract it may or may not win will often prefer an FX option over a forward precisely because of the contingent exposure — if the bid fails, an option simply lapses, while an unwound forward could leave a cash settlement obligation on an exposure that never materialized.</p>
+        </article>
+
+      </div>
+    </section>
+    <!-- ============ COMPARISON ============ -->
+    <div class="part-heading"><h2>Reference</h2><span class="part-count">tables &amp; glossary</span></div>
+    <section id="compare">
+      <h2 class="section-title">Comparison tables</h2>
+
+      <div class="table-wrap">
+      <table>
+        <caption>By category, quick reference</caption>
+        <thead><tr><th>Category</th><th>Payoff</th><th>Typical market</th><th>Primary use</th></tr></thead>
+        <tbody>
+          <tr><td>Linear (forwards, futures, swaps)</td><td>Symmetric</td><td>OTC (forwards, swaps) or exchange (futures)</td><td>Locking in a price or rate</td></tr>
+          <tr><td>Options &amp; optionality</td><td>Asymmetric</td><td>Exchange (vanilla) or OTC (exotic)</td><td>Asymmetric protection, retaining upside</td></tr>
+          <tr><td>Credit derivatives</td><td>Contingent on a credit event</td><td>OTC, increasingly cleared</td><td>Transferring or hedging default risk</td></tr>
+          <tr><td>FX derivatives</td><td>Mostly symmetric (options excepted)</td><td>OTC</td><td>Currency hedging and short-term funding</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="table-wrap">
+      <table>
+        <caption>What determines a trade's operational path</caption>
+        <thead><tr><th>Question</th><th>If yes</th><th>If no</th></tr></thead>
+        <tbody>
+          <tr><td>Is it standardized enough to clear?</td><td>Novated to a CCP; daily margining, mutualized default risk</td><td>Stays bilateral; governed by ISDA + CSA, margined per UMR if in scope</td></tr>
+          <tr><td>Is it physically settled?</td><td>Requires full custody/delivery infrastructure at maturity or exercise</td><td>Simple cash payment of the price difference</td></tr>
+          <tr><td>Does it have optionality?</td><td>Premium paid upfront; asymmetric payoff; Greeks-based risk management</td><td>No premium; symmetric payoff; simpler mark-to-market risk</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ BLOWUPS ============ -->
+    <section id="blowups">
+      <h2 class="section-title">Notable derivatives episodes, for quick recall</h2>
+      <p>Concrete, real cases are worth more in an interview than a memorised definition — each of these is a genuine illustration of a specific operational or risk-management failure mode.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Episode</th><th>Year</th><th>Instrument</th><th>The lesson</th></tr></thead>
+        <tbody>
+          <tr><td>Barings Bank (Nick Leeson)</td><td>1995</td><td>Nikkei 225 futures &amp; options</td><td>~$1.3bn loss from unauthorized, concentrated trading; collapsed a 233-year-old bank. Root cause: the same person controlled both trading and back-office settlement — a segregation-of-duties failure.</td></tr>
+          <tr><td>Metallgesellschaft</td><td>1993</td><td>Oil futures (rolling hedge)</td><td>~$1.3bn loss when the futures curve flipped from backwardation to contango, triggering margin calls the parent couldn't sustain. Lesson: cash-flow timing mismatch between a hedge and the exposure it protects.</td></tr>
+          <tr><td>Long-Term Capital Management</td><td>1998</td><td>Swaps &amp; convergence trades</td><td>Highly leveraged OTC derivative positions nearly triggered a systemic crisis when correlations broke down simultaneously across markets, requiring a Fed-organized bank consortium bailout.</td></tr>
+          <tr><td>JPMorgan "London Whale"</td><td>2012</td><td>CDX.NA.IG.9 index (CDS)</td><td>An oversized position distorted the index's own pricing; losses grew from a disclosed $2bn to ~$6.2bn. Lesson: position size itself can become a risk factor once it dwarfs the market's liquidity.</td></tr>
+          <tr><td>Archegos Capital Management</td><td>2021</td><td>Total return swaps (equity)</td><td>~$20bn forced liquidation, ~$10bn combined bank losses. Synthetic prime brokerage let a family office build concentrated, leveraged, undisclosed exposure invisible to regulators.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ GLOSSARY ============ -->
+    <section id="glossary">
+      <h2 class="section-title">Glossary — derivatives-specific terms</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">Notional</span><p class="g-def">The reference amount a derivative's payments are calculated on — not an amount either party actually owes outright.</p></div>
+        <div class="g-item"><span class="g-term">Premium</span><p class="g-def">The upfront price an option buyer pays the seller for the right (but not obligation) embedded in the contract.</p></div>
+        <div class="g-item"><span class="g-term">Strike Price</span><p class="g-def">The fixed price at which an option's holder can buy (call) or sell (put) the underlying.</p></div>
+        <div class="g-item"><span class="g-term">In / At / Out-of-the-Money</span><p class="g-def">Describes an option's strike relative to the current underlying price — whether exercising now would be profitable, breakeven, or worthless.</p></div>
+        <div class="g-item"><span class="g-term">Mark-to-Market (MTM)</span><p class="g-def">Revaluing a position to its current market price, the basis for calculating variation margin.</p></div>
+        <div class="g-item"><span class="g-term">Initial Margin (IM)</span><p class="g-def">Collateral posted upfront to cover potential future exposure between the last margin exchange and closing out a defaulted position.</p></div>
+        <div class="g-item"><span class="g-term">Variation Margin (VM)</span><p class="g-def">Collateral posted to cover a position's mark-to-market change since the last exchange, typically daily.</p></div>
+        <div class="g-item"><span class="g-term">ISDA Master Agreement</span><p class="g-def">The standard legal framework governing OTC derivatives between two counterparties, negotiated once and covering every subsequent trade between them.</p></div>
+        <div class="g-item"><span class="g-term">CSA (Credit Support Annex)</span><p class="g-def">The collateral annex to an ISDA Master Agreement, specifying how margin is exchanged to cover current exposure.</p></div>
+        <div class="g-item"><span class="g-term">Novation</span><p class="g-def">The legal replacement of a bilateral trade with two new trades facing a central counterparty, the mechanism behind central clearing.</p></div>
+        <div class="g-item"><span class="g-term">CCP (Central Counterparty)</span><p class="g-def">A clearing house that becomes the buyer to every seller and seller to every buyer on cleared trades, mutualizing counterparty risk.</p></div>
+        <div class="g-item"><span class="g-term">Close-Out Netting</span><p class="g-def">Collapsing all outstanding trades between two counterparties into a single net amount if one party defaults, rather than settling trade-by-trade.</p></div>
+        <div class="g-item"><span class="g-term">SEF (Swap Execution Facility)</span><p class="g-def">A regulated electronic platform mandated for executing many standardized swaps under post-Dodd-Frank rules.</p></div>
+        <div class="g-item"><span class="g-term">The Greeks</span><p class="g-def">Sensitivity measures for an option's price: Delta (vs. underlying price), Gamma (rate of change of Delta), Vega (vs. volatility), Theta (vs. time decay).</p></div>
+        <div class="g-item"><span class="g-term">Contango / Backwardation</span><p class="g-def">Describes a futures curve sloping up (contango) or down (backwardation) relative to spot — determines the cost or benefit of rolling a futures position.</p></div>
+        <div class="g-item"><span class="g-term">Credit Event</span><p class="g-def">A defined trigger (default, bankruptcy, or specified restructuring) under a CDS contract that obligates the protection seller to pay out.</p></div>
+        <div class="g-item"><span class="g-term">Reference Entity</span><p class="g-def">The specific issuer whose credit risk a CDS or credit-linked note is written against.</p></div>
+        <div class="g-item"><span class="g-term">Compression</span><p class="g-def">Netting down offsetting derivative trades across multiple counterparties to reduce gross notional outstanding without changing net risk.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Part 4 of a study set on derivatives for Investment Banking Operations interview preparation. Regulatory details (UMR phasing, clearing mandates) are verified as of 2026; local market and firm-specific conventions vary — confirm specifics for whichever product or jurisdiction an interviewer names. Parts 1–3 cover corporate actions, the corporate action lifecycle, and fixed income products.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' instrument' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>

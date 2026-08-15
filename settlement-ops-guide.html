@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settlement Operations — Interview Field Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --bg:#f6f4ee;
+  --panel:#ffffff;
+  --ink:#1c2b2e;
+  --sub:#4b5b5e;
+  --line:#dcd6c8;
+  --navy:#16324f;
+  --teal:#0f6b64;
+  --gold:#a8792e;
+  --rose:#8c3a3a;
+  --tag-bg:#eef1e6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  line-height:1.6;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 28px 120px;}
+header.hero{
+  padding:70px 28px 50px;
+  border-bottom:3px solid var(--navy);
+  background:linear-gradient(180deg,#fbfaf5,var(--bg));
+}
+header.hero .inner{max-width:980px;margin:0 auto;}
+.eyebrow{
+  font-family:'Courier New',monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:12.5px;
+  color:var(--teal);
+  margin-bottom:14px;
+}
+h1.title{
+  font-size:44px;
+  margin:0 0 12px;
+  color:var(--navy);
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+.subtitle{color:var(--sub);font-size:18px;max-width:640px;}
+nav.toc{
+  margin-top:36px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px 22px;
+  font-family:'Courier New',monospace;
+  font-size:13px;
+}
+nav.toc a{color:var(--navy);text-decoration:none;border-bottom:1px dotted var(--line);display:block;padding:4px 0;}
+nav.toc a:hover{color:var(--teal);}
+
+section{margin-top:64px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--navy);padding-bottom:10px;margin-bottom:26px;}
+.sec-num{font-family:'Courier New',monospace;color:var(--gold);font-size:15px;}
+h2{font-size:28px;margin:0;color:var(--navy);}
+h3{font-size:20px;color:var(--teal);margin:30px 0 8px;}
+p{color:var(--ink);}
+.lede{color:var(--sub);font-size:17px;}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-left:4px solid var(--teal);
+  border-radius:4px;
+  padding:20px 24px;
+  margin:18px 0;
+}
+.card.gold{border-left-color:var(--gold);}
+.card.rose{border-left-color:var(--rose);}
+.card h4{margin:0 0 8px;color:var(--navy);font-size:16.5px;font-family:-apple-system,Helvetica,Arial,sans-serif;}
+.tag{
+  display:inline-block;
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  letter-spacing:.05em;
+  background:var(--tag-bg);
+  color:var(--navy);
+  padding:2px 8px;
+  border-radius:3px;
+  margin-right:6px;
+  text-transform:uppercase;
+}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:720px){.grid2{grid-template-columns:1fr;} nav.toc{grid-template-columns:1fr 1fr;} h1.title{font-size:32px;}}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:14.5px;}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;font-weight:600;}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+tr:nth-child(even) td{background:#faf9f3;}
+
+.flow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0;
+  align-items:stretch;
+  margin:22px 0;
+  font-family:-apple-system,Helvetica,Arial,sans-serif;
+}
+.flow .step{
+  background:var(--panel);
+  border:1.5px solid var(--navy);
+  padding:12px 16px;
+  font-size:13.5px;
+  min-width:130px;
+  flex:1;
+  text-align:center;
+  color:var(--navy);
+  font-weight:600;
+}
+.flow .arrow{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 6px;color:var(--gold);font-size:20px;
+}
+
+.example{
+  background:#fbfaf2;
+  border:1px dashed var(--gold);
+  border-radius:4px;
+  padding:16px 20px;
+  margin:14px 0;
+  font-family:-apple-system,Helvetica,Arial,sans-serif;
+  font-size:14.5px;
+}
+.example .lab{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+
+.def{font-family:-apple-system,Helvetica,Arial,sans-serif;}
+.def dt{font-weight:700;color:var(--navy);margin-top:14px;}
+.def dd{margin:4px 0 0;color:var(--sub);}
+
+.msg{font-family:'Courier New',monospace;background:#0f1f22;color:#d8e8de;padding:14px 16px;border-radius:4px;font-size:13px;overflow-x:auto;margin:12px 0;}
+.msg .field{color:#8fd6c0;}
+.msg .val{color:#f0d9a0;}
+
+.case{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:22px 26px;
+  margin:20px 0;
+  box-shadow:0 1px 3px rgba(20,40,40,.05);
+}
+.case .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.case .head h4{margin:0;color:var(--rose);font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:17px;}
+.case .sev{font-family:'Courier New',monospace;font-size:11px;background:var(--rose);color:#fff;padding:3px 9px;border-radius:3px;}
+.case .num{font-family:'Courier New',monospace;background:var(--tag-bg);padding:10px 14px;border-radius:4px;font-size:13.5px;margin:10px 0;}
+.case ol{padding-left:20px;}
+.case ol li{margin-bottom:6px;}
+
+.glossary dt{font-family:'Courier New',monospace;font-weight:700;color:var(--navy);}
+
+footer{margin-top:80px;border-top:2px solid var(--navy);padding-top:24px;color:var(--sub);font-size:13.5px;font-family:-apple-system,Helvetica,Arial,sans-serif;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <div class="eyebrow">Global Markets · Operations · Settlements</div>
+    <h1 class="title">Settlement Operations — Field Guide</h1>
+    <p class="subtitle">A ground-up walkthrough of the plumbing that moves securities and cash after a trade is done — infrastructure, players, messaging, lifecycle, and real break scenarios — for equities, fixed income, and derivatives, across the US and Europe.</p>
+    <nav class="toc">
+      <a href="#s1">01 · Trade lifecycle overview</a>
+      <a href="#s2">02 · Market infrastructure (DTC/DTCC, CCP)</a>
+      <a href="#s3">03 · Euroclear, Clearstream & ICSDs</a>
+      <a href="#s4">04 · Custodians, agents, nostro/vostro</a>
+      <a href="#s5">05 · SSI, BIC, BENE, SWIFT messages</a>
+      <a href="#s6">06 · DvP vs FoP, settlement cycles</a>
+      <a href="#s7">07 · Equities settlement walkthrough</a>
+      <a href="#s8">08 · Fixed income settlement</a>
+      <a href="#s9">09 · Derivatives settlement & CCP margin</a>
+      <a href="#s10">10 · Breaks & real resolution case studies</a>
+      <a href="#s11">11 · Glossary — quick fire</a>
+      <a href="#s12">12 · Interview angles</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- SECTION 1 -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>The trade lifecycle — where "settlement" sits</h2></div>
+  <p class="lede">Before any jargon, anchor yourself in the lifecycle. Settlement is the <em>last mile</em> — everything before it is about agreeing what happened; settlement is about actually exchanging value.</p>
+
+  <div class="flow">
+    <div class="step">1. Trade Execution<br><span style="font-weight:400;font-size:12px;color:#555">Front office deals on exchange / OTC</span></div>
+    <div class="arrow">→</div>
+    <div class="step">2. Trade Capture<br><span style="font-weight:400;font-size:12px;color:#555">Booked in the firm's system</span></div>
+    <div class="arrow">→</div>
+    <div class="step">3. Confirmation & Matching<br><span style="font-weight:400;font-size:12px;color:#555">Both sides agree the details</span></div>
+    <div class="arrow">→</div>
+    <div class="step">4. Clearing<br><span style="font-weight:400;font-size:12px;color:#555">Novation / netting via CCP</span></div>
+    <div class="arrow">→</div>
+    <div class="step">5. Settlement<br><span style="font-weight:400;font-size:12px;color:#555">Securities ↔ cash exchange</span></div>
+  </div>
+
+  <p>Think of it like buying a house. <strong>Execution</strong> is agreeing the price with the seller. <strong>Confirmation</strong> is both lawyers agreeing the contract text matches. <strong>Clearing</strong> is like having an escrow agent stand in the middle so neither side has to trust the other directly. <strong>Settlement</strong> is completion day — keys handed over, money wired, deed registered.</p>
+
+  <p>Settlement operations teams live mainly in steps 3–5: making sure trade details match between counterparties, that the trade clears correctly, and that securities and cash actually move on the right date, to the right place, in the right amount — and when they don't, fixing it (a "break").</p>
+</section>
+
+<!-- SECTION 2 -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>US Market Infrastructure — DTC, DTCC, NSCC, CCP</h2></div>
+
+  <dl class="def">
+    <dt>DTC — Depository Trust Company</dt>
+    <dd>The US <strong>Central Securities Depository (CSD)</strong>. It is the vault — literally the entity that holds electronic (dematerialized) securities in custody and moves ownership between accounts on its books. When a US equity trade settles, it settles by DTC debiting the seller's participant account and crediting the buyer's participant account. Nobody physically moves a paper certificate anymore; DTC just updates a ledger.</dd>
+
+    <dt>DTCC — Depository Trust & Clearing Corporation</dt>
+    <dd>The parent holding company. DTC is one subsidiary of DTCC. The others matter just as much in an interview:
+      <ul>
+        <li><strong>NSCC (National Securities Clearing Corporation)</strong> — clears and nets US equity, corporate bond and muni bond trades. NSCC is the <strong>CCP</strong> for those markets (see below).</li>
+        <li><strong>FICC (Fixed Income Clearing Corporation)</strong> — the CCP for US Treasuries and mortgage-backed securities (split into GSD — Government Securities Division, and MBSD — Mortgage-Backed Securities Division).</li>
+        <li><strong>DTCC ITP / CTM</strong> — the post-trade matching utility (this is where "Omgeo" lives — see below).</li>
+      </ul>
+    </dd>
+
+    <dt>Central Counterparty (CCP)</dt>
+    <dd>A CCP interposes itself between the original buyer and seller through a legal process called <strong>novation</strong>: the single trade "Buyer X bought 1,000 shares from Seller Y" legally becomes two trades — "X bought from the CCP" and "the CCP bought from Y." Each side now only has counterparty risk to the highly-capitalized CCP, not to each other. This is what lets a bank trade with a hedge fund it has never heard of and still be safe if that fund defaults.</dd>
+  </dl>
+
+  <div class="example">
+    <div class="lab">Worked example — netting</div>
+    Firm A trades Apple stock all day: buys 10,000 shares across 40 trades, sells 7,000 shares across 25 trades, all versus different counterparties. Without netting, that's 65 separate settlement instructions. NSCC nets all same-day, same-security trades into <strong>one net obligation</strong>: Firm A ends up needing to <em>receive</em> a net 3,000 shares and pay one net cash amount, settling with NSCC itself rather than 65 counterparties. This is "continuous net settlement" (CNS) — it is the single biggest reason US equity settlement works at scale.
+  </div>
+
+  <h3>Omgeo → now DTCC CTM</h3>
+  <p><strong>Omgeo</strong> was a joint venture between DTCC and Thomson Reuters that ran the industry's central trade matching utility. It was fully absorbed into DTCC in 2013 and today the same service is branded <strong>DTCC CTM (Central Trade Manager)</strong> under the "Institutional Trade Processing" (ITP) suite. You'll still hear traders and ops people say "Omgeo" out of habit — treat it as the legacy name for CTM. Its job: broker and investment manager enter trade details independently; CTM matches them field-by-field (security, quantity, price, settlement date, SSI) and flags any mismatch immediately, well before settlement date, so it can be fixed with days to spare instead of discovered as a fail on settlement date itself.</p>
+</section>
+
+<!-- SECTION 3 -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Europe & international — Euroclear, Clearstream, ICSDs</h2></div>
+
+  <p>Europe doesn't have one dominant CSD like the US has DTC — it's fragmented by country (each has its own local/national CSD) plus two dominant <strong>International Central Securities Depositories (ICSDs)</strong> that specialise in cross-border and Eurobond settlement.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Euroclear</h4>
+      Headquartered in Brussels. Originally set up by Morgan Guaranty in 1968 to settle Eurobonds. Today it's a group covering Euroclear Bank (the ICSD) plus several national CSDs it acquired (Euroclear UK & Ireland — formerly CREST, Euroclear France, Belgium, Netherlands, Sweden, Finland).
+    </div>
+    <div class="card">
+      <h4>Clearstream</h4>
+      Headquartered in Luxembourg, owned by Deutsche Börse. Clearstream Banking Luxembourg is the ICSD; Clearstream Banking Frankfurt is the German domestic CSD. Historically grew out of Cedel (Centrale de Livraison de Valeurs Mobilières).
+    </div>
+  </div>
+
+  <p>Euroclear and Clearstream are direct competitors that also interoperate via a "bridge" link so a Eurobond held at one can settle against a counterparty holding at the other. In an interview, the simplest correct line is: <em>"Euroclear and Clearstream are the two big ICSDs that settle Eurobonds and cross-border securities across Europe, similar in role to DTC domestically in the US, but international in scope."</em></p>
+
+  <h3>CSD vs ICSD — the distinction interviewers probe</h3>
+  <table>
+    <tr><th>Term</th><th>What it does</th><th>Example</th></tr>
+    <tr><td>CSD (domestic)</td><td>Holds and settles securities issued under one country's law, for domestic market participants</td><td>DTC (US), CREST/Euroclear UK (UK), Clearstream Frankfurt (Germany)</td></tr>
+    <tr><td>ICSD</td><td>Holds and settles internationally-issued securities (Eurobonds) and cross-border positions, links to multiple domestic CSDs</td><td>Euroclear Bank, Clearstream Banking Luxembourg</td></tr>
+  </table>
+
+  <p>Since 2015, most EU domestic markets also settle on a shared platform called <strong>T2S (TARGET2-Securities)</strong> run by the Eurosystem (ECB), which harmonised settlement across many European CSDs onto one technical settlement engine — worth a one-line mention if asked about EU harmonisation.</p>
+</section>
+
+<!-- SECTION 4 -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Custodians, agent banks, and nostro / vostro accounts</h2></div>
+
+  <dl class="def">
+    <dt>Custodian</dt>
+    <dd>An institution (often a bank — State Street, BNY Mellon, JPMorgan, Citi, HSBC) that safe-keeps securities on behalf of an owner (asset manager, pension fund, hedge fund) and handles settlement, income collection (dividends/coupons), corporate actions, and reporting for them. A custodian holds the underlying account at the CSD/ICSD on the client's behalf — the client typically isn't a direct participant at DTC or Euroclear themselves.</dd>
+
+    <dt>Sub-custodian / Agent bank</dt>
+    <dd>A global custodian can't be a direct member of every market's CSD worldwide, so it appoints a local <strong>sub-custodian</strong> (agent bank) in each market — e.g. a US global custodian uses a Japanese sub-custodian to settle Tokyo Stock Exchange trades, because that local bank is a direct participant of the Japanese CSD.</dd>
+
+    <dt>Nostro account</dt>
+    <dd>Latin for "ours" — <em>"our account, held at your bank."</em> This is a bank's own cash account held with a correspondent bank in a foreign currency, used to make and receive payments in that currency. E.g., a UK bank holding a USD account at a US bank to settle USD payments is that USD account the UK bank's <strong>nostro</strong>.</dd>
+
+    <dt>Vostro account</dt>
+    <dd>Latin for "yours" — <em>"your account, held at our bank."</em> Same account, opposite perspective: from the US bank's point of view, that UK bank's USD account sitting on its own books is a <strong>vostro</strong> account. Nostro and vostro are the same physical account described from two sides of the same relationship — this pairing is a very common interview trick question.</dd>
+  </dl>
+
+  <div class="example">
+    <div class="lab">Why this matters in settlement</div>
+    A London-based fund buys US Treasuries. Cash leg settles in USD. The fund's custodian doesn't sit in the US Fedwire system directly, so it settles the USD cash leg through its <strong>nostro account</strong> at a US correspondent bank. If that nostro doesn't have enough USD balance (or the correspondent's cut-off time is missed), you get a <strong>cash settlement fail</strong> even though the securities side was perfectly fine — a classic exam-style break scenario.
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>SSI, BIC, BENE, and the SWIFT messages that carry them</h2></div>
+
+  <dl class="def">
+    <dt>SSI — Standing Settlement Instructions</dt>
+    <dd>The pre-agreed "delivery address" for a counterparty's securities and cash: which custodian/agent, which account number, which nostro, for a given currency/security type. Instead of negotiating settlement details trade-by-trade, counterparties exchange SSIs once (or maintain them in a shared database like <strong>DTCC ALERT</strong>) and every subsequent trade auto-populates from them. A wrong or stale SSI is one of the single most common causes of settlement breaks.</dd>
+
+    <dt>BIC — Business Identifier Code (a.k.a. SWIFT code)</dt>
+    <dd>An 8 or 11-character ISO 9362 code identifying a specific bank/branch globally — used to route SWIFT messages and payments. Format: <strong>4 letters</strong> bank code + <strong>2 letters</strong> country code + <strong>2 characters</strong> location code + <strong>optional 3 characters</strong> branch code.</dd>
+
+    <dt>BENE / Beneficiary</dt>
+    <dd>The ultimate party who is meant to receive the cash or securities — as opposed to an intermediary bank the payment merely passes through. "Bene BIC" = the BIC of the final beneficiary institution, as distinct from the correspondent/intermediary BIC the payment routes via.</dd>
+  </dl>
+
+  <div class="example">
+    <div class="lab">Decoding a BIC</div>
+    <strong>DEUTDEFF</strong> → DEUT (Deutsche Bank) + DE (Germany) + FF (Frankfurt) — an 8-character BIC, meaning head office / primary office, no specific branch.<br>
+    <strong>CHASUS33XXX</strong> → CHAS (JPMorgan Chase) + US (United States) + 33 (New York) + XXX (no specific branch, primary office code) — the 11-character version.
+  </div>
+
+  <h3>The SWIFT MT5xx series — settlement messaging</h3>
+  <table>
+    <tr><th>Message</th><th>Purpose</th></tr>
+    <tr><td>MT540 / MT542</td><td>Instruction to receive / deliver securities free of payment (FoP)</td></tr>
+    <tr><td>MT541 / MT543</td><td>Instruction to receive / deliver securities against payment (DvP)</td></tr>
+    <tr><td>MT544–547</td><td>Confirmations that a receipt/delivery has actually settled</td></tr>
+    <tr><td>MT548</td><td>Status/exception message — tells you a settlement instruction is pending, matched, or has failed, and why</td></tr>
+    <tr><td>MT202 / MT202 COV</td><td>Bank-to-bank cash payment order for the funds leg (interbank), COV variant carries underlying customer info for transparency/AML</td></tr>
+    <tr><td>MT103</td><td>Customer credit transfer — a single cross-border payment instruction with full BENE details</td></tr>
+  </table>
+
+  <div class="msg">{1:F01<span class="field">DEUTDEFFAXXX</span>0000000000}{2:I541<span class="field">CHASUS33XXX</span>N}
+{4:
+:16R:GENL
+:20C::SEME//<span class="val">TRD00019283</span>
+:23G:NEWM
+:16R:TRADDET
+:98A::SETT//<span class="val">20260728</span>
+:35B:ISIN <span class="val">DE0001102309</span> BUND 0% 15/08/29
+:16S:TRADDET
+:16R:FIAC
+:36B::SETT//FAMT/<span class="val">5000000,</span>
+:97A::SAFE//<span class="val">1234567</span>
+:16S:FIAC
+:16R:SETDET
+:22F::SETR//<span class="val">TRAD</span>
+:16S:SETDET
+-}</div>
+  <p style="font-size:13.5px;color:var(--sub);margin-top:-6px;">↑ A simplified MT541 (receive against payment): sender DEUTDEFFAXXX instructs receipt of €5,000,000 face of a German Bund (ISIN DE0001102309) settling 28-Jul-2026 versus payment, into safekeeping account 1234567 — routed to receiving agent CHASUS33XXX.</p>
+</section>
+
+<!-- SECTION 6 -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>DvP vs FoP, and settlement cycles</h2></div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>DvP — Delivery versus Payment</h4>
+      Securities and cash move <strong>simultaneously and conditionally</strong> — the CSD's system will only release the securities leg if the cash leg is confirmed in the same instant, and vice versa. Neither party can be left holding neither the cash nor the stock (this is what removes "principal risk"). The vast majority of institutional trades settle DvP.
+    </div>
+    <div class="card gold">
+      <h4>FoP — Free of Payment</h4>
+      Securities move with <strong>no linked cash payment</strong> at that moment — used for things like collateral movements, transfers between a client's own accounts, gifting, or post-trade allocation shifts where money already changed hands separately. Higher operational risk because there's no automatic mechanism forcing both legs to happen together, so FoP moves are usually double-checked more carefully.
+    </div>
+  </div>
+
+  <h3>Settlement cycles</h3>
+  <table>
+    <tr><th>Market</th><th>Standard cycle</th><th>Notes</th></tr>
+    <tr><td>US equities</td><td>T+1</td><td>Moved from T+2 to T+1 in May 2024</td></tr>
+    <tr><td>EU equities (most)</td><td>T+2</td><td>EU is moving toward T+1, targeted around Oct 2027</td></tr>
+    <tr><td>UK equities</td><td>T+2 (moving to T+1)</td><td>UK aligning with EU/US direction</td></tr>
+    <tr><td>US Treasuries</td><td>T+1</td><td>Cash market; some when-issued trades settle T+0</td></tr>
+    <tr><td>Most corporate/govt bonds (EU)</td><td>T+2</td><td></td></tr>
+    <tr><td>FX spot</td><td>T+2</td><td>Relevant because FX often funds the cash leg of a cross-currency securities trade</td></tr>
+  </table>
+  <p>"T" = trade date. T+1 means settlement is due one business day after execution. Shorter cycles reduce counterparty risk in the system but compress the operational window to catch and fix breaks — this compression is exactly why T+1 made settlement ops a hotter topic industry-wide.</p>
+</section>
+
+<!-- SECTION 7 -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Equities — how a trade actually settles, step by step</h2></div>
+
+  <div class="example">
+    <div class="lab">Scenario</div>
+    Asset Manager (buyer, client of Custodian Bank C) buys 50,000 shares of a NYSE-listed stock from Broker-Dealer B, trade date Monday, at $42.10/share, standard T+1.
+  </div>
+
+  <ol>
+    <li><strong>Execution (T):</strong> B's trader fills the order on-exchange/ATS. Trade ticket generated: 50,000 shares, $42.10, settlement T+1 (Tuesday), DvP.</li>
+    <li><strong>Allocation & confirmation:</strong> The Asset Manager's order management system sends allocation instructions; B and the Asset Manager's operations teams both submit trade details to <strong>DTCC CTM</strong>, which matches security, quantity, price, and settlement date. A match generates an <strong>affirmed</strong> trade.</li>
+    <li><strong>SSI enrichment:</strong> The matched trade is enriched with the Asset Manager's SSI (their custodian's DTC participant account) pulled from DTCC ALERT.</li>
+    <li><strong>Clearing / novation:</strong> Because both are NSCC members (directly or via a clearing broker), the trade novates to NSCC and gets folded into that day's <strong>CNS net position</strong> for that stock.</li>
+    <li><strong>Settlement (T+1):</strong> DTC's system matches the buy instruction (from Custodian C, on behalf of the Asset Manager) against the net delivery instruction from NSCC. If both securities and cash are available, DTC executes simultaneous book-entry movement: 50,000 shares debited from B's DTC account / NSCC's net position, credited to Custodian C's account; $2,105,000 cash moves the other way — true <strong>DvP</strong>, instantaneous and irrevocable at the moment of settlement.</li>
+    <li><strong>Confirmation:</strong> MT544/547-type confirmation messages fire back to both operations teams confirming settlement; the Asset Manager's custody statement reflects the new position next morning.</li>
+  </ol>
+
+  <p>If step 5 can't happen — say Custodian C's account doesn't have enough cash, or B doesn't actually have the shares available to deliver — the instruction sits as a <strong>fail</strong>, recycles automatically the next day, and ops has to investigate (see Section 10).</p>
+</section>
+
+<!-- SECTION 8 -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Fixed income settlement — what's different from equities</h2></div>
+
+  <p>Bond settlement runs on the same DvP/FoP mechanics but with extra wrinkles:</p>
+  <ul>
+    <li><strong>Accrued interest</strong> — the buyer pays the clean price <em>plus</em> interest accrued since the last coupon date, so the cash amount to reconcile is not simply price × quantity; a mismatch in day-count convention (30/360 vs Actual/Actual vs Actual/360) is a classic cash break source.</li>
+    <li><strong>Face amount, not share count</strong> — bonds trade in face value (e.g., "$5mm face"), quoted as a price per 100 of face (e.g., 98.375), so quantity fields in messages look different from equities.</li>
+    <li><strong>ISIN-driven, multi-CSD</strong> — a Eurobond might be eligible at both Euroclear and Clearstream; settling "across the bridge" between them takes an extra day and is a common source of timing breaks.</li>
+    <li><strong>Repo settlement</strong> — a huge share of daily fixed income settlement volume is repo (sale + forward repurchase), settling DvP on both legs (near leg and far leg), often same-day for GC (general collateral) repo via triparty agents (BNY Mellon, JPMorgan act as triparty custodians managing collateral automatically).</li>
+    <li><strong>When-issued (WI) trading</strong> — new Treasury issues trade before they technically exist (before auction settlement), settling same day as the auction issue date.</li>
+  </ul>
+
+  <div class="example">
+    <div class="lab">Worked example — accrued interest</div>
+    Buy $5,000,000 face of a 4% semi-annual coupon corporate bond, clean price 99.500, 62 days since last coupon, 30/360 basis.<br>
+    Principal = 5,000,000 × 0.995 = <strong>$4,975,000.00</strong><br>
+    Accrued = 5,000,000 × 0.04 × (62/360) = <strong>$34,444.44</strong><br>
+    Total settlement (dirty price) = <strong>$5,009,444.44</strong><br>
+    If the seller's system used Actual/360 instead of 30/360, the accrued figure comes out slightly different — exactly the kind of few-hundred-dollar cash mismatch that blocks DvP settlement until reconciled.
+  </div>
+</section>
+
+<!-- SECTION 9 -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Derivatives — cleared vs OTC, and why margin matters</h2></div>
+
+  <p>"Settlement" for derivatives means something broader than for cash securities — there's rarely a one-off exchange of the underlying; instead there's ongoing cash movement over the life of the trade.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Exchange-traded / cleared derivatives</h4>
+      Futures and cleared swaps novate to a CCP (e.g. LCH for interest rate swaps, CME/ICE for futures) just like cash equities novate to NSCC. The CCP requires:
+      <ul>
+        <li><strong>Initial margin (IM)</strong> — collateral posted upfront covering potential future exposure if the counterparty defaults</li>
+        <li><strong>Variation margin (VM)</strong> — cash exchanged <em>daily</em> (sometimes intraday) reflecting the mark-to-market gain/loss since the prior day</li>
+      </ul>
+      "Settlement" here largely = the daily VM cash settlement process plus final settlement/expiry mechanics.
+    </div>
+    <div class="card rose">
+      <h4>OTC / bilateral derivatives</h4>
+      Non-cleared swaps settle bilaterally under an <strong>ISDA Master Agreement</strong> and <strong>CSA (Credit Support Annex)</strong>, which defines how collateral (margin) moves between the two counterparties directly rather than through a CCP. Confirmation matching happens via platforms like MarkitSERV / DTCC's Global Trade Repository rather than DTCC CTM.
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="lab">Worked example — daily VM settlement</div>
+    Firm holds a cleared interest rate swap with LCH, notional $100mm. Yesterday's close-of-day mark: +$120,000 in Firm's favor (LCH owes Firm). Today's close: +$95,000 in Firm's favor. Change = <strong>-$25,000</strong>. LCH's overnight VM process debits Firm's margin account $25,000 cash — this settles the next morning via the clearing member's cash account, confirmed via a margin statement rather than a security movement. A break here looks completely different from an equity break: it's usually a <strong>mark disagreement</strong> (Firm's valuation model and LCH's don't agree on the swap's value) rather than a failed delivery.
+  </div>
+</section>
+
+<!-- SECTION 10 -->
+<section id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Breaks & real resolution case studies</h2></div>
+  <p class="lede">This is the section interviewers probe hardest — they want to see you can diagnose a break, not just define one. Below are common categories, each with a worked numeric scenario and the resolution steps ops actually takes.</p>
+
+  <div class="case">
+    <div class="head"><h4>Case 1 — DK ("Don't Know") / unmatched trade</h4><span class="sev">Pre-settlement</span></div>
+    <p><strong>Setup:</strong> Broker B sends an MT515/trade confirm to Custodian C for "Sell 20,000 shares XYZ Corp @ $18.25, settle T+1, SSI: Account 88213." Custodian C's system has no record of this trade from its client, the Asset Manager — the Asset Manager never allocated it.</p>
+    <div class="num">Trade value at risk: 20,000 × $18.25 = $365,000</div>
+    <p><strong>Resolution steps:</strong></p>
+    <ol>
+      <li>Ops raises the item as "DK'd" in CTM — flags mismatch same day, well before T+1 cutoff.</li>
+      <li>Contacts the Asset Manager's trading desk directly: was this trade actually done? Often it's a booking error — wrong client code, or the trade belongs to a different fund under the same manager.</li>
+      <li>If genuine: Asset Manager allocates correctly and it re-matches. If erroneous: Broker cancels/rebooks to the correct counterparty.</li>
+      <li>Deadline pressure: if unresolved by settlement date, it becomes an actual settlement fail, and NSCC/exchange rules may allow the broker to initiate a <strong>buy-in</strong> against the non-delivering side after a grace period (T+3 to T+6 depending on market).</li>
+    </ol>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 2 — SSI mismatch causing cash break</h4><span class="sev">Settlement date</span></div>
+    <p><strong>Setup:</strong> Trade matched correctly in CTM, but the Asset Manager's SSI on file points to an old custodian account closed six months ago (client changed custodians but the counterparty's static data wasn't updated). Delivery instruction sent to the wrong DTC participant account.</p>
+    <div class="num">50,000 shares @ $42.10 = $2,105,000 fails to settle on T+1</div>
+    <ol>
+      <li>Overnight settlement run rejects — DTC returns a "no match" / account closed exception, generating an MT548 status message.</li>
+      <li>Ops checks DTCC ALERT — sees the SSI was updated by the client two weeks ago but the counterparty broker's static data team hadn't refreshed their record.</li>
+      <li>Urgent call/email to broker's settlements desk with correct SSI; broker amends the instruction.</li>
+      <li>Trade resettles same day if caught before the final settlement batch cutoff, otherwise it fails overnight and recycles for next-day settlement — Asset Manager may be exposed to a <strong>claim</strong> for lost interest/dividend entitlement in the interim.</li>
+      <li><strong>Root-cause fix:</strong> ops teams push both sides to keep SSI databases current and add a control requiring SSI verification whenever a client changes custodian.</li>
+    </ol>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 3 — Stock/securities fail: seller doesn't have the shares</h4><span class="sev">Settlement date, ongoing</span></div>
+    <p><strong>Setup:</strong> Broker B sold 50,000 shares of a thinly-traded small-cap it doesn't actually hold (it may itself be waiting on a delivery from another counterparty further up the chain — a "fails chain"). On T+1 morning, B's DTC account is short 50,000 shares.</p>
+    <div class="num">Position short: 50,000 shares. Fail persists 4 business days before buy-in threat.</div>
+    <ol>
+      <li>Instruction sits in DTC's continuous overnight/intraday matching cycles — CNS auto-recycles it daily, retrying settlement each day as B's position (hopefully) improves.</li>
+      <li>Ops on both sides monitor the fail daily via DTCC's fail reports; buyer's ops sends a formal <strong>fails notice</strong> to seller's ops.</li>
+      <li>If unresolved after the market's grace period (NSCC rules generally allow a buy-in notice from T+3 for equities), buyer's broker can execute a <strong>buy-in</strong>: buy the 50,000 shares in the open market and bill the difference in cost back to the originally-failing seller.</li>
+      <li><strong>Numeric buy-in example:</strong> original sale price was $42.10/share; by the time of buy-in the market has moved to $43.60. Buyer's broker buys 50,000 shares at $43.60 = $2,180,000, versus the original contracted $2,105,000. The failing seller (Broker B) is charged the <strong>$75,000 shortfall</strong> plus buy-in execution costs.</li>
+      <li>Meanwhile the buyer, if it's a fund that needed the shares for an index-tracking mandate, may also separately claim for tracking error / opportunity cost — this is why chronic settlement fails are taken seriously, not just as an admin nuisance.</li>
+    </ol>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 4 — Corporate action overlapping settlement (income claim)</h4><span class="sev">Post-settlement adjustment</span></div>
+    <p><strong>Setup:</strong> A stock trades "cum-dividend" — trade executed before the ex-date, but due to the SSI break in Case 2 it settled three days late, <em>after</em> the record date for a $0.35/share dividend.</p>
+    <div class="num">Dividend at stake: 50,000 × $0.35 = $17,500</div>
+    <ol>
+      <li>Because the trade was entitled to the dividend economically (executed cum-dividend) but settled too late to be the holder of record on the company's books, the dividend is paid to the seller (who was still the registered holder) instead of the rightful buyer.</li>
+      <li>Ops raises a <strong>dividend/income claim</strong> against the seller: "you received a dividend you were not economically entitled to because our late settlement was your fault (SSI error) / caused by a fail on your side."</li>
+      <li>Seller's ops verifies entitlement dates and either pays the $17,500 across directly or nets it against another open item between the two firms.</li>
+      <li>This is exactly why late settlement isn't "victimless" — it can cascade into real cash claims tied to corporate actions (dividends, coupon payments, stock splits) that fall in the gap.</li>
+    </ol>
+  </div>
+
+  <table>
+    <tr><th>Break type</th><th>Typical root cause</th><th>Typical fix</th></tr>
+    <tr><td>DK / unmatched</td><td>No allocation, wrong counterparty code</td><td>Trade verification call, correct & rematch in CTM</td></tr>
+    <tr><td>SSI break</td><td>Stale static data</td><td>Correct SSI via ALERT, resend instruction</td></tr>
+    <tr><td>Securities fail</td><td>Seller doesn't have the position (short/borrow issue)</td><td>Recycle, stock borrow, or buy-in after grace period</td></tr>
+    <tr><td>Cash fail</td><td>Insufficient nostro balance, wrong currency, cut-off missed</td><td>FX/cash funding, contact correspondent bank, resettle</td></tr>
+    <tr><td>Price/quantity break</td><td>Manual entry error, day-count convention mismatch (FI)</td><td>Recompute, agree correct dirty price, amend instruction</td></tr>
+    <tr><td>Income/dividend claim</td><td>Late settlement crossing a record date</td><td>Claim raised against responsible party, cash reimbursed</td></tr>
+    <tr><td>Margin/VM dispute</td><td>Differing mark-to-market valuation models</td><td>Reconcile pricing sources, agree via ISDA dispute resolution timeline</td></tr>
+  </table>
+</section>
+
+<!-- SECTION 11 -->
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Glossary — quick fire</h2></div>
+  <dl class="glossary def">
+    <dt>Affirmation</dt><dd>The formal step where the receiving party confirms it agrees to the trade details before settlement — an affirmed trade is far less likely to fail.</dd>
+    <dt>Allocation</dt><dd>Splitting a block trade executed by an asset manager across the individual underlying funds/accounts it was bought for.</dd>
+    <dt>Buy-in</dt><dd>Forced open-market purchase of securities a seller failed to deliver, billed back to the failing seller.</dd>
+    <dt>CNS (Continuous Net Settlement)</dt><dd>NSCC's netting system that consolidates all of a member's same-day trades in a security into one net receive/deliver obligation.</dd>
+    <dt>Corporate action</dt><dd>An event affecting a security's terms — dividend, coupon, stock split, merger — that can generate claims if settlement timing is off.</dd>
+    <dt>Custody</dt><dd>Safekeeping of securities and related administration (income collection, corporate actions) on a client's behalf.</dd>
+    <dt>Fail (settlement fail)</dt><dd>A trade that does not settle on its contractual settlement date.</dd>
+    <dt>ISIN</dt><dd>International Securities Identification Number — 12-character global code identifying a specific security.</dd>
+    <dt>Matching</dt><dd>Automated comparison of both counterparties' trade details to confirm they agree before settlement.</dd>
+    <dt>Novation</dt><dd>Legal replacement of a single bilateral trade with two trades against a CCP.</dd>
+    <dt>Repo (repurchase agreement)</dt><dd>Sale of a security with a simultaneous agreement to repurchase it later — economically a collateralised loan.</dd>
+    <dt>Triparty agent</dt><dd>A custodian (e.g. BNY Mellon, JPMorgan) that manages collateral selection/movement automatically between two parties in a repo or margin relationship.</dd>
+  </dl>
+</section>
+
+<!-- SECTION 12 -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Interview angles worth rehearsing</h2></div>
+  <div class="card">
+    <h4>"Walk me through what happens after a trade is executed"</h4>
+    Use the 5-step lifecycle from Section 1, then narrate the equities worked example from Section 7 end-to-end in under 90 seconds.
+  </div>
+  <div class="card gold">
+    <h4>"What's the difference between DTC and DTCC?"</h4>
+    DTC is the depository (the vault/ledger); DTCC is the parent, and NSCC/FICC underneath it are the clearing corporations (the CCPs). Keep this crisp — it's the single most common gotcha question.
+  </div>
+  <div class="card rose">
+    <h4>"Tell me about a time you resolved a settlement break" (or: "how would you approach one?")</h4>
+    Structure your answer around: <em>identify</em> (what broke and why — SSI, DK, short position, cash) → <em>quantify</em> (dollar amount / days late) → <em>act</em> (who you contacted, what you fixed) → <em>prevent</em> (what control you'd add). Use the numeric case studies in Section 10 as templates for the kind of concrete detail that stands out.
+  </div>
+  <div class="card">
+    <h4>"Why does T+1 matter operationally?"</h4>
+    Less time between trade and settlement to catch and fix mismatches — pushes firms toward same-day affirmation, automated SSI enrichment, and pre-funded cash/FX, since manual, next-day fixes no longer fit inside the settlement window.
+  </div>
+</section>
+
+<footer>
+  Field guide for settlement operations interview prep — covers US and European market infrastructure, equities, fixed income, and derivatives settlement mechanics. Treat the numeric examples as illustrative templates for structuring your own answers, not memorised facts to recite verbatim.
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Actions — IB Operations Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- Layout shell ---------- */
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  /* ---------- Sidebar contents ---------- */
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1rem 1.15rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.35rem; font-size:.95rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+
+  /* ---------- Lifecycle steps ---------- */
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.92rem;}
+
+  /* ---------- Player chain ---------- */
+  .chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .chain .node{
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; padding:.55rem .8rem;
+    font-size:.82rem; font-weight:600; flex:1 1 130px; text-align:center;
+  }
+  .chain .arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.87rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.65rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  /* ---------- Card grid & CA cards ---------- */
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:.95rem;}
+  .ca-dates{display:flex; flex-wrap:wrap; align-items:stretch; gap:.4rem; margin:1rem 0;}
+  .date-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 130px;
+  }
+  .dc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .v-voluntary .dc-label{color:var(--teal);}
+  .v-choice .dc-label{color:var(--red);}
+  .dc-desc{display:block; font-size:.78rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35;}
+  .dc-arrow{align-self:center; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-top:.3rem;}
+  .ca-grid h4{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.1rem; padding:.75rem .95rem; background:var(--surface-2); border-radius:8px;
+    font-size:.86rem; color:var(--ink-soft);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.4rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Glossary ---------- */
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem;}
+  .g-item{padding:.85rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem; color:var(--brass); display:block; margin-bottom:.2rem;}
+  .g-def{font-size:.86rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--ink-soft);}
+  .legend-dot{width:12px; height:12px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.8rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Corporate Actions</p>
+        <p class="brand-sub">IB Operations Field Manual</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search events, codes, terms…">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Foundations</p>
+      <a href="#intro">What is a Corporate Action</a>
+      <a href="#classification">Classification</a>
+      <a href="#lifecycle">Lifecycle &amp; Key Dates</a>
+      <a href="#players">Players in the Chain</a>
+      <a href="#messaging">SWIFT &amp; ISO 20022 Messaging</a>
+      <a href="#claims">Market Claims &amp; Buyer Protection</a>
+      <a href="#risk">Risk, Controls &amp; STP</a>
+
+      <p class="toc-group-label">Equity</p>
+      <a href="#eq-dvca">Cash Dividend</a>
+      <a href="#eq-dvse">Stock Dividend &amp; Bonus Issue</a>
+      <a href="#eq-drip">DRIP / Scrip Dividend</a>
+      <a href="#eq-splf">Stock Split</a>
+      <a href="#eq-splr">Reverse Stock Split</a>
+      <a href="#eq-rhts">Rights Issue</a>
+      <a href="#eq-tend">Tender Offer / Buyback</a>
+      <a href="#eq-dtch">Dutch Auction Buyback</a>
+      <a href="#eq-mrgr-cash">Merger — Cash</a>
+      <a href="#eq-mrgr-stock">Merger — Stock-for-Stock</a>
+      <a href="#eq-mrgr-choice">Merger — Cash-or-Stock</a>
+      <a href="#eq-soff">Spin-off</a>
+      <a href="#eq-exof">Exchange Offer</a>
+      <a href="#eq-exwa">Warrant Exercise</a>
+      <a href="#eq-dlst">Delisting &amp; Name Change</a>
+      <a href="#eq-meet">AGM / EGM Voting</a>
+      <a href="#eq-liqu">Liquidation</a>
+
+      <p class="toc-group-label">Fixed Income</p>
+      <a href="#fi-intr">Coupon / Interest Payment</a>
+      <a href="#fi-redm">Final Maturity / Redemption</a>
+      <a href="#fi-mcal">Full Call</a>
+      <a href="#fi-pcal">Partial Call / Paydown</a>
+      <a href="#fi-put">Put Option</a>
+      <a href="#fi-draw">Sinking Fund / Drawing</a>
+      <a href="#fi-conv">Convertible Bond Conversion</a>
+      <a href="#fi-cons">Consent Solicitation</a>
+      <a href="#fi-exof">Exchange Offer / Restructuring</a>
+      <a href="#fi-frn">Rate Reset (FRN)</a>
+      <a href="#fi-redo">Redenomination</a>
+      <a href="#fi-default">Default / Bankruptcy</a>
+
+      <p class="toc-group-label">Funds</p>
+      <a href="#fu-dist">Income / Dividend Distribution</a>
+      <a href="#fu-capg">Capital Gains Distribution</a>
+      <a href="#fu-drip">Dividend Reinvestment (Growth Option)</a>
+      <a href="#fu-accu">Accumulation Units</a>
+      <a href="#fu-mrgr">Fund Merger / Scheme Amalgamation</a>
+      <a href="#fu-liqu">Fund Liquidation / Winding-up</a>
+      <a href="#fu-switch">Share Class Conversion</a>
+      <a href="#fu-bonus">Bonus Units / Unit Split</a>
+      <a href="#fu-rhts">Rights Issue — Closed-End Funds</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#compare">Comparison Tables</a>
+      <a href="#deals">Notable Real Deals</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Study material · Investment Banking Operations</span>
+      <h1>Corporate Actions, start to end</h1>
+      <p class="lead">Every mandatory, voluntary, and elective corporate action across <strong>equity</strong>, <strong>fixed income</strong>, and <strong>funds</strong> — what it is, how it's classified, the dates that govern it, what happens to cash and positions, and how it actually moves through the settlement chain. Written for an Ops interview: definitions plus the "why it matters operationally" layer that textbooks skip.</p>
+      <div class="hero-tags">
+        <span>38 corporate action types</span>
+        <span>SWIFT MT564–MT568</span>
+        <span>ISO 20022 seev.03x</span>
+        <span>Real deal examples</span>
+      </div>
+    </header>
+
+    <!-- ============ INTRO ============ -->
+    <section id="intro">
+      <h2 class="section-title">What is a corporate action?</h2>
+      <p>A corporate action is any event initiated by an issuer (a company, government, or fund) that affects its outstanding securities and, in turn, the holders of those securities — their cash, their position, or the terms of what they hold. It can be as routine as a quarterly dividend or as complex as a cross-border, cash-or-stock merger with proration.</p>
+      <p>For an Operations team, a corporate action is not a market-data event — it's an <strong>instruction to move cash and securities correctly, on time, for every affected account</strong>, based on a position snapshot that may be sitting anywhere across a chain of custodians. That's why Ops interviews probe two things above all: can you classify an event correctly (because classification drives the workflow), and do you understand the dates and the entitlement math well enough to catch a break before it becomes a client complaint.</p>
+      <div class="callout">
+        <h4>Why this matters in Ops specifically</h4>
+        <p>Corporate actions sit at the intersection of custody, settlements, tax, and client service. A missed election deadline, a wrong record-date position, or an unrecognised market claim is real money and a real breach of duty of care — which is exactly why interviewers spend so much time on process, not just definitions.</p>
+      </div>
+    </section>
+
+    <!-- ============ CLASSIFICATION ============ -->
+    <section id="classification">
+      <h2 class="section-title">Classification: the first question in every event</h2>
+      <p>Before anything else, every corporate action is classified along one axis: <strong>does the holder have to do anything?</strong> This single distinction determines the entire operational workflow — whether Ops merely calculates and pays, or has to capture, validate, and forward an election before a hard deadline.</p>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot"></span> Mandatory</div>
+        <div class="legend-item"><span class="legend-dot"></span> Voluntary</div>
+        <div class="legend-item"><span class="legend-dot"></span> Mandatory with Choice</div>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <caption>Classification reference</caption>
+        <thead><tr><th>Type</th><th>Action required from holder</th><th>If no instruction is given</th><th>Typical examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mandatory</strong></td><td>None — applied automatically to every eligible position</td><td>Not applicable; there is nothing to instruct</td><td>Cash dividend, stock split, spin-off, bond maturity, interest payment</td></tr>
+          <tr><td><strong>Voluntary</strong></td><td>Yes — an instruction/election must reach the agent before the deadline</td><td>The holder simply does not participate; no entitlement accrues</td><td>Rights subscription, tender offer, exchange offer, consent solicitation, warrant exercise</td></tr>
+          <tr><td><strong>Mandatory with Choice</strong></td><td>Optional — the event happens regardless, but the holder may choose the form of proceeds</td><td>The issuer's pre-defined <em>default option</em> is auto-applied</td><td>Cash-or-stock merger consideration, dividend reinvestment (DRIP), scrip dividend</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-soft)">You'll see these three categories colour-coded consistently through every card below: <span class="mono" style="color:var(--brass)">brass</span> for mandatory, <span class="mono" style="color:var(--teal)">teal</span> for voluntary, <span class="mono" style="color:var(--red)">red</span> for mandatory-with-choice.</p>
+    </section>
+
+    <!-- ============ LIFECYCLE ============ -->
+    <section id="lifecycle">
+      <h2 class="section-title">The lifecycle: five dates that run every event</h2>
+      <p>Almost every corporate action — regardless of asset class — is governed by the same skeleton of dates. Learn this once and you can reason about any event you've never seen before.</p>
+      <ol class="lifecycle">
+        <li>
+          <h4>1. Announcement / Declaration Date</h4>
+          <p>The issuer publicly announces the event's terms — via press release, stock-exchange filing, or board resolution. Data vendors and custodians capture the raw terms, cross-check them against a second or third source, and produce a validated "golden record." The first client-facing notification (SWIFT <span class="mono">MT564 NEWM</span> / ISO 20022 <span class="mono">seev.031</span>) goes out from here.</p>
+        </li>
+        <li>
+          <h4>2. Record Date</h4>
+          <p>The snapshot date. Whoever is the registered/beneficial holder of the security <em>as of the close of business on this date</em>, per the CSD's books, is entitled to the benefit. Everything about entitlement calculation traces back to "what was the position on record date."</p>
+        </li>
+        <li>
+          <h4>3. Ex-Date (Ex-Entitlement Date)</h4>
+          <p>The first day the security trades <em>without</em> the entitlement attached. It is set relative to the market's settlement cycle so that only a trade that will actually settle by record date carries the benefit. Since the US moved to T+1 settlement in May 2024, ex-date and record date effectively align for most US equities; under the older T+2 cycle, ex-date sat one business day before record date. The exchange typically marks the security's opening price down by the value of the entitlement on ex-date.</p>
+        </li>
+        <li>
+          <h4>4. Election / Response Deadline <span style="font-weight:400;color:var(--ink-faint);font-size:.8rem;">(voluntary &amp; choice events only)</span></h4>
+          <p>The date by which an instruction must reach the agent. Note there are always <em>two</em> deadlines: the official "market deadline" set by the issuer/agent, and an earlier internal "custodian cut-off" — Ops always sets its own cut-off well ahead of the market deadline, because an instruction has to travel back up the chain (client → broker/custodian → sub-custodian → CSD → registrar) and each hop needs processing time. Missing the internal cut-off, not just the market deadline, is the real operational risk.</p>
+        </li>
+        <li>
+          <h4>5. Payment / Effective Date</h4>
+          <p>Cash is credited, new securities are delivered, or — for a merger, split, or restructuring — the corporate change legally takes effect. Confirmations (<span class="mono">MT566</span> / <span class="mono">seev.036</span>) are issued, and Ops reconciles the entitlement actually received against what was expected, chasing any shortfall as an income break.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ PLAYERS ============ -->
+    <section id="players">
+      <h2 class="section-title">Players in the chain</h2>
+      <p>A notification rarely travels in one hop. Understanding this chain is what separates a textbook answer from an Ops answer.</p>
+      <div class="chain">
+        <div class="node">Issuer</div><span class="arrow">→</span>
+        <div class="node">Registrar / Paying Agent</div><span class="arrow">→</span>
+        <div class="node">CSD / ICSD<br><span class="mono" style="font-weight:400;font-size:.7rem;color:var(--ink-faint)">DTC · Euroclear · Clearstream · NSDL/CDSL</span></div><span class="arrow">→</span>
+        <div class="node">Global Custodian</div><span class="arrow">→</span>
+        <div class="node">Sub-custodian<br><span style="font-weight:400;font-size:.72rem;color:var(--ink-faint)">local agent</span></div><span class="arrow">→</span>
+        <div class="node">Broker-Dealer / Asset Manager</div><span class="arrow">→</span>
+        <div class="node">Beneficial Owner</div>
+      </div>
+      <p>Ops teams typically sit at the <strong>custodian / sub-custodian / broker-dealer</strong> layer: taking a CSD-level notification, mapping it to every affected client account, calculating each account's entitlement, and — for voluntary events — collecting client elections and pushing them back up the same chain before the internal cut-off.</p>
+    </section>
+
+    <!-- ============ MESSAGING ============ -->
+    <section id="messaging">
+      <h2 class="section-title">SWIFT &amp; ISO 20022 messaging</h2>
+      <p>Corporate action data moves between institutions on standardised messages. ISO 15022 (the "MT" family) is still dominant in many markets; ISO 20022 (the "MX / seev" family) is its structured-XML successor and the direction the industry is migrating toward.</p>
+      <div class="table-wrap">
+      <table>
+        <caption>Message reference</caption>
+        <thead><tr><th>ISO 15022 (MT)</th><th>ISO 20022 (MX)</th><th>Purpose</th><th>Sent by</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">MT564</td><td class="mono">seev.031</td><td>Notification — announces event terms, options, and (later) computed entitlements</td><td>Account servicer → account owner</td></tr>
+          <tr><td class="mono">MT565</td><td class="mono">seev.033</td><td>Instruction — the holder's election on a voluntary / choice event</td><td>Account owner → account servicer</td></tr>
+          <tr><td class="mono">MT567</td><td class="mono">seev.032 / seev.034</td><td>Status &amp; processing advice — acknowledges, accepts, or rejects an instruction; reports event processing status</td><td>Account servicer → account owner</td></tr>
+          <tr><td class="mono">MT566</td><td class="mono">seev.036</td><td>Confirmation — confirms the actual cash/securities movement once paid</td><td>Account servicer → account owner</td></tr>
+          <tr><td class="mono">MT568</td><td class="mono">seev.038</td><td>Narrative — supplementary free-format text or legal notices attached to any of the above</td><td>Either direction</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Typical flow for a voluntary event: <span class="mono">MT564 (NEWM)</span> announces it → the client instructs via <span class="mono">MT565</span> → the agent confirms receipt/acceptance via <span class="mono">MT567</span> → on payment date, <span class="mono">MT566</span> confirms what was actually delivered. If terms change mid-event, a replacement <span class="mono">MT564 (REPL)</span> is issued; if the event is pulled, <span class="mono">MT564 (CANC)</span> follows.</p>
+      <div class="callout teal">
+        <h4>Interview-ready line</h4>
+        <p>"MT564 notifies, MT565 instructs, MT567 acknowledges status, MT566 confirms payment, MT568 carries the narrative." If you can say that in one breath, you've covered the messaging basics most interviewers are actually listening for.</p>
+      </div>
+    </section>
+
+    <!-- ============ MARKET CLAIMS ============ -->
+    <section id="claims">
+      <h2 class="section-title">Market claims, transformations &amp; buyer protection</h2>
+      <p>These three mechanisms exist because trade settlement and corporate action dates don't always line up — a trade can be agreed before ex-date but still be unsettled after record date. This is one of the most commonly tested topics in an Ops interview.</p>
+
+      <div class="callout">
+        <h4>Market Claim</h4>
+        <p>A trade executes <em>before</em> ex-date (so the buyer is economically entitled to the upcoming benefit) but fails to settle until <em>after</em> record date. Because the CSD still shows the <strong>seller</strong> as the record holder, the seller receives the entitlement from the issuer — but it economically belongs to the buyer. The CSD/custodian automatically raises a compensating "market claim" transaction between the two counterparties so the entitlement passes from seller to buyer, keeping the outcome consistent with the trade's ex-date rather than its settlement date.</p>
+      </div>
+      <div class="callout teal">
+        <h4>Transformation</h4>
+        <p>A mandatory (or mandatory-with-choice) event changes the nature of a security while a trade in the <em>old</em> security is still pending settlement — for example, a cash merger converts Company&nbsp;A shares into a fixed cash amount per share. Any open trade that hasn't settled by the effective date is automatically "transformed": the CSD converts the pending deliverable from shares into the cash (or new-security) equivalent so the trade can still settle cleanly.</p>
+      </div>
+      <div class="callout red">
+        <h4>Buyer Protection</h4>
+        <p>Applies to voluntary/elective events. If a buyer's trade hasn't settled by the event's deadline, the buyer isn't yet the record holder and normally couldn't elect. Buyer protection is a formal mechanism (in the US, administered via DTCC) letting the buyer file a protected instruction asserting their economic right to elect — preserving their ability to participate despite not yet holding the position of record.</p>
+      </div>
+    </section>
+
+    <!-- ============ RISK & STP ============ -->
+    <section id="risk">
+      <h2 class="section-title">Risk, controls &amp; STP</h2>
+      <p>What actually goes wrong in corporate actions processing — and what Ops does to prevent it.</p>
+      <div class="table-wrap">
+      <table>
+        <caption>Common risk points and controls</caption>
+        <thead><tr><th>Risk</th><th>Why it happens</th><th>Control</th></tr></thead>
+        <tbody>
+          <tr><td>Wrong event terms captured</td><td>Conflicting data across vendors/sources</td><td>Cross-source validation into a single "golden record" before any client notification goes out</td></tr>
+          <tr><td>Missed election</td><td>Instruction arrives after the market deadline</td><td>Internal cut-off set well ahead of the market deadline, with escalation reminders to clients</td></tr>
+          <tr><td>Wrong default applied</td><td>Client is silent on a mandatory-with-choice event</td><td>Pre-agreed standing instructions on file; proactive reminders before cut-off</td></tr>
+          <tr><td>Income break</td><td>Entitlement received ≠ entitlement expected (holding × rate)</td><td>Automated entitlement recalculation and reconciliation against custodian credit; investigate and claim shortfalls</td></tr>
+          <tr><td>Unclaimed market claim</td><td>Settlement fail across ex/record date not recognised</td><td>Automated market-claims engine at the CSD/custodian level</td></tr>
+          <tr><td>Incorrect withholding tax</td><td>Investor tax documentation/treaty relief not on file</td><td>Tax documentation held with custodian; relief-at-source or reclaim process</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><strong>STP (Straight-Through-Processing) rate</strong> — the percentage of notifications and instructions processed without manual intervention — is the headline KPI for a corporate actions desk. Voluntary and complex mandatory-with-choice events pull STP down because they require validated, timely, human-readable elections; pure mandatory cash events (like a plain dividend) should approach 100% STP.</p>
+    </section>
+
+    <!-- ============ PART I EQUITY ============ -->
+    <div class="part-heading"><h2>Part I — Equity Corporate Actions</h2><span class="part-count">17 events</span></div>
+    <section id="equity-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="eq-dvca">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Cash Dividend</h3></div><span class="ca-code">DVCA</span></div>
+          <p class="ca-def">Distribution of cash to equity holders out of company profits or reserves, in proportion to shareholding. The most routine, highest-volume corporate action any Ops desk processes.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Board declares dividend rate</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span><span class="dc-desc">Snapshot of eligible holders</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span><span class="dc-desc">Price marked down</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span><span class="dc-desc">Cash credited</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = record-date position × dividend rate per share. Currency conversion applies if paid in a currency other than the holder's base currency; some issuers offer a currency election.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited to the account, typically net of withholding tax deducted at source per the holder's tax residency/treaty documentation; gross and net amounts are both reported. Pure cash event — no position movement.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Quarterly dividends from NYSE, LSE and NSE blue chips are almost all plain DVCA events — the single highest-volume corporate action type any custodian handles.</p>
+        </article>
+
+        <article class="ca-card" id="eq-dvse">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Stock Dividend &amp; Bonus Issue</h3></div><span class="ca-code">DVSE / BONU</span></div>
+          <p class="ca-def">Distribution of additional shares to existing holders — instead of cash (stock dividend) or free of payment on top of the existing holding (bonus/capitalisation issue) — in proportion to holding. Markets mainly distinguish the two by accounting source (retained earnings vs. share premium/reserves) and tax treatment.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Ratio declared, e.g. 1:1</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span><span class="dc-desc">Price adjusted for dilution</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Credit Date</span><span class="dc-desc">New shares allotted</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New shares = holding × bonus ratio, usually rounded down with the fraction paid as cash-in-lieu. Market price is adjusted down on ex-date proportionate to the dilution — total position value is roughly unchanged.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Free-of-payment securities credit; no cash movement aside from fractional cash-in-lieu. Average cost per share is recalculated by spreading the original cost basis across the new, larger share count.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Indian issuers frequently issue bonus shares (e.g., ratios like 1:1); each event increases share count and reduces market price proportionally, leaving pre-market-movement holding value unchanged.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="eq-drip">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Dividend Reinvestment (DRIP) / Scrip Dividend</h3></div><span class="ca-code">DRIP / DVOP</span></div>
+          <p class="ca-def">A cash dividend where the holder may elect to receive newly issued or market-purchased shares of equivalent value instead of cash — or, in a scrip structure, shares by default with a cash option.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment / Allotment</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Election is per holding; if silent, the issuer's stated default (usually cash) applies. Share entitlement = elected cash amount ÷ a reinvestment reference price, often set at a small discount to market.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>A cash-electing holder is processed exactly like a DVCA. A stock-electing holder gets a FoP securities credit instead, with the cash amount recorded internally as "reinvested" — still relevant for tax reporting even though no cash actually moved.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>DRIP programmes are common with income-focused blue chips and REITs, letting long-term holders compound their position without brokerage costs on each reinvestment.</p>
+        </article>
+
+        <article class="ca-card" id="eq-splf">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Stock Split (Forward)</h3></div><span class="ca-code">SPLF</span></div>
+          <p class="ca-def">Each existing share is subdivided into a larger number of shares (e.g., 10-for-1), reducing the price per share proportionally with no change to total investment value or market cap.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Split ratio declared</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date / Effective Date</span><span class="dc-desc">Ratio applied</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New holding = old holding × split ratio. Reference price is divided by the same ratio — a re-denomination of the same economic interest into more units.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Position increased via a free-of-payment event; no cash movement. Average cost per share is divided by the ratio so total cost basis is unchanged; exchanges auto-adjust open orders and limit prices.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Nvidia executed a 10-for-1 forward split effective 7 June 2024 — a holder of 100 shares became a holder of 1,000 at one-tenth the price. Amazon carried out a 20-for-1 split in June 2022.</p>
+        </article>
+
+        <article class="ca-card" id="eq-splr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Reverse Stock Split</h3></div><span class="ca-code">SPLR</span></div>
+          <p class="ca-def">The opposite of a forward split — existing shares are consolidated into a smaller number (e.g., 1-for-10), raising the per-share price proportionally. Often used to meet an exchange's minimum-price listing rule or reduce an unwieldy share count.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date / Effective Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New holding = old holding ÷ consolidation ratio, rounded down; fractional shares are almost always cashed out rather than issued, since exchanges don't trade in fractions.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Position reduced via a FoP event; fractional entitlement paid as cash-in-lieu at the post-split reference price; average cost per share is multiplied by the ratio.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>General Electric executed a 1-for-8 reverse split in 2021; Citigroup executed a 1-for-10 reverse split in 2011 following its post-financial-crisis share count.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-rhts">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Rights Issue</h3></div><span class="ca-code">RHTS</span></div>
+          <p class="ca-def">The issuer offers existing shareholders the right — not the obligation — to subscribe for new shares, usually at a discount to market, in proportion to their holding. Raises fresh capital while preserving existing holders' pre-emption rights.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Ratio &amp; price set</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Rights Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Subscription Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Allotment / Listing</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holders have three real choices: subscribe (pay the price for new shares), sell the renounceable rights entitlement in the market, or let it lapse. Unsubscribed rights are often sold by the agent for non-participants (the "rump"), or simply lapse depending on the market.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>On subscription: cash debited, new (sometimes partly-paid) shares credited, often under a temporary ISIN until fully paid and merged into the parent line. If rights are sold instead, cash is credited and no new position is created.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Reliance Industries raised ₹53,124 crore via a rights issue in May 2020 — 1 new share for every 15 held at ₹1,257 per share, payable in instalments — one of the largest global rights issues that year.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-tend">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Tender Offer / Share Buyback</h3></div><span class="ca-code">TEND</span></div>
+          <p class="ca-def">The issuer (or occasionally a third party) offers to repurchase shares directly from holders at a fixed price, usually at a premium to market, for a limited window and often capped at a maximum quantity.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span><span class="dc-desc">Eligibility</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Tender Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Proration</span><span class="dc-desc">If oversubscribed</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holders elect how many shares to tender. If total tendered exceeds the offer's cap, shares are accepted pro-rata across all tendering holders; untendered or prorated-back shares remain outstanding, unaffected.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Accepted shares debited from custody, cash credited at the tender price; any unaccepted portion simply remains in the account. Odd-lot holders are sometimes given priority to avoid leaving small residual positions.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Fixed-price and Dutch-auction tender buybacks are a standard capital-return tool for large-cap issuers alongside open-market repurchases; Dell's 2013 going-private deal used a tender/merger structure.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-dtch">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Dutch Auction Buyback</h3></div><span class="ca-code">DTCH</span></div>
+          <p class="ca-def">A variant of the tender offer where the issuer specifies a price <em>range</em> rather than a single price; holders tender at whatever price within the range they'd accept, and the issuer sets the single "clearing price" that lets it repurchase the targeted amount.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Price range &amp; size</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Clearing Price Set</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Every accepted tender is paid the <em>same</em> clearing price, regardless of the price the holder specified, as long as their bid was at or below the clearing price. Oversubscription at the clearing price is prorated.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Identical mechanics to a standard tender offer once the clearing price is set: shares debited, cash credited at the single clearing price.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Dutch-auction structures are used when an issuer wants price discovery from its own shareholder base rather than dictating a single premium upfront.</p>
+        </article>
+
+        <article class="ca-card" id="eq-mrgr-cash">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Merger — Cash Consideration</h3></div><span class="ca-code">MRGR</span></div>
+          <p class="ca-def">Target shareholders receive a fixed cash amount per share and the target's shares cease to exist once the deal legally closes. No holder choice — a mandatory conversion of equity into cash.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Deal terms</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Approvals</span><span class="dc-desc">Shareholder &amp; regulatory</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective/Closing Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = holding × agreed cash-per-share price. Any trade in the target still open on the effective date is <strong>transformed</strong> from a securities deliverable into the cash equivalent.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Target shares extinguished (debited) from custody; cash credited at the agreed price; the security is delisted from its exchange.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Pfizer's ~$43bn all-cash acquisition of Seagen closed in December 2023. Twitter's take-private deal (October 2022) was an all-cash merger at $54.20 per share.</p>
+        </article>
+
+        <article class="ca-card" id="eq-mrgr-stock">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Merger — Stock-for-Stock</h3></div><span class="ca-code">MRGR</span></div>
+          <p class="ca-def">Target shareholders receive newly issued acquirer shares at a fixed exchange ratio (e.g., 0.6275 acquirer shares per target share) instead of cash. Also mandatory — every eligible holder is converted at the same ratio.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Exchange ratio set</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Approvals</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Delivery Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New position = target holding × exchange ratio, generally rounded down with cash-in-lieu for fractions.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Target shares debited and extinguished; acquirer shares credited FoP; cost basis carries over from the old position, often tax-deferred in a genuine share-for-share reorganisation, subject to jurisdiction.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Large-cap combinations are frequently structured as pure stock swaps to preserve both companies' balance sheets and give target shareholders continued upside in the combined entity.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="eq-mrgr-choice">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Merger — Cash-or-Stock Election</h3></div><span class="ca-code">MRGR</span></div>
+          <p class="ca-def">Target shareholders may elect cash, acquirer stock, or a mix, subject to an overall proration mechanism that caps the total cash (or stock) the acquirer pays out across all shareholders combined.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Proration Calculated</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Closing Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment/Delivery</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Because the aggregate cash/stock mix is fixed at deal level, an individual holder's election can be prorated if too many choose the same option — cash electors scaled back and topped up with stock, or vice versa. Non-electing holders receive a pre-set default mix.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>A composite of the cash-merger and stock-merger mechanics above, applied per the final prorated allocation once the election window closes.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Broadcom's acquisition of VMware (closed November 2023) let VMware holders elect $142.50 cash or a fixed ratio of Broadcom shares per share, prorated to keep the overall consideration roughly half cash, half stock.</p>
+        </article>
+
+        <article class="ca-card" id="eq-soff">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Spin-off</h3></div><span class="ca-code">SOFF</span></div>
+          <p class="ca-def">A parent company distributes shares of a subsidiary ("spinco") pro-rata to its existing shareholders, creating a new, independently listed company. Economically similar to a stock dividend, but the distributed security is a different, newly listed entity.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Distribution/Ex-Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Spinco Trades Independently</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Distribution ratio (e.g., 1 spinco share for every 4 parent shares) is fixed by the parent's board. No cash changes hands; the parent's price is marked down on ex-date to reflect the value distributed.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>A new position (in the spinco, under its own ISIN) is credited FoP to the same account; the parent's cost basis is split between parent and spinco shares based on their relative fair values at distribution — a genuinely fiddly tax-lot exercise.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>General Electric spun off GE HealthCare in January 2023, then split its remaining businesses into GE Aerospace and GE Vernova in April 2024 — one issuer running the mechanic twice in under two years.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-exof">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Exchange Offer</h3></div><span class="ca-code">EXOF</span></div>
+          <p class="ca-def">Holders are invited to voluntarily exchange their existing security for a different one — new shares of a related issuer, a new bond with different terms, or a mix — commonly used in split-offs, debt exchanges, or restructurings.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Exchange terms</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Proration</span><span class="dc-desc">If oversubscribed</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>The holder chooses whether to tender their existing security into the offer; if capped and oversubscribed, accepted amounts are prorated exactly as in a tender offer.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Old security debited, new security (or cash/mixed consideration) credited for the accepted portion; anything not tendered or not accepted remains unchanged in the original security.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Johnson &amp; Johnson completed the separation of its remaining Kenvue stake in August 2023 via a split-off exchange offer — J&amp;J shareholders could voluntarily swap J&amp;J shares for Kenvue shares at a discount.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-exwa">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Warrant Exercise</h3></div><span class="ca-code">EXWA</span></div>
+          <p class="ca-def">A warrant gives its holder the right to buy the underlying share at a fixed strike price before expiry. Exercise is entirely at the holder's discretion — economically like a call option, but warrants are issued directly by the company (dilutive) rather than traded as standardised derivatives.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Issuance</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Exercise Window Opens</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Exercise Deadline/Expiry</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holder pays the strike price per warrant exercised; new shares are issued by the company (dilutive), unlike an exchange-traded option settled between existing market participants.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash debited (strike price × warrants exercised), new shares credited FoP; unexercised, out-of-the-money warrants simply lapse worthless at expiry.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>SPAC (special-purpose acquisition company) warrants are a high-volume, retail-heavy example of EXWA processing — holders weigh exercising against the current share price ahead of expiry.</p>
+        </article>
+
+        <article class="ca-card" id="eq-dlst">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Delisting &amp; Name / Ticker Change</h3></div><span class="ca-code">DLST / CHAN</span></div>
+          <p class="ca-def">Delisting removes a security from an exchange (voluntarily, by regulatory action, or following a merger); a name or ticker change (CHAN) simply updates identifying information with no economic effect on the holding.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Ticker/name change: position is entirely unaffected — only static data updates across custody and trading systems. Delisting following a merger: closed out through the merger's own settlement, not through DLST alone.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Name/ticker change — no cash or position movement, purely a static-data update. Standalone delisting (e.g., regulatory) — no automatic entitlement; impact is on liquidity and valuation, not settlement.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A company rebranding its legal name and ticker triggers a CHAN event across every custodian's static data with zero cash or position impact — the clearest example of a purely informational corporate action.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-meet">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>AGM / EGM Voting</h3></div><span class="ca-code">MEET</span></div>
+          <p class="ca-def">Not a movement of cash or securities at all — a governance event. Shareholders are notified of an Annual or Extraordinary General Meeting and invited to vote (in person, by proxy, or electronically) on resolutions such as director elections, executive pay, or approving a merger.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Meeting Notice</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Voting Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Proxy Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Meeting Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Results Announced</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Only holders as of the voting record date are eligible; custodians pass voting rights down to beneficial owners and aggregate instructions back up as a single omnibus vote at the meeting.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>No cash or securities movement whatsoever — MEET is purely an instruction-and-reporting workflow, still handled through the same MT564/565/567 message family.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A merger's shareholder-approval vote is itself a MEET event that must pass before the underlying MRGR event can proceed to its effective date — procedurally linked, operationally distinct.</p>
+        </article>
+
+        <article class="ca-card" id="eq-liqu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Liquidation</h3></div><span class="ca-code">LIQU</span></div>
+          <p class="ca-def">The company is wound up — assets sold, liabilities settled, and any residual value distributed to shareholders (who rank behind creditors and preferred holders) in one or more liquidating distributions. In a full liquidation, the equity is ultimately extinguished.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Liquidation Approved</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date(s)</span><span class="dc-desc">Per distribution</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Distribution Date(s)</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Final Distribution / Cancellation</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>There may be one final payment or several interim liquidating distributions as assets are realised over time; the per-share amount is rarely known precisely in advance.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash (occasionally in-kind assets) credited to holders as distributions occur; the equity position is debited to zero once the final distribution is paid and the security is cancelled.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Common outcome for closed-end funds and distressed/bankrupt issuers once a court-approved winding-up plan is in place; equity holders typically recover little or nothing if the company was insolvent, since creditors are paid first.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART II FIXED INCOME ============ -->
+    <div class="part-heading"><h2>Part II — Fixed Income Corporate Actions</h2><span class="part-count">12 events</span></div>
+    <section id="fi-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="fi-intr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Coupon / Interest Payment</h3></div><span class="ca-code">INTR</span></div>
+          <p class="ca-def">Periodic interest payment on a bond to holders of record, per the instrument's coupon rate and payment frequency. Fixed income's equivalent of a cash dividend, and similarly the highest-volume FI event.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Accrual Period</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = face value held × coupon rate × (days in period ÷ day-count convention, e.g. 30/360 or Actual/Actual). Accrued interest is settled between buyer and seller on every trade — the buyer pays the seller accrued interest at trade settlement, then collects the full coupon at payment date.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited at the coupon rate on face value held at record date. For floating-rate notes, the applicable reference-rate reset for the period is applied first.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A semi-annual USD corporate bond paying a fixed coupon is one of the highest-STP events in fixed income — largely automated end to end since the entitlement is pure arithmetic on face value.</p>
+        </article>
+
+        <article class="ca-card" id="fi-redm">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Final Maturity / Redemption</h3></div><span class="ca-code">REDM</span></div>
+          <p class="ca-def">The bond reaches its stated maturity date and the issuer repays full face value to holders of record, alongside the final coupon; the security is then cancelled. Used only for redemption on the original schedule, not an early call/put option.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Final Coupon / Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Maturity / Redemption Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = face value held × 100% (par) + final coupon accrued. No election — every holder is redeemed identically.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited for principal + final interest; the bond position is debited to zero and the ISIN cancelled/deactivated.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Government and corporate bonds redeeming at scheduled maturity are the cleanest, most predictable fixed income event — the date and amount have been known since issuance.</p>
+        </article>
+
+        <article class="ca-card" id="fi-mcal">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Full Call</h3></div><span class="ca-code">MCAL</span></div>
+          <p class="ca-def">The issuer exercises its right (per the call schedule/indenture) to redeem an entire outstanding issue early, usually at a pre-set call price (often par, sometimes at a small premium). Common when falling rates let the issuer refinance more cheaply.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Call Announcement</span><span class="dc-desc">Often 30 days' notice</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Call / Redemption Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = face value held × call price + accrued interest to the call date. From announcement, the bond's yield-to-call becomes the relevant metric rather than yield-to-maturity.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited at the call price; position debited to zero; the bond stops trading once formally called.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>A wave of corporate bond calls typically follows a rate-cutting cycle, as issuers refinance high-coupon debt issued when rates were higher.</p>
+        </article>
+
+        <article class="ca-card" id="fi-pcal">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Partial Call / Paydown</h3></div><span class="ca-code">PCAL / PRED</span></div>
+          <p class="ca-def">Only a portion of the outstanding issue is redeemed early — common for asset-backed and mortgage-backed securities (ABS/MBS) where loan prepayments flow through as principal paydowns. PCAL reduces face value per unit; PRED redeems a portion without reducing nominal value (via a lottery-style drawing instead).</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Factor Update</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span><span class="dc-desc">Often monthly</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = face value held × change in pool factor × par — a pro-rata slice of the paydown; the remaining position's face value is reduced accordingly (PCAL) rather than the number of bonds held.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash principal paydown credited; outstanding face value is written down in the ledger to reflect the new pool factor — a step easy to miss, and a classic source of income breaks if the factor isn't updated before the next coupon is calculated.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Mortgage-backed securities pay down principal monthly as underlying homeowners prepay or refinance — the "pool factor" published each month is exactly what drives this paydown.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-put">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Put Option / Puttable Bond</h3></div><span class="ca-code">Put Redemption</span></div>
+          <p class="ca-def">Gives the bondholder — not the issuer — the right to demand early redemption at a pre-set price on specified put date(s), protecting the holder if rates rise or credit quality deteriorates. The mirror image of a callable bond.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Put Window Opens</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Put Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holder decides whether to exercise; if not exercised, the bond simply continues to its next put date or maturity unchanged.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>For exercising holders: cash credited at the put price + accrued interest, position debited. Non-exercising holders see no change at all.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Puttable structured notes and some sovereign/agency bonds include periodic put windows, giving institutional holders an exit valve without selling in the secondary market.</p>
+        </article>
+
+        <article class="ca-card" id="fi-draw">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Sinking Fund / Drawing</h3></div><span class="ca-code">DRAW</span></div>
+          <p class="ca-def">The issuer is contractually required to retire a portion of an issue periodically ahead of final maturity. Which specific certificates are redeemed is typically decided by a random lottery drawing among all outstanding certificates.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Drawing Date</span><span class="dc-desc">Lottery held</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Notification</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Redemption / Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>A subset of outstanding certificates is selected by lottery for full or partial redemption at the sinking-fund price (usually par); all other holders are unaffected until the next drawing.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>For drawn holders: cash credited at the sinking price, position reduced/cancelled for the drawn certificates. Undrawn holders continue to hold and accrue interest normally.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Sinking-fund drawings remain common in markets that still use physical/bearer certificates and in structured or municipal bond programmes with mandatory periodic retirement schedules.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-conv">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Convertible Bond Conversion</h3></div><span class="ca-code">CONV</span></div>
+          <p class="ca-def">Conversion of a convertible bond (or convertible preferred share) into common equity of the issuer, at a pre-stated conversion price/ratio, at the holder's election — some instruments also carry an issuer-forced conversion clause above a trigger price.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Conversion Window Opens</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Conversion / Delivery Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Shares received = face value held ÷ conversion price (or face value × conversion ratio). Economically rational mainly when the equity's market value exceeds the "as-converted" bond value — which is why conversion volume clusters around rallies in the underlying stock.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Bond position debited/cancelled for the converted portion; equity shares credited FoP. Accrued-interest treatment on conversion is defined by the indenture (sometimes forfeited, sometimes paid).</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Convertible note holders in high-growth technology names have historically converted into equity once the underlying share price rallied well above the conversion price, locking in the upside the bond was designed to offer.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-cons">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Consent Solicitation</h3></div><span class="ca-code">CONS</span></div>
+          <p class="ca-def">The issuer (or a third party) asks bondholders to vote to approve a change to the bond's terms — waiving a covenant, extending maturity, or approving a restructuring — usually with a one-off consent fee for holders voting in favour before the deadline.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Solicitation Launch</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Consent Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Results Announced</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Consent Fee Paid</span><span class="dc-desc">If applicable</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holder decides whether to grant consent; a required threshold (e.g., majority or super-majority of outstanding face value) must be reached for the amendment to bind all holders under most indentures.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>No principal/security movement — a voting event with an optional cash consent-fee payment to participating, favourable voters.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Consent solicitations commonly precede a bond exchange offer, where the issuer first needs bondholder approval to waive protective covenants before executing the broader restructuring.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-exof">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Exchange Offer / Debt Restructuring</h3></div><span class="ca-code">EXOF</span></div>
+          <p class="ca-def">Bondholders are invited to voluntarily exchange existing notes for new notes with different terms — lower principal, extended maturity, different coupon, or equity — typically used in distressed-debt restructurings as an alternative to formal bankruptcy.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Exchange terms</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Election Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holder decides whether to tender into the exchange; often paired with a simultaneous consent solicitation to amend the old bond's covenants ("exit consents"), making non-participation less attractive.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Old bond debited, new instrument (bond, mixed cash/bond, or equity) credited for the accepted/tendered portion.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Distressed issuers frequently combine debt exchange offers with exit consents to restructure outside formal bankruptcy, since reaching the participation threshold amends the old bond's terms even for holdout creditors.</p>
+        </article>
+
+        <article class="ca-card" id="fi-frn">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Interest Rate Reset (Floating Rate Note)</h3></div><span class="ca-code">INTR (rate reset)</span></div>
+          <p class="ca-def">A floating-rate note's coupon resets periodically (e.g., quarterly) to a new reference rate plus a fixed spread — historically LIBOR-based, now predominantly SOFR / €STR / SONIA-based following the post-2021 benchmark transition.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Reset / Fixing Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">New Rate Published</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Next Coupon Period</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New coupon rate = reference rate (as fixed on reset date) + fixed spread. No holder action — the new rate simply applies automatically to the next coupon calculation.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>No cash movement at reset itself; it changes the entitlement calculation for the next coupon (INTR) event.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>The 2021–2023 industry-wide LIBOR-to-SOFR transition required re-papering millions of legacy floating-rate instruments' reset mechanics — a landmark, industry-scale project for fixed income Ops teams.</p>
+        </article>
+
+        <article class="ca-card" id="fi-redo">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Redenomination</h3></div><span class="ca-code">REDO</span></div>
+          <p class="ca-def">The currency or unit denomination of a security is changed — historically most associated with legacy European currencies (franc, mark, lira) converting into the euro, or more generally when face-value denominations are updated for market convention.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Redenomination / Effective Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Face value is recalculated at the fixed conversion rate; units held are generally unchanged, but the currency and/or minimum denomination of the security is updated.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>No cash movement; static data (currency, face-value denomination) is updated across custody records.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Bonds originally issued in legacy currencies like the Deutsche Mark or French Franc were redenominated into euro as those currencies were phased out between 1999 and 2002.</p>
+        </article>
+
+        <article class="ca-card" id="fi-default">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Default / Bankruptcy</h3></div><span class="ca-code">Status Event</span></div>
+          <p class="ca-def">The issuer fails to make a scheduled interest or principal payment, or files for bankruptcy protection, triggering a change in the security's legal and trading status. Not itself a cash/security movement, but the trigger for a cascade of subsequent events.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Missed Payment / Filing</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Trading Status Update</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Subsequent Restructuring Events</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>The bond typically continues to trade "flat" (without accrued interest changing hands) once in default, since future coupons are no longer assured. Recovery, if any, ultimately comes through a court-supervised or negotiated restructuring.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>No automatic cash/security movement at default itself; Ops flags the position, stops accruing interest income in client statements per accounting policy, and monitors for the restructuring event that follows.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>High-yield issuers that miss a coupon payment typically enter a restructuring process — often resulting in an exchange offer converting bondholders into a mix of new debt and/or equity in the reorganised company.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART III FUNDS ============ -->
+    <div class="part-heading"><h2>Part III — Fund Corporate Actions</h2><span class="part-count">9 events</span></div>
+    <section id="funds-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="fu-dist">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Income / Dividend Distribution</h3></div><span class="ca-code">DVCA (fund context)</span></div>
+          <p class="ca-def">A mutual fund, ETF, or closed-end fund distributes accumulated income (interest, dividends received by the fund) to unit/shareholders in proportion to units held, typically on a set schedule per the fund's distribution policy.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Declaration Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Distribution Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = units held × per-unit distribution rate. NAV drops by the per-unit distribution amount on ex-date, since the distributed income leaves the fund's assets.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited (or automatically reinvested if a growth/DRIP option is selected — see below); no change to units held for cash-distribution investors.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Debt/income mutual funds often distribute monthly or quarterly; equity growth funds may distribute annually or not at all, retaining income within NAV instead.</p>
+        </article>
+
+        <article class="ca-card" id="fu-capg">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Capital Gains Distribution</h3></div><span class="ca-code">CAPG</span></div>
+          <p class="ca-def">Distribution of realised profits from the fund's sale of portfolio securities during the year, passed through to unit-holders — common at year-end for open-end mutual funds in jurisdictions where funds must distribute realised gains to retain pass-through tax status.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Estimate / Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = units held on record date × per-unit capital gains rate, split between short-term and long-term gains for tax reporting in relevant markets. NAV is reduced by the distribution amount on ex-date.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited (or reinvested); a taxable event for the investor even if reinvested, since the gain was realised inside the fund regardless of how long the investor personally held their units.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>US mutual funds commonly declare capital gains distributions in November/December each year — creating a "buying a distribution" trap for investors who purchase shortly before record date and immediately owe tax on gains they didn't economically benefit from.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fu-drip">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Dividend Reinvestment (Growth Option)</h3></div><span class="ca-code">DRIP</span></div>
+          <p class="ca-def">At subscription, most funds let an investor choose a "growth/accumulation" option (income retained/reinvested as new units) or an "income/distribution" option (income paid as cash) — the same choice-driven mechanic as an equity DRIP, but usually elected once at account opening.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Follows the underlying distribution's own timeline</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>If reinvestment is elected, additional units = distribution amount ÷ NAV per unit on the reinvestment date (often ex-date NAV, sometimes with no sales load).</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Growth option: new units credited FoP, no cash movement visible to the investor. Income option: cash credited exactly as a standard distribution.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Nearly all fund platforms default retail investors into "growth"/accumulation share classes unless income is explicitly requested, since most retail investors are accumulating rather than drawing income.</p>
+        </article>
+
+        <article class="ca-card" id="fu-accu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Accumulation Units (Deemed Distribution)</h3></div><span class="ca-code">INFO</span></div>
+          <p class="ca-def">In an accumulation share class, income accrued during the period is retained within the fund rather than paid out — but for tax purposes in several jurisdictions (notably the UK), retained income is still treated as if distributed to investors, creating a tax liability with no matching cash payment.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Accounting Period End</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Deemed Distribution Date</span><span class="dc-desc">No cash moves</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>No unit or cash movement at all; NAV simply reflects the retained income already. Only a tax-reporting entry is generated for the investor.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Nothing settles — this is purely a tax/reporting corporate action, one of the few events with zero balance-sheet impact anywhere in the chain.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>UK "accumulation" (Acc) share classes are the clearest case: investors must report and pay tax on income they never actually received in cash, purely because it was retained and reflected in a higher NAV.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fu-mrgr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Fund Merger / Scheme Amalgamation</h3></div><span class="ca-code">MRGR</span></div>
+          <p class="ca-def">Two funds (or two share classes) are combined into one, usually to eliminate an overlapping or sub-scale scheme. Unlike a corporate merger, unit-holders in the absorbed fund are typically given a window to redeem out for cash instead of rolling into the surviving fund.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Opt-out / Redemption Window</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Merger Effective Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">New Units Allotted</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Holders who don't opt out are converted into units of the surviving fund at the relevant NAV-based exchange ratio on the effective date; holders who opt out simply redeem at NAV as a normal transaction.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Absorbed fund's units debited (cancelled); surviving fund's units credited FoP at the calculated ratio, with cost basis carried forward where the merger qualifies as a tax-deferred reorganisation.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Following SEBI's mutual fund re-categorisation norms, many Indian asset managers merged overlapping schemes into a single scheme per category, giving unit-holders an exit option before the merger date.</p>
+        </article>
+
+        <article class="ca-card" id="fu-liqu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Fund Liquidation / Winding-up</h3></div><span class="ca-code">LIQU</span></div>
+          <p class="ca-def">The fund is closed and its remaining assets sold and distributed to unit-holders — used when a scheme is sub-scale, its strategy is discontinued, or (for closed-end funds/trusts) its term expires.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Wind-up Announced</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Trading Suspended</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Final NAV Struck</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Final Distribution Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Entitlement = units held × final NAV per unit once all portfolio assets are liquidated (or, rarely, transferred in-kind) and liabilities settled.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash credited for the final NAV; the unit position is debited to zero and the fund's registration is deactivated.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Sub-scale niche or thematic ETFs are frequently wound up by their sponsor when assets under management fall below a viable threshold, returning final NAV to holders in cash.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fu-switch">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Share Class Conversion / Switch</h3></div><span class="ca-code">Class Switch</span></div>
+          <p class="ca-def">An investor (or the fund itself, in a forced conversion) moves a holding from one share class of the same fund to another — e.g., retail to institutional, or income to growth — usually to access a lower expense ratio at a higher investment threshold.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Election or Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Conversion Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New units = value of old holding at NAV ÷ new class's NAV per unit; economically neutral at the moment of conversion, but the ongoing expense ratio changes going forward.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Old class units debited, new class units credited FoP within the same fund — no cash movement, no capital-gains/redemption event in most jurisdictions since it's the same underlying fund.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Institutional platforms routinely auto-convert investors from a retail share class into a lower-cost institutional class once their holding crosses a minimum-investment threshold.</p>
+        </article>
+
+        <article class="ca-card" id="fu-bonus">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Bonus Units / Unit Split</h3></div><span class="ca-code">BONU / SPLF</span></div>
+          <p class="ca-def">Additional units issued free of payment to existing unit-holders in proportion to their holding (bonus units), or existing units subdivided into a larger number at a proportionally lower NAV (unit split) — both leave total holding value unchanged, purely changing unit count and per-unit NAV.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Credit / Split Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>New unit count = old units × (1 + bonus ratio), or × split ratio for a straight split; NAV per unit adjusted down by the same factor.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Free-of-payment unit credit; no cash movement; average cost per unit recalculated across the new, larger unit count.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Fund houses occasionally use unit splits to bring a high-NAV legacy scheme's per-unit price back down to a more retail-friendly level, without changing any investor's total holding value.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fu-rhts">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Rights Issue — Closed-End Funds</h3></div><span class="ca-code">RHTS</span></div>
+          <p class="ca-def">A closed-end fund (which, unlike an open-end mutual fund, has a fixed share count and trades on an exchange like a company) can raise additional capital via a rights issue to existing shareholders, exactly as an operating company would.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Rights Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Subscription Deadline</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Allotment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>Mechanics &amp; Entitlement</h4><p>Identical mechanics to an equity rights issue — subscribe, sell the rights, or let them lapse — since a closed-end fund's shares trade and settle exactly like ordinary equity.</p></div>
+            <div><h4>Settlement &amp; Accounting Impact</h4><p>Cash debited and new shares credited on subscription; shares are often issued at a discount to NAV to incentivise take-up, which can dilute non-participating holders' NAV per share.</p></div>
+          </div>
+          <p class="ca-example"><span class="ex-tag">Real-world example</span>Closed-end funds trading at a premium to NAV sometimes use rights issues to raise growth capital, since the premium makes new share issuance accretive rather than dilutive to existing holders.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ COMPARISON TABLES ============ -->
+    <div class="part-heading"><h2>Reference</h2><span class="part-count">tables &amp; glossary</span></div>
+    <section id="compare">
+      <h2 class="section-title">Comparison tables</h2>
+      <p>The classification table (Mandatory / Voluntary / Mandatory with Choice) is covered in <a href="#classification">Classification</a> above. Two more comparisons worth having cold for an interview:</p>
+
+      <div class="table-wrap">
+      <table>
+        <caption>Cash event vs. securities/stock event</caption>
+        <thead><tr><th>Aspect</th><th>Cash Event <span style="font-weight:400;color:var(--ink-faint)">(cash dividend, coupon, cash merger)</span></th><th>Securities Event <span style="font-weight:400;color:var(--ink-faint)">(bonus issue, split, stock merger)</span></th></tr></thead>
+        <tbody>
+          <tr><td>Account impacted</td><td>Cash/nostro account credited</td><td>Custody/position account increased, reduced, or converted</td></tr>
+          <tr><td>Valuation impact</td><td>Price marked down by the cash amount on ex-date; no other adjustment</td><td>New/additional securities require a recalculated average cost per unit</td></tr>
+          <tr><td>Settlement mechanism</td><td>Cash payment referencing the corporate action event</td><td>Free-of-payment (FoP) securities movement or re-registration</td></tr>
+          <tr><td>Tax treatment</td><td>Often withholding tax applies at source</td><td>Usually tax-deferred until eventual sale (jurisdiction dependent)</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="table-wrap">
+      <table>
+        <caption>Equity vs. fixed income vs. funds — quick reference</caption>
+        <thead><tr><th>Aspect</th><th>Equity</th><th>Fixed Income</th><th>Funds</th></tr></thead>
+        <tbody>
+          <tr><td>Typical trigger</td><td>Board/company decision</td><td>Bond indenture terms or issuer election</td><td>AMC/trustee decision, scheme rules</td></tr>
+          <tr><td>Common events</td><td>Dividend, split, merger, rights, buyback</td><td>Coupon, call, put, maturity, conversion</td><td>Distribution, NAV rebasing, scheme merger</td></tr>
+          <tr><td>Key reference entity</td><td>Registrar &amp; stock exchange</td><td>Paying/fiscal agent &amp; trustee</td><td>Registrar &amp; Transfer Agent (RTA), trustee</td></tr>
+          <tr><td>Typical CAEV family</td><td class="mono" style="font-size:.8rem">DVCA, BONU, SPLF, MRGR, RHTS, TEND</td><td class="mono" style="font-size:.8rem">INTR, REDM, MCAL, PCAL, CONV, CONS</td><td class="mono" style="font-size:.8rem">DVCA/CAPG, MRGR, LIQU</td></tr>
+          <tr><td>Settlement venue</td><td>Exchange CSD (DTC / Euroclear / NSDL-CDSL)</td><td>Bond CSD / ICSD (Euroclear / Clearstream) or local</td><td>Fund registrar / transfer-agency platform</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="deals">
+      <h2 class="section-title">Notable real deals, for quick recall</h2>
+      <p>Concrete anchors are worth more in an interview than a memorised definition. These are real, verifiable examples worth having ready.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>Deal</th><th>Year</th><th>What happened</th></tr></thead>
+        <tbody>
+          <tr><td>Forward Split</td><td>Nvidia</td><td>2024</td><td>10-for-1 forward split, effective 7 June 2024</td></tr>
+          <tr><td>Forward Split</td><td>Amazon</td><td>2022</td><td>20-for-1 forward split, effective June 2022</td></tr>
+          <tr><td>Reverse Split</td><td>General Electric</td><td>2021</td><td>1-for-8 reverse split as part of a broader restructuring</td></tr>
+          <tr><td>Reverse Split</td><td>Citigroup</td><td>2011</td><td>1-for-10 reverse split following the financial crisis</td></tr>
+          <tr><td>Rights Issue</td><td>Reliance Industries</td><td>2020</td><td>₹53,124 crore raised; 1 new share per 15 held at ₹1,257, payable in instalments</td></tr>
+          <tr><td>Spin-off</td><td>GE HealthCare / GE Vernova &amp; GE Aerospace</td><td>2023 &amp; 2024</td><td>General Electric separated into three independent public companies in two stages</td></tr>
+          <tr><td>Exchange Offer / Split-off</td><td>Johnson &amp; Johnson → Kenvue</td><td>2023</td><td>J&amp;J shareholders could voluntarily swap J&amp;J shares for Kenvue shares at a discount</td></tr>
+          <tr><td>Cash Merger</td><td>Pfizer → Seagen</td><td>2023</td><td>~$43bn all-cash acquisition; Seagen delisted on close</td></tr>
+          <tr><td>Cash Merger (going-private)</td><td>Twitter (Musk)</td><td>2022</td><td>All-cash take-private at $54.20 per share</td></tr>
+          <tr><td>Cash-or-Stock Merger</td><td>Broadcom → VMware</td><td>2023</td><td>Holders elected $142.50 cash or a fixed Broadcom share ratio, prorated toward a ~50/50 mix</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <h2 class="section-title">Glossary</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">ISIN</span><p class="g-def">International Securities Identification Number — 12-character alphanumeric code uniquely identifying a security globally (ISO 6166).</p></div>
+        <div class="g-item"><span class="g-term">CUSIP</span><p class="g-def">9-character identifier used for securities in the US and Canada.</p></div>
+        <div class="g-item"><span class="g-term">SEDOL</span><p class="g-def">7-character UK identifier (Stock Exchange Daily Official List), used on the LSE and as a component of many ISINs.</p></div>
+        <div class="g-item"><span class="g-term">Record Date</span><p class="g-def">The snapshot date used to determine which holders are entitled to a corporate action benefit.</p></div>
+        <div class="g-item"><span class="g-term">Ex-Date</span><p class="g-def">First trading day a security trades without the entitlement attached; price is typically marked down on this date.</p></div>
+        <div class="g-item"><span class="g-term">Payment / Effective Date</span><p class="g-def">Date cash/securities are actually delivered, or a restructuring legally takes effect.</p></div>
+        <div class="g-item"><span class="g-term">Entitlement</span><p class="g-def">The cash and/or securities a holder is due, computed as position × rate/ratio.</p></div>
+        <div class="g-item"><span class="g-term">CAEV</span><p class="g-def">ISO 15022/20022 "Corporate Action Event Indicator" — the 4-letter code identifying the event type (e.g. DVCA, MRGR).</p></div>
+        <div class="g-item"><span class="g-term">Golden Record</span><p class="g-def">The validated master version of an event's terms, cross-checked across multiple data sources before being sent to clients.</p></div>
+        <div class="g-item"><span class="g-term">STP</span><p class="g-def">Straight-Through-Processing — the percentage of notifications/instructions processed without manual intervention.</p></div>
+        <div class="g-item"><span class="g-term">Due Bill</span><p class="g-def">A tracking mechanism ensuring a buyer who traded before ex-date but hasn't settled still receives the entitlement (or the reverse), by attaching or stripping it from delivery.</p></div>
+        <div class="g-item"><span class="g-term">Market Claim</span><p class="g-def">Automatic compensating transaction between counterparties when a trade settles late across an ex/record date, correcting who receives the entitlement.</p></div>
+        <div class="g-item"><span class="g-term">Transformation</span><p class="g-def">Automatic conversion of a pending trade's deliverable when the underlying security changes due to a mandatory event.</p></div>
+        <div class="g-item"><span class="g-term">Buyer Protection</span><p class="g-def">A formal mechanism letting a buyer whose trade hasn't settled still assert an election right on a voluntary event.</p></div>
+        <div class="g-item"><span class="g-term">Proration</span><p class="g-def">Reducing tendered/elected quantities pro-rata when an offer is oversubscribed relative to its cap.</p></div>
+        <div class="g-item"><span class="g-term">Odd Lot</span><p class="g-def">A holding below the standard trading unit (e.g., under 100 shares in the US), sometimes given priority tender treatment.</p></div>
+        <div class="g-item"><span class="g-term">Fractional Entitlement</span><p class="g-def">A non-whole-share/unit remainder from a ratio-based event, usually paid out as cash-in-lieu.</p></div>
+        <div class="g-item"><span class="g-term">Rump</span><p class="g-def">The unsubscribed portion of a rights issue, typically sold in the market with proceeds passed to non-participating holders.</p></div>
+        <div class="g-item"><span class="g-term">Pari-Passu</span><p class="g-def">New securities rank equally with existing ones for dividend/rights purposes.</p></div>
+        <div class="g-item"><span class="g-term">Withholding Tax (WHT)</span><p class="g-def">Tax deducted at source on dividend/interest income, based on the investor's tax residency and treaty relief documentation.</p></div>
+        <div class="g-item"><span class="g-term">DTC / Euroclear / Clearstream</span><p class="g-def">Major (I)CSDs — DTC for US equities and corporate debt, Euroclear &amp; Clearstream as the two main international/Eurobond ICSDs.</p></div>
+        <div class="g-item"><span class="g-term">NSDL / CDSL</span><p class="g-def">India's two securities depositories, where dematerialised Indian equities and bonds are held.</p></div>
+        <div class="g-item"><span class="g-term">Registrar &amp; Transfer Agent (RTA)</span><p class="g-def">Entity maintaining the register of holders and processing entitlements on the issuer's behalf.</p></div>
+        <div class="g-item"><span class="g-term">Paying / Fiscal Agent</span><p class="g-def">Bank appointed to handle coupon/redemption cash flows for a bond issue.</p></div>
+        <div class="g-item"><span class="g-term">Custodian / Sub-custodian</span><p class="g-def">Institutions holding securities on behalf of clients; sub-custodians are local agents in a given market for a global custodian.</p></div>
+        <div class="g-item"><span class="g-term">Street Name</span><p class="g-def">Securities held in the name of a broker/custodian/nominee rather than the beneficial owner directly.</p></div>
+        <div class="g-item"><span class="g-term">NAV</span><p class="g-def">Net Asset Value — the per-unit value of a fund.</p></div>
+        <div class="g-item"><span class="g-term">DRIP</span><p class="g-def">Dividend Reinvestment Plan — automatic reinvestment of a cash distribution into additional units/shares.</p></div>
+        <div class="g-item"><span class="g-term">Book Closure</span><p class="g-def">A period during which the register/transfer books are closed to determine entitlement — an older mechanism, still referenced in some markets alongside a single record date.</p></div>
+        <div class="g-item"><span class="g-term">Free of Payment (FoP)</span><p class="g-def">A securities settlement with no corresponding cash movement.</p></div>
+        <div class="g-item"><span class="g-term">Delivery versus Payment (DvP)</span><p class="g-def">Settlement where securities and cash move simultaneously and conditionally on each other.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Study reference compiled for Investment Banking Operations interview preparation. Corporate action terminology and dates follow common global market practice (SWIFT/ISO 15022 &amp; 20022, DTCC, Euroclear/Clearstream) — always confirm against the specific market and custodian rulebook you're being asked about, since local variations exist.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  // respect system preference on first load
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  // mobile nav
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  // scrollspy
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  // search filter (filters CA cards + glossary items; TOC links dim when their card is filtered out)
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' event' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>

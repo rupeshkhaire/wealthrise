@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Action Lifecycle — Announcement to Reconciliation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- Layout shell ---------- */
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  /* ---------- Sidebar contents ---------- */
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1rem 1.15rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.35rem; font-size:.95rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+
+  /* ---------- Lifecycle steps ---------- */
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.92rem;}
+
+  /* ---------- Player chain ---------- */
+  .chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .chain .node{
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; padding:.55rem .8rem;
+    font-size:.82rem; font-weight:600; flex:1 1 130px; text-align:center;
+  }
+  .chain .arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.87rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.65rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  /* ---------- Card grid & CA cards ---------- */
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:.95rem;}
+  .ca-dates{display:flex; flex-wrap:wrap; align-items:stretch; gap:.4rem; margin:1rem 0;}
+  .date-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 130px;
+  }
+  .dc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .v-voluntary .dc-label{color:var(--teal);}
+  .v-choice .dc-label{color:var(--red);}
+  .dc-desc{display:block; font-size:.78rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35;}
+  .dc-arrow{align-self:center; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-top:.3rem;}
+  .ca-grid h4{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.1rem; padding:.75rem .95rem; background:var(--surface-2); border-radius:8px;
+    font-size:.86rem; color:var(--ink-soft);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.4rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Glossary ---------- */
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem;}
+  .g-item{padding:.85rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem; color:var(--brass); display:block; margin-bottom:.2rem;}
+  .g-def{font-size:.86rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--ink-soft);}
+  .legend-dot{width:12px; height:12px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.8rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+
+  /* ---------- Additions for lifecycle doc ---------- */
+  .stat-grid{display:flex; flex-wrap:wrap; gap:1rem; margin:1.25rem 0;}
+  .stat-card{
+    flex:1 1 200px; background:var(--surface); border:1px solid var(--rule); border-radius:10px;
+    padding:1.1rem 1.2rem;
+  }
+  .stat-num{display:block; font-family:'Source Serif 4',serif; font-weight:700; font-size:1.9rem; color:var(--brass); line-height:1;}
+  .stat-label{display:block; font-size:.82rem; color:var(--ink-soft); margin-top:.4rem; line-height:1.4;}
+
+  .stage-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.5rem 1.6rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); margin-bottom:1.4rem; scroll-margin-top:1.25rem;
+  }
+  .stage-head{display:flex; align-items:flex-start; gap:1rem; margin-bottom:.5rem;}
+  .stage-num{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:1.6rem; color:var(--brass-soft);
+    -webkit-text-stroke:1.5px var(--brass); color:transparent; flex-shrink:0; line-height:1;
+  }
+  .stage-head h3{margin:0;}
+  .stage-tag{margin:.2rem 0 0; font-size:.78rem; color:var(--ink-faint); font-style:italic;}
+  .stage-def{color:var(--ink-soft); font-size:.95rem; margin:.7rem 0 1rem;}
+
+  .state-chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .state-chip{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; padding:.5rem .85rem;
+    border-radius:20px; background:var(--brass-soft); color:var(--brass); border:1px solid transparent;
+  }
+  .state-chip.branch{background:var(--teal-soft); color:var(--teal);}
+  .state-chip.exception{background:var(--red-soft); color:var(--red);}
+  .state-arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  .breaks-flag{
+    margin-top:1rem; padding:.8rem 1rem; background:var(--red-soft); border-radius:8px; font-size:.86rem; color:var(--ink);
+  }
+  .breaks-flag b{color:var(--red);}
+
+  .worked-table td:first-child, .worked-table th:first-child{white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">CA Lifecycle</p>
+        <p class="brand-sub">Announcement → Reconciliation</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search stages, terms…">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Overview</p>
+      <a href="#intro">The Big Picture</a>
+
+      <p class="toc-group-label">The 7 Stages</p>
+      <a href="#stage-1">1 · Event Creation</a>
+      <a href="#stage-2">2 · Scrubbing &amp; Golden Record</a>
+      <a href="#stage-3">3 · Announcement Dissemination</a>
+      <a href="#stage-4">4 · Entitlement Calculation</a>
+      <a href="#stage-5">5 · Instruction / Election Capture</a>
+      <a href="#stage-6">6 · Execution &amp; Allocation</a>
+      <a href="#stage-7">7 · Reconciliation &amp; Reporting</a>
+
+      <p class="toc-group-label">Systems View</p>
+      <a href="#state-machine">Event Status Lifecycle</a>
+      <a href="#paths">Mandatory vs Voluntary Paths</a>
+
+      <p class="toc-group-label">Core Controls</p>
+      <a href="#three-way">Three-Way Reconciliation</a>
+      <a href="#ibor">Record-Date Snapshot &amp; IBOR</a>
+      <a href="#manufactured">Manufactured Payments</a>
+      <a href="#cutoffs">The Cut-off Cascade</a>
+
+      <p class="toc-group-label">Worked Examples</p>
+      <a href="#worked-mandatory">Cash Dividend, Start to End</a>
+      <a href="#worked-voluntary">Rights Issue, Start to End</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#failures">Where It Breaks — Quick Table</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Study material · Part 2 · Investment Banking Operations</span>
+      <h1>The Corporate Action Lifecycle</h1>
+      <p class="lead">Not just the five dates — the actual <strong>operational workflow</strong> a corporate action travels through: from a boardroom decision that Ops doesn't control, through data validation, notification, entitlement, elections, execution, and the reconciliation control that closes the loop. This is the "walk me through what happens end to end" answer, built to hold up under follow-up questions.</p>
+      <div class="hero-tags">
+        <span>7-stage process model</span>
+        <span>Event status state-machine</span>
+        <span>Three-way reconciliation</span>
+        <span>2 fully worked examples</span>
+      </div>
+    </header>
+
+    <!-- ============ INTRO ============ -->
+    <section id="intro">
+      <h2 class="section-title">The big picture</h2>
+      <p>A corporate action "lifecycle" is the complete journey of one issuer decision — a dividend, a split, a merger, a rights issue — from the moment it's approved in a boardroom to the moment your firm's books show the correct, reconciled cash or position for every affected account. It crosses company boundaries constantly: issuer → registrar/agent → data vendors → CSD → global custodian → sub-custodian → broker or asset manager → the beneficial owner. Every handoff is a place where the same event can arrive late, arrive wrong, or arrive from five different sources that don't quite agree with each other.</p>
+      <p>That's not a hypothetical risk — it's the defining operational problem of the entire discipline. Ops doesn't struggle with corporate actions because the concepts are hard; a dividend is arithmetic. Ops struggles because the <em>data</em> about that dividend has to survive a long chain of handoffs intact, on time, for every account, without anyone downstream simply trusting the first version that arrives.</p>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-num">100+</span><span class="stat-label">distinct sources an asset manager can receive notification of the <em>same</em> corporate action from, per industry analysis of the notification problem</span></div>
+        <div class="stat-card"><span class="stat-num">$400M</span><span class="stat-label">estimated annual cost to the US financial sector from corporate action notification inefficiency — largely manual reconciliation of conflicting data</span></div>
+        <div class="stat-card"><span class="stat-num">&lt;2%</span><span class="stat-label">of corporate action notifications are estimated to actually be processed in the modern ISO 20022 format today, despite years of availability</span></div>
+      </div>
+      <p style="font-size:.82rem;color:var(--ink-faint)">Figures are industry estimates cited for context (SWIFT / market-research sources) — treat them as illustrative of scale, not precise current statistics.</p>
+      <div class="callout">
+        <h4>Two ways to look at the same process</h4>
+        <p>This document covers the lifecycle from two angles that interviewers move between freely: the <strong>7-stage process view</strong> (what work gets done, and by whom) and the <strong>event status state-machine</strong> (how a single event record's status changes inside a system as that work happens). Know both, and know how they map onto each other.</p>
+      </div>
+    </section>
+
+    <!-- ============ 7 STAGES ============ -->
+    <div class="part-heading"><h2>The Seven Stages</h2><span class="part-count">announcement → reconciliation</span></div>
+    <section id="stages">
+
+      <article class="stage-card" id="stage-1">
+        <div class="stage-head"><span class="stage-num">01</span><div><h3>Event Creation by Issuer</h3><p class="stage-tag">Where it starts — outside your firm's walls</p></div></div>
+        <p class="stage-def">Every lifecycle begins with a decision Ops doesn't control: the issuer's board approves the action and fixes its core terms — event type, ratio or rate, and the key dates. This step is <em>captured</em> downstream, never created downstream.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>The issuer, or its transfer/paying agent, files the disclosure — an exchange announcement, a regulatory filing, or a formal notice to the CSD. For bonds, the trustee or paying agent typically issues notice under the indenture rather than the company itself.</p></div>
+          <div><h4>Systems &amp; sources</h4><p>Data vendors (Bloomberg, Refinitiv/LSEG), the CSD's own reorganisation system (e.g., DTCC's Corporate Actions Reorg service in the US), or a direct custodian ISO 20022 message. The same event can arrive from several of these channels independently and at different times.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> nothing about this event can be trusted yet — it may already be arriving from multiple sources that don't fully agree. That's exactly the problem Stage 2 exists to solve.</div>
+      </article>
+
+      <article class="stage-card" id="stage-2">
+        <div class="stage-head"><span class="stage-num">02</span><div><h3>Data Scrubbing &amp; the Golden Record</h3><p class="stage-tag">One validated version of the truth</p></div></div>
+        <p class="stage-def">Before any client notification goes out, Ops cross-checks every source that reported the event and resolves conflicting rates, ratios, or dates into a single validated "golden record" — the one version everything downstream will calculate from.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>Analysts, or increasingly rules-based matching engines, compare vendor feeds against CSD/custodian notices and the original issuer disclosure. The instrument itself is re-verified against the security/instrument master — confirming the correct ISIN/CUSIP and tax classification are attached.</p></div>
+          <div><h4>Systems</h4><p>Corporate action scrubbing/matching engines; the firm's instrument master database; manual ops review for anything the engine can't auto-resolve.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> the security master is one of the most common origin points for a downstream error. A wrong CUSIP/ISIN or a stale tax classification silently produces a wrong entitlement for <em>every</em> account in the event — and it usually isn't caught until a reconciliation break surfaces much later, far from where the mistake actually happened.</div>
+      </article>
+
+      <article class="stage-card" id="stage-3">
+        <div class="stage-head"><span class="stage-num">03</span><div><h3>Announcement Dissemination</h3><p class="stage-tag">The client-facing notification</p></div></div>
+        <p class="stage-def">The validated golden record is pushed out to every affected desk and client along the custody chain — the MT564 / seev.031 notification introduced in Part I.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>Notification is tailored per recipient, showing only their relevant accounts, and — for voluntary or mandatory-with-choice events — the available options and election deadline. A replacement (<span class="mono">MT564 REPL</span>) follows if terms change; a cancellation (<span class="mono">MT564 CANC</span>) follows if the event is withdrawn.</p></div>
+          <div><h4>Systems &amp; messages</h4><p><span class="mono">MT564 / seev.031</span>, distributed down the custodian → sub-custodian → broker → client chain, each hop re-packaging it for its own downstream clients.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> time-zone gaps and inconsistent formats across the chain are a classic source of late notification — a message that leaves the CSD in good time can still land on the end client uncomfortably close to their own decision deadline, once every hop has added its own processing lag.</div>
+      </article>
+
+      <article class="stage-card" id="stage-4">
+        <div class="stage-head"><span class="stage-num">04</span><div><h3>Entitlement Calculation</h3><p class="stage-tag">Turning terms into a number</p></div></div>
+        <p class="stage-def">For every affected account, Ops turns the golden record's terms into a concrete figure: how much cash, or how many new units, that specific position is actually due.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>The record-date position is locked from a snapshot of the firm's Investment Book of Record (IBOR) — typically taken the business day before ex-date — and multiplied by the event's rate or ratio. Positions bought on or after ex-date are excluded. Positions out on securities loan at the snapshot are flagged separately (see Manufactured Payments). Fractional results are usually cashed out rather than issued as partial securities.</p></div>
+          <div><h4>The core formulas</h4><p><span class="mono">cashEntitlement = position × rate</span><br><span class="mono">shareEntitlement = position × (new ratio ÷ old ratio)</span><br>Withholding tax and fractional-handling rules are pulled from the instrument master and applied here.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> this is where a Stage 2 error becomes real money. A wrong rate, wrong record date, or stale master produces an entitlement that's wrong by construction — and the error stays invisible until Stage 7 reconciliation surfaces it.</div>
+      </article>
+
+      <article class="stage-card v-voluntary" id="stage-5">
+        <div class="stage-head"><span class="stage-num">05</span><div><h3>Instruction / Election Capture</h3><p class="stage-tag">Voluntary &amp; mandatory-with-choice events only</p></div></div>
+        <p class="stage-def">Applies only when the holder has a decision to make. Each affected account must submit an election — participate or not, or which option to take — before the deadline.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>Elections are collected per account, validated for completeness, and forwarded up the custody chain toward the agent. Ops tracks each account's status through the workflow — no response yet → elected → forwarded → acknowledged — since a silent account may just have an instruction still in transit somewhere in the chain, not a deliberate non-participant.</p></div>
+          <div><h4>Systems &amp; messages</h4><p>Inbound client instruction (<span class="mono">MT565 / seev.033</span>); outbound acknowledgement (<span class="mono">MT567 / seev.032, seev.034</span>).</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> missed deadlines are the single highest-visibility risk in the whole lifecycle. Custodians generally reject a late election without exception, and escalating after the deadline rarely succeeds. For mandatory-with-choice events, silence doesn't mean nothing happens — it means the issuer's default option is auto-applied, often the least favourable outcome for the holder.</div>
+      </article>
+
+      <article class="stage-card" id="stage-6">
+        <div class="stage-head"><span class="stage-num">06</span><div><h3>Execution &amp; Allocation</h3><p class="stage-tag">The entitlement is actually applied</p></div></div>
+        <p class="stage-def">On or immediately after payment date, the calculated entitlement is applied for real — cash is credited, or securities are delivered and cost basis adjusted — across every affected account simultaneously.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>Cash dividends, coupons, and manufactured payments post to cash balances; splits, stock dividends, mergers, and spin-offs update position quantities and cost basis. For voluntary/choice events, this is where the <em>final</em> elected — and, if oversubscribed, prorated — outcome is applied, which may differ from what the holder originally requested.</p></div>
+          <div><h4>Systems</h4><p>Confirmation issued outbound (<span class="mono">MT566 / seev.036</span>); an internal "applied" flag prevents the same event being double-processed if it's ever re-run.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> proration on an oversubscribed voluntary offer is a <em>legitimate, expected</em> divergence between what was elected and what was allocated. A good desk recognises this as normal and doesn't burn time investigating it like a data error.</div>
+      </article>
+
+      <article class="stage-card" id="stage-7">
+        <div class="stage-head"><span class="stage-num">07</span><div><h3>Reconciliation &amp; Reporting</h3><p class="stage-tag">The control that closes the loop</p></div></div>
+        <p class="stage-def">The final stage, and arguably the most important control in the entire process: comparing what was actually received against what was expected, before the accounting period closes.</p>
+        <div class="ca-grid">
+          <div><h4>What happens</h4><p>A <strong>three-way reconciliation</strong> (full deep dive below) compares the internally calculated entitlement, the custodian's own notification of what they're crediting, and what actually landed on the custody statement. Matches close automatically; mismatches are flagged and queued for investigation.</p></div>
+          <div><h4>Systems</h4><p>Reconciliation engines matching internal entitlement records against custodian ISO 20022 confirmations and statement data; open breaks block period close.</p></div>
+        </div>
+        <div class="breaks-flag"><b>Where it breaks:</b> a break here isn't the failure — it's the <em>detection</em> of a failure that happened somewhere upstream. This stage is doing its job precisely when it catches something.</div>
+      </article>
+
+    </section>
+
+    <!-- ============ STATE MACHINE ============ -->
+    <section id="state-machine">
+      <h2 class="section-title">The event status lifecycle (systems view)</h2>
+      <p>The 7 stages above describe the <em>work</em>. Underneath that, most corporate action systems also track a formal <strong>status</strong> on the event record itself, which is a slightly different (and very interview-friendly) way of describing the same journey — worth knowing both framings.</p>
+      <div class="state-chain">
+        <span class="state-chip">ANNOUNCED</span><span class="state-arrow">→</span>
+        <span class="state-chip">CONFIRMED</span><span class="state-arrow">→</span>
+        <span class="state-chip branch">PENDING_ELECTION</span><span class="state-arrow">→</span>
+        <span class="state-chip branch">ELECTED</span><span class="state-arrow">→</span>
+        <span class="state-chip">PROCESSING</span><span class="state-arrow">→</span>
+        <span class="state-chip">APPLIED</span>
+      </div>
+      <p style="font-size:.85rem;color:var(--ink-soft)">The teal <span class="mono" style="color:var(--teal)">PENDING_ELECTION → ELECTED</span> pair only applies to voluntary and mandatory-with-choice events — a pure mandatory event skips straight from <span class="mono">CONFIRMED</span> to <span class="mono">PROCESSING</span>. At any point, an event can also move to one of two terminal exception states:</p>
+      <div class="state-chain">
+        <span class="state-chip exception">CANCELED</span><span style="font-size:.82rem;color:var(--ink-faint)">— the issuer withdraws the event</span>
+      </div>
+      <div class="state-chain">
+        <span class="state-chip exception">FAILED</span><span style="font-size:.82rem;color:var(--ink-faint)">— reconciliation can't be closed automatically and needs manual resolution</span>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <caption>What triggers each transition</caption>
+        <thead><tr><th>Status</th><th>Set when…</th><th>Roughly maps to stage</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">ANNOUNCED</td><td>Raw event captured from a vendor, CSD, or custodian, before validation</td><td>1</td></tr>
+          <tr><td class="mono">CONFIRMED</td><td>Ops has reviewed and validated the terms against source; golden record locked</td><td>2–3</td></tr>
+          <tr><td class="mono">PENDING_ELECTION</td><td>Voluntary/choice event awaiting the account's instruction</td><td>5</td></tr>
+          <tr><td class="mono">ELECTED</td><td>Instruction submitted and captured for the account</td><td>5</td></tr>
+          <tr><td class="mono">PROCESSING</td><td>Payment date reached; entitlement is being applied to positions/cash</td><td>6</td></tr>
+          <tr><td class="mono">APPLIED</td><td>Both the cash and securities legs are confirmed applied</td><td>6–7</td></tr>
+          <tr><td class="mono">FAILED</td><td>Reconciliation break that can't auto-close</td><td>7 (exception)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ PATHS ============ -->
+    <section id="paths">
+      <h2 class="section-title">How the path differs: Mandatory vs Voluntary vs Choice</h2>
+      <p>All three classifications travel through the same 7 stages — what changes is what happens (or doesn't) at Stages 5 and 6.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Stage</th><th>Mandatory</th><th>Voluntary</th><th>Mandatory with Choice</th></tr></thead>
+        <tbody>
+          <tr><td>1–4 (Creation → Entitlement)</td><td colspan="3" style="color:var(--ink-soft)">Identical across all three — every classification is captured, scrubbed, notified, and has an entitlement calculated the same way.</td></tr>
+          <tr><td>5 · Election Capture</td><td>Skipped entirely — nothing to elect</td><td>Required; no response = no entitlement, full stop</td><td>Required; no response = issuer's pre-set default option is applied automatically</td></tr>
+          <tr><td>6 · Execution</td><td>Applied identically to every eligible account</td><td>Applied only for accounts that elected and were accepted (possibly prorated)</td><td>Applied per election, or per default if silent; possibly prorated</td></tr>
+          <tr><td>7 · Reconciliation</td><td>Focused on confirming the rate/ratio was applied correctly</td><td>Must also validate that proration logic was applied correctly — a proration gap is not a data error</td><td>Must also confirm the correct default was applied to every non-responding account</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ THREE WAY RECON ============ -->
+    <div class="part-heading"><h2>Core Controls, in Depth</h2><span class="part-count">the mechanics behind Stage 7</span></div>
+    <section id="three-way">
+      <h2 class="section-title">Three-way reconciliation</h2>
+      <p>This is the single control most worth being fluent in for an Ops interview. Every corporate action entitlement is checked against <strong>three</strong> independent figures — not two — and knowing why there are three, not two, is what separates a surface-level answer from a strong one.</p>
+      <ol class="lifecycle">
+        <li><h4>1. Expected entitlement</h4><p>Calculated internally in Stage 4, from the record-date IBOR position × the golden record's rate/ratio. This is what Ops believes should happen.</p></li>
+        <li><h4>2. Custodian notification</h4><p>The custodian's own ISO 20022 (or MT566) message stating what they are actually crediting. This is what the custodian believes should happen.</p></li>
+        <li><h4>3. Actual receipt</h4><p>What lands on the custody statement on or after payment date. This is what actually happened.</p></li>
+      </ol>
+      <div class="callout">
+        <h4>Worked example</h4>
+        <p>A fund holds 10,000 shares of a dividend-paying company on record date; the declared rate is $0.50/share, and the applicable withholding tax treaty rate is 15%.<br><br>
+        <strong>Expected (Stage 4):</strong> 10,000 × $0.50 = $5,000 gross → $4,250 net after 15% WHT.<br>
+        <strong>Custodian notification:</strong> confirms $5,000 gross, $750 withheld, $4,250 net — matches expected.<br>
+        <strong>Actual receipt:</strong> $4,250 net lands on the statement — matches both. <span style="color:var(--teal);font-weight:600">All three agree → closes automatically, no manual touch.</span></p>
+      </div>
+      <div class="callout red">
+        <h4>Now vary it</h4>
+        <p>Suppose actual receipt comes in at $4,100 net instead of $4,250. Expected and custodian notification still agree with each other — so the break sits specifically between notification and receipt, pointing toward a <strong>settlement/payment timing or execution issue</strong>, not a data error. If instead the custodian's own notification had shown $4,100 net from the start (an 18% withholding rate instead of 15%), the break would sit between expected and notification — pointing toward a <strong>data/rate error</strong>, likely worth a tax-reclaim conversation with the custodian.</p>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <caption>Reading a break by where it sits</caption>
+        <thead><tr><th>Break location</th><th>Most likely root cause</th><th>Typical next step</th></tr></thead>
+        <tbody>
+          <tr><td>Expected ≠ Custodian notification</td><td>Data capture error — wrong rate, wrong record date, or a stale instrument master entry</td><td>Correct the master/golden record, then recalculate the entitlement</td></tr>
+          <tr><td>Custodian notification ≠ Actual receipt</td><td>Settlement or payment-timing issue at the custodian/CSD level</td><td>Chase the custodian for the shortfall or a corrected confirmation</td></tr>
+          <tr><td>Elected quantity ≠ Allocated quantity</td><td>Legitimate proration on an oversubscribed voluntary offer — not a data error</td><td>Verify the proration factor was applied correctly; no further action if it checks out</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ IBOR ============ -->
+    <section id="ibor">
+      <h2 class="section-title">The record-date snapshot &amp; the IBOR</h2>
+      <p>Entitlement calculation is only as good as the position it's calculated from — and that raises a subtle but genuinely important question: which "position" exactly?</p>
+      <p>The snapshot is taken from the <strong>Investment Book of Record (IBOR)</strong> — a real-time position view that includes trades executed but not yet settled — rather than waiting for a fully custodian-confirmed, settled position (sometimes tracked separately as the <strong>Accounting Book of Record, ABOR</strong>). Taking the snapshot from the IBOR, timed the business day before ex-date, means a trade that's economically yours by ex-date is captured correctly even if its own settlement is still a day or two away.</p>
+      <p>Two account states get flagged specially at this snapshot:</p>
+      <ul style="color:var(--ink-soft); font-size:.92rem; padding-left:1.2rem;">
+        <li style="margin-bottom:.5rem"><strong>Positions bought on or after ex-date</strong> — excluded from entitlement; the seller (or their downstream chain) retains the economic right, which is exactly the scenario that produces a market claim if the trade hasn't settled by record date (see Part I).</li>
+        <li><strong>Positions out on securities loan</strong> at the snapshot — flagged separately, because the loan's borrower, not the lender, is the legal holder of record for this event. See Manufactured Payments below.</li>
+      </ul>
+    </section>
+
+    <!-- ============ MANUFACTURED PAYMENTS ============ -->
+    <section id="manufactured">
+      <h2 class="section-title">Manufactured payments</h2>
+      <p>A lifecycle wrinkle that trips up a lot of otherwise-solid answers: what happens to a dividend when the underlying share is out on loan over record date?</p>
+      <p>The <strong>borrower</strong> of the stock — not the original beneficial owner who lent it out — is the legal holder of record at that moment, and receives the dividend directly from the issuer. Under the securities lending agreement, the borrower is then contractually obligated to pay the lender an equivalent amount back: a <strong>manufactured payment</strong> (or manufactured dividend).</p>
+      <div class="callout teal">
+        <h4>Why Ops can't just book it as a normal dividend</h4>
+        <p>The tax treatment genuinely differs. A dividend received directly may qualify for a reduced withholding rate under an applicable tax treaty; a manufactured payment typically does <em>not</em> qualify for that same treaty relief and is commonly taxed as ordinary income instead. Booking a manufactured payment as if it were an ordinary qualified dividend misstates the account's after-tax income — which is why it has to be flagged and tracked as its own category in the IBOR, not folded into standard dividend income.</p>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-soft)"><strong>Manufactured payment vs. market claim</strong> — easy to conflate, worth keeping distinct: a market claim (Part I) arises from a trade that hasn't <em>settled</em> by record date; a manufactured payment arises from a security that's out on <em>loan</em> over record date. Different root cause, same underlying logic — the economic benefit has to reach whoever actually held the economic exposure, not just whoever the CSD's books say was the legal holder.</p>
+    </section>
+
+    <!-- ============ CUTOFFS ============ -->
+    <section id="cutoffs">
+      <h2 class="section-title">The cut-off cascade</h2>
+      <p>Every voluntary or choice event has one official, published deadline — but by the time you're several hops away from the issuer, your <em>real</em> deadline is considerably earlier. This is one of the most concrete, testable things an interviewer can ask you to walk through.</p>
+      <div class="table-wrap">
+      <table>
+        <caption>Illustrative cascade for a Friday 5:00pm London market deadline</caption>
+        <thead><tr><th>Layer</th><th>Their real cut-off</th><th>Why it's earlier than the layer below</th></tr></thead>
+        <tbody>
+          <tr><td>Issuer / market deadline</td><td class="mono">Fri 17:00</td><td>The absolute, published, final deadline</td></tr>
+          <tr><td>CSD / registrar</td><td class="mono">Fri 12:00</td><td>Needs time to batch-process all received elections before its own end-of-day cycle to the issuer</td></tr>
+          <tr><td>Global custodian</td><td class="mono">Thu 17:00</td><td>Needs to aggregate every sub-custodian's instructions into one clean batch for the CSD</td></tr>
+          <tr><td>Sub-custodian (local agent)</td><td class="mono">Thu 12:00</td><td>Needs to aggregate every broker/client instruction locally before forwarding to the global custodian</td></tr>
+          <tr><td>Broker / asset manager (client-facing)</td><td class="mono">Wed 17:00</td><td>Needs buffer for its own clients to instruct, plus internal QC before forwarding</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>The pattern generalises: <strong>the further you sit from the issuer, the earlier your real deadline is</strong> — because every layer needs to aggregate, validate, and forward before its own upstream cut-off, and none of that time is optional. This is exactly why Ops always publishes internal deadlines meaningfully ahead of the official market deadline, and why "the client instructed before the market deadline" is not, by itself, a defence for a missed election if it arrived after your own internal cut-off.</p>
+    </section>
+
+    <!-- ============ WORKED EXAMPLES ============ -->
+    <div class="part-heading"><h2>Worked Examples</h2><span class="part-count">tracing one event through all 7 stages</span></div>
+
+    <section id="worked-mandatory">
+      <h2 class="section-title">Cash dividend, start to end <span style="font-weight:400;color:var(--ink-faint);font-size:.85rem">(illustrative — Northfield Utilities plc)</span></h2>
+      <div class="table-wrap">
+      <table class="worked-table">
+        <thead><tr><th>Stage</th><th>Timing</th><th>What happens in this example</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Creation</td><td>Day 0</td><td>Northfield Utilities' board declares a $0.60/share quarterly cash dividend and files the disclosure.</td></tr>
+          <tr><td>2 · Scrubbing</td><td>Day 0–1</td><td>Ops cross-checks the vendor feed, the custodian's notice, and the issuer filing — all three agree on rate, record date, and pay date. Golden record confirmed.</td></tr>
+          <tr><td>3 · Notification</td><td>Day 1</td><td><span class="mono">MT564 NEWM</span> sent to every custody client holding the stock.</td></tr>
+          <tr><td>4 · Entitlement</td><td>Business day before record date</td><td>IBOR snapshot: Client A holds 10,000 shares → entitlement = 10,000 × $0.60 = $6,000 gross.</td></tr>
+          <tr><td>5 · Election</td><td>—</td><td>Not applicable — mandatory event, nothing to elect.</td></tr>
+          <tr><td>6 · Execution</td><td>Payment date</td><td>$6,000 gross; 15% withholding tax ($900) applied; $5,100 net credited to Client A's cash account. <span class="mono">MT566</span> confirmation issued.</td></tr>
+          <tr><td>7 · Reconciliation</td><td>Payment date + 1</td><td>Internal expectation ($5,100 net) matches the custodian statement exactly — closes automatically, fully STP, zero manual touches.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="worked-voluntary">
+      <h2 class="section-title">Rights issue, start to end <span style="font-weight:400;color:var(--ink-faint);font-size:.85rem">(illustrative — Castlereagh Mining Ltd)</span></h2>
+      <div class="table-wrap">
+      <table class="worked-table">
+        <thead><tr><th>Stage</th><th>Timing</th><th>What happens in this example</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Creation</td><td>Day 0</td><td>Castlereagh Mining's board approves a 1-for-10 rights issue at a 20% discount to raise growth capital.</td></tr>
+          <tr><td>2 · Scrubbing</td><td>Day 0–1</td><td>Ratio (1:10), subscription price, and dates confirmed identically across every source. Golden record locked.</td></tr>
+          <tr><td>3 · Notification</td><td>Day 1</td><td><span class="mono">MT564 NEWM</span> sent with subscription price, ratio, and — critically — the election deadline.</td></tr>
+          <tr><td>4 · Entitlement</td><td>Business day before record date</td><td>Client B holds 5,000 shares on record date → entitled to subscribe for up to 500 new shares.</td></tr>
+          <tr><td>5 · Election</td><td>Internal cut-off, ahead of market deadline</td><td>Client B instructs (<span class="mono">MT565</span>) to subscribe for the full 500 shares, plus an "excess application" request for 100 more in case other holders don't take up their own entitlement.</td></tr>
+          <tr><td>6 · Execution</td><td>Payment/allotment date</td><td>Subscription cash debited for the base 500 shares in full. The excess application is scaled back to 40 shares because the excess pool was oversubscribed by other applicants — a proration, not an error.</td></tr>
+          <tr><td>7 · Reconciliation</td><td>Allotment date + 1</td><td>540 new shares (temporary ISIN) credited, cash debited matches the calculated total exactly — closes cleanly once the proration factor is confirmed correct.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ FAILURES TABLE ============ -->
+    <section id="failures">
+      <h2 class="section-title">Where it breaks — quick recall table</h2>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Stage</th><th>Typical failure</th><th>Root cause</th><th>Control</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Creation</td><td>Conflicting terms from different sources</td><td>Up to 100 independent notification channels for one event</td><td>Never act on a single unvalidated source</td></tr>
+          <tr><td>2 · Scrubbing</td><td>Wrong CUSIP/ISIN or tax classification</td><td>Stale instrument/security master record</td><td>Master re-verification before golden record is confirmed</td></tr>
+          <tr><td>3 · Notification</td><td>Client notified too close to their own deadline</td><td>Cumulative processing lag added at each hop of the chain</td><td>Internal cut-offs published well ahead of the market deadline</td></tr>
+          <tr><td>4 · Entitlement</td><td>Wrong cash/share amount calculated</td><td>Bad rate/ratio/record-date carried over from Stage 1–2</td><td>Entitlement always traced back to the confirmed golden record</td></tr>
+          <tr><td>5 · Election</td><td>Missed deadline; unfavourable default applied</td><td>Instruction submitted after the internal (not just market) cut-off</td><td>Proactive reminders ahead of cut-off; standing instructions on file</td></tr>
+          <tr><td>6 · Execution</td><td>Apparent shortfall vs. what was elected</td><td>Often a legitimate proration, not an error</td><td>Check proration factor before opening an investigation</td></tr>
+          <tr><td>7 · Reconciliation</td><td>Open break at period close</td><td>Unresolved data, timing, or proration break</td><td>Three-way reconciliation triage by break location</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ GLOSSARY ============ -->
+    <section id="glossary">
+      <h2 class="section-title">Glossary — lifecycle-specific terms</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">IBOR</span><p class="g-def">Investment Book of Record — a real-time position view including unsettled trades, used as the source for the record-date snapshot.</p></div>
+        <div class="g-item"><span class="g-term">ABOR</span><p class="g-def">Accounting Book of Record — the settled, custodian-confirmed position view used for official accounting, as distinct from the IBOR.</p></div>
+        <div class="g-item"><span class="g-term">Instrument / Security Master</span><p class="g-def">The authoritative reference database for every security a firm holds — identifiers, static attributes, and tax classification. A common origin point for downstream errors.</p></div>
+        <div class="g-item"><span class="g-term">Golden Record</span><p class="g-def">The single, validated version of an event's terms, produced by cross-checking every source that reported it.</p></div>
+        <div class="g-item"><span class="g-term">Corporate Action Scrubbing</span><p class="g-def">The process of cross-referencing multiple data sources to resolve conflicting terms before entitlement calculation begins.</p></div>
+        <div class="g-item"><span class="g-term">Three-Way Reconciliation</span><p class="g-def">Comparing expected entitlement, custodian notification, and actual receipt — the core control that closes every corporate action.</p></div>
+        <div class="g-item"><span class="g-term">Proration Break</span><p class="g-def">A legitimate mismatch between elected and allocated quantity on an oversubscribed voluntary offer — distinct from a data error.</p></div>
+        <div class="g-item"><span class="g-term">Manufactured Payment</span><p class="g-def">A payment a stock-loan borrower owes the lender to replicate a dividend the borrower received as the legal holder of record.</p></div>
+        <div class="g-item"><span class="g-term">Event Status</span><p class="g-def">The internal state of a corporate action record as it moves through the system — e.g. ANNOUNCED, CONFIRMED, PROCESSING, APPLIED.</p></div>
+        <div class="g-item"><span class="g-term">Data Source</span><p class="g-def">The origin of a captured event — vendor feed, CSD notification, direct custodian message, or manual entry — tracked for audit and reconciliation.</p></div>
+        <div class="g-item"><span class="g-term">Excess Application</span><p class="g-def">In a rights issue, a request for shares beyond one's basic entitlement, filled from any unsubscribed rump and prorated if oversubscribed.</p></div>
+        <div class="g-item"><span class="g-term">STP</span><p class="g-def">Straight-Through-Processing — the share of events that close without manual intervention; the headline efficiency metric for a CA desk.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Part 2 of a two-part study set on corporate actions for Investment Banking Operations interview preparation. Part 1 covers all 38 individual event types across equity, fixed income, and funds. Process framing (the 7-stage model and event-status pattern) is informed by common industry descriptions of corporate action processing; local market and firm-specific workflows vary — confirm specifics for whichever custodian/market an interviewer names.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const searchableBlocks = Array.from(document.querySelectorAll('.stage-card, section'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    document.querySelectorAll('.stage-card').forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+    });
+    document.querySelectorAll('.g-item').forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' stage' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>
