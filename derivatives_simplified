@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derivatives — The Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1.25rem 1.5rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.5rem; font-size:1.05rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+  .highlight-term { font-weight: 600; color: var(--ink); background: var(--surface-2); padding: 0.1rem 0.3rem; border-radius: 4px;}
+
+
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1.1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.95rem;}
+
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.9rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.75rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.85rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0; font-size: 1.25rem;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.08em; font-weight:600;
+    padding:.25rem .6rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.85rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:1rem;}
+  
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:.5rem;}
+  .ca-grid h4{font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.95rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.25rem; padding:1rem; background:var(--surface-2); border-radius:8px;
+    font-size:.95rem; color:var(--ink-soft); border-left: 3px solid var(--brass);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.5rem; display: block; margin-bottom: 0.25rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.25rem 2rem;}
+  .g-item{padding:1rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.95rem; color:var(--brass); display:block; margin-bottom:.3rem;}
+  .g-def{font-size:.95rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.9rem; color:var(--ink-soft); font-weight: 500;}
+  .legend-dot{width:14px; height:14px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.85rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+
+  .payoff-badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:600;
+    padding:.25rem .6rem; border-radius:4px; background:var(--teal-soft); color:var(--teal); margin-left:.4rem;
+  }
+  .payoff-badge.nonlinear{background:var(--red-soft); color:var(--red);}
+
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Derivatives 101</p>
+        <p class="brand-sub">The Beginner's Field Manual</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search swaps, options…">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Foundations</p>
+      <a href="#what-is">What Is a Derivative?</a>
+      <a href="#exchange-otc">Where to Buy Them</a>
+      <a href="#isda">The Master Rulebook (ISDA)</a>
+      <a href="#clearing">The Middleman (Clearing)</a>
+      <a href="#margin">Security Deposits (Margin)</a>
+      <a href="#trade-life">Life of a Trade</a>
+
+      <p class="toc-group-label">I · Basic Contracts (Linear)</p>
+      <a href="#forward">Forward Contracts</a>
+      <a href="#future">Futures Contracts</a>
+      <a href="#fra">Forward Rate Agreements</a>
+      <a href="#irs">Interest Rate Swaps</a>
+      <a href="#ois">Overnight Index Swaps</a>
+      <a href="#basis-swap">Basis Swaps</a>
+      <a href="#xccy">Cross-Currency Swaps</a>
+      <a href="#asset-swap">Asset Swaps</a>
+
+      <p class="toc-group-label">II · Equity &amp; Commodity</p>
+      <a href="#eq-trs">Total Return Swaps</a>
+      <a href="#cfd">Contracts for Difference (CFDs)</a>
+      <a href="#comm-fut">Commodity Futures</a>
+      <a href="#comm-swap">Commodity Swaps</a>
+
+      <p class="toc-group-label">III · Options (Non-Linear)</p>
+      <a href="#vanilla">Vanilla Options (Calls &amp; Puts)</a>
+      <a href="#cap-floor">Caps &amp; Floors</a>
+      <a href="#collar">Collars</a>
+      <a href="#swaption">Swaptions</a>
+      <a href="#barrier">Barrier Options</a>
+      <a href="#asian">Asian Options</a>
+      <a href="#digital">Digital (Binary) Options</a>
+      <a href="#lookback">Lookback Options</a>
+
+      <p class="toc-group-label">IV · Credit Insurance</p>
+      <a href="#cds">Single-Name CDS</a>
+      <a href="#cds-index">CDS Indices (CDX)</a>
+      <a href="#credit-trs">Credit Total Return Swaps</a>
+      <a href="#cln">Credit Linked Notes</a>
+
+      <p class="toc-group-label">V · Currency (FX)</p>
+      <a href="#fx-fwd">FX Forwards</a>
+      <a href="#fx-swap">FX Swaps</a>
+      <a href="#ndf">Non-Deliverable Forwards</a>
+      <a href="#fx-opt">FX Options</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#compare">Cheat Sheets</a>
+      <a href="#blowups">Famous Disasters</a>
+      <a href="#glossary">Jargon Buster Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="hero">
+      <span class="eyebrow">Investment Basics Explained Simply</span>
+      <h1>Derivatives, Demystified</h1>
+      <p class="lead">Derivatives often get a bad reputation as dangerous, complex casino bets. But at their core, they are just legal agreements that help companies manage risk (like locking in the price of jet fuel or foreign currencies). In this guide, we strip away the Wall Street jargon and explain exactly how these contracts work using plain English and real-world examples.</p>
+      <div class="hero-tags">
+        <span>Clear everyday analogies</span>
+        <span>28 contract types explained</span>
+        <span>No finance degree required</span>
+        <span>Famous real-world disasters</span>
+      </div>
+    </header>
+
+    <!-- ============ WHAT IS ============ -->
+    <section id="what-is">
+      <h2 class="section-title">What is a Derivative?</h2>
+      <p>A derivative is a financial contract whose value is <em>derived</em> from the price of something else. Think of a sports betting ticket. The ticket itself is just a piece of paper, but its value is <em>derived</em> from the outcome of the football game.</p>
+      <p>In finance, you can buy a contract whose value is derived from the price of oil, the value of the US Dollar, or the interest rate on a mortgage. You don't actually own the oil or the mortgage; you just own a contract <em>about</em> it.</p>
+      
+      <div class="callout teal">
+        <h4>Notional Value vs. Market Value</h4>
+        <p>This is the most misunderstood concept in derivatives. <br><br>Imagine you make a $10 bet with a friend on the outcome of a $1 Million horse race. <br>The <strong>Notional Value</strong> is $1 Million (the size of the thing you are betting on). <br>The <strong>Market Value</strong> is $10 (the actual amount of money changing hands). <br><br>When news articles say "There are $600 Trillion in Derivatives!", they are quoting the Notional Value. The actual money at risk (Market Value) is only a tiny fraction of that.</p>
+      </div>
+
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>How it pays out</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><span class="payoff-badge">Linear (Fair Fight)</span></td><td>If oil goes up $1, you make $1. If oil goes down $1, you lose $1. It is perfectly symmetrical.</td><td>Forwards, Futures, Swaps</td></tr>
+          <tr><td><span class="payoff-badge nonlinear">Non-Linear (Insurance)</span></td><td>You pay an upfront fee. If oil crashes, you are protected. But if oil goes up, you don't lose any more money; you just lose the upfront fee.</td><td>Options, Caps, Floors</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ EXCHANGE VS OTC ============ -->
+    <section id="exchange-otc">
+      <h2 class="section-title">Where do you buy them? (Exchange vs. OTC)</h2>
+      <p>This is the biggest difference in how these contracts are traded.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Exchange-Traded (The Supermarket)</th><th>OTC: Over-the-Counter (The Tailor)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>What it is</strong></td><td>You buy a pre-packaged, standardized contract on a public stock exchange.</td><td>You call a bank directly and they custom-build a contract exactly for your needs.</td></tr>
+          <tr><td><strong>Customization</strong></td><td>None. You must buy exactly 1,000 barrels of oil, expiring on December 15th.</td><td>Unlimited. You can buy a contract for exactly 834 barrels of oil, expiring on a random Tuesday.</td></tr>
+          <tr><td><strong>Who is your partner?</strong></td><td>The Exchange's Middleman (Highly safe).</td><td>The Bank you called (If the bank goes bankrupt, you might lose your money).</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ ISDA ============ -->
+    <section id="isda">
+      <h2 class="section-title">The Master Rulebook (ISDA)</h2>
+      <p>If a massive corporation wants to do 500 custom OTC trades with JP Morgan this year, they don't want to hire lawyers to write 500 different 100-page contracts.</p>
+      <p>Instead, they sign one giant master rulebook upfront called the <strong>ISDA Master Agreement</strong>. It outlines all the legal rules, like what happens if someone goes bankrupt. Once that is signed, they can do a new trade in 5 seconds over the phone, because the trade automatically falls under the rules of the Master Agreement.</p>
+    </section>
+
+    <!-- ============ CLEARING ============ -->
+    <section id="clearing">
+      <h2 class="section-title">The Middleman (Central Clearing)</h2>
+      <p>In 2008, when Lehman Brothers went bankrupt, everyone realized that OTC trades were dangerous. If you made a bet with Lehman, and Lehman died, you lost your money.</p>
+      <p>To fix this, the government forced most derivatives to use a <strong>Central Counterparty (CCP)</strong>. Think of the CCP like an Escrow Agent or PayPal.</p>
+      <div class="ca-grid" style="margin-top: 1rem;">
+        <div><h4>How it works</h4><p>Instead of you trading directly with Lehman, you trade with the CCP, and Lehman trades with the CCP. The CCP stands safely in the middle. If Lehman goes bankrupt, the CCP guarantees that you will still get paid.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ MARGIN ============ -->
+    <section id="margin">
+      <h2 class="section-title">Security Deposits (Margin)</h2>
+      <p>Because derivatives are essentially promises to pay money in the future, you have to prove you are good for the money. You do this by posting collateral, called <strong>Margin</strong>.</p>
+      
+      <div class="card-grid" style="margin-top: 1.5rem;">
+        <article class="ca-card">
+          <div class="ca-head"><div><span class="ca-class">Margin Type</span><h3>Initial Margin (The Security Deposit)</h3></div></div>
+          <p class="ca-def">When you rent an apartment, you give the landlord $1,000 on day one just in case you trash the place. Initial Margin is cash you lock away in a vault on Day 1 of the trade to prove you aren't a scammer.</p>
+        </article>
+
+        <article class="ca-card v-choice">
+          <div class="ca-head"><div><span class="ca-class">Margin Type</span><h3>Variation Margin (Daily Settling Up)</h3></div></div>
+          <p class="ca-def">Imagine a week-long poker game. Instead of waiting until Sunday to see who owes who a million dollars, the dealer makes everyone empty their pockets and settle their debts <strong>every single night</strong>. If your oil contract loses $10,000 today, you must wire $10,000 in cash tonight. This stops debts from piling up.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ TRADE LIFECYCLE ============ -->
+    <section id="trade-life">
+      <h2 class="section-title">The Life of a Trade</h2>
+      <p>Here is exactly how a derivative goes from a phone call to a finished deal.</p>
+      <ol class="lifecycle">
+        <li><h4>1. Execution</h4><p>You call a bank and agree to the price and terms.</p></li>
+        <li><h4>2. Confirmation</h4><p>Computers check the details to make sure neither side made a typo.</p></li>
+        <li><h4>3. Clearing</h4><p>The trade is handed over to the CCP (The Middleman) for safety.</p></li>
+        <li><h4>4. Margin</h4><p>You wire your Initial Margin (Security Deposit) to the vault.</p></li>
+        <li><h4>5. Daily Life</h4><p>For the next 6 months, you send or receive Variation Margin every night depending on if you are winning or losing.</p></li>
+        <li><h4>6. Maturity</h4><p>The contract ends. Either you physically deliver the goods (like dropping off barrels of oil), or you just wire the final cash difference.</p></li>
+      </ol>
+    </section>
+
+    <!-- ============ PART I: LINEAR ============ -->
+    <div class="part-heading"><h2>Part I — Basic Contracts (Linear)</h2><span class="part-count">Symmetrical bets</span></div>
+    <section id="linear-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> These are straight bets. If you lock in a price of $50, and the market goes to $60, you win $10. If the market goes to $40, you lose $10.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card" id="forward">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Forward Contracts</h3></div><span class="ca-code">The Custom Lock-In</span></div>
+          <p class="ca-def">A private agreement between you and a bank to buy something in the future at a locked-in price.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A farmer agrees to sell a bakery 500 pounds of wheat in exactly 6 months for $2 a pound. The farmer is safe if wheat prices crash. The bakery is safe if wheat prices skyrocket.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="future">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Futures Contracts</h3></div><span class="ca-code">The Public Lock-In</span></div>
+          <p class="ca-def">The exact same concept as a Forward, but bought at the "Supermarket" (A public exchange). They are safer because they use a CCP Middleman and require daily Margin payments.</p>
+        </article>
+
+        <article class="ca-card" id="fra">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Forward Rate Agreements (FRAs)</h3></div><span class="ca-code">Locking an Interest Rate</span></div>
+          <p class="ca-def">An agreement to lock in an interest rate for a loan you plan to take out in the future.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You plan to borrow $1 Million in three months, but you are terrified bank rates will go up before then. You use an FRA to lock in a 5% rate today. If rates jump to 7%, the bank pays you the difference.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="irs">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Interest Rate Swaps (IRS)</h3></div><span class="ca-code">Trading Mortgages</span></div>
+          <p class="ca-def">Trading your unpredictable, changing interest rate for someone else's safe, locked-in interest rate.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You have a mortgage where the rate changes every month. You hate the stress. Your friend has a fixed 5% mortgage. You agree to swap payments. You pay their 5% bill, and they pay your unpredictable bill. </p></div>
+          </div>
+          <div class="ca-example">
+            <span class="ex-tag">Fun Fact</span>
+            This is the largest financial market in the entire world by dollar amount.
+          </div>
+        </article>
+
+        <article class="ca-card" id="ois">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Overnight Index Swaps (OIS)</h3></div><span class="ca-code">The Daily Swap</span></div>
+          <p class="ca-def">A specific type of Interest Rate Swap that uses the absolute safest, overnight interest rate set by the government (like the Federal Reserve) instead of normal bank rates.</p>
+        </article>
+
+        <article class="ca-card" id="basis-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Basis Swaps</h3></div><span class="ca-code">Float vs. Float</span></div>
+          <p class="ca-def">Trading two unpredictable (floating) rates against each other. For example, trading a rate that changes every 1 month for a rate that changes every 6 months.</p>
+        </article>
+
+        <article class="ca-card" id="xccy">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Cross-Currency Swaps</h3></div><span class="ca-code">The Translator</span></div>
+          <p class="ca-def">A company borrows money in Euros, but wants to pay it back in US Dollars. They use this swap to translate the entire loan (and the interest payments) into their home currency.</p>
+        </article>
+
+        <article class="ca-card" id="asset-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Asset Swaps</h3></div><span class="ca-code">The Transformer</span></div>
+          <p class="ca-def">Buying a normal, fixed-rate bond, and instantly gluing an Interest Rate Swap to it. This magically transforms the boring fixed bond into a floating-rate bond.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART II: EQUITY & COMMODITY ============ -->
+    <div class="part-heading"><h2>Part II — Equity &amp; Commodity</h2><span class="part-count">Stocks and goods</span></div>
+    <section id="eqcomm-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="eq-trs">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Total Return Swaps</h3></div><span class="ca-code">The Ghost Owner</span></div>
+          <p class="ca-def">Getting all the benefits of owning a stock, without ever actually buying the stock.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A hedge fund wants the profits of Apple stock, but doesn't want the hassle of buying it. A bank buys the stock, and agrees to hand over all the profits (and dividends) to the hedge fund. In exchange, the hedge fund pays the bank a flat fee. It's essentially renting a stock.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="cfd">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Contracts for Difference (CFDs)</h3></div><span class="ca-code">The App Bet</span></div>
+          <p class="ca-def">A popular tool in Europe for regular people on trading apps. You bet on whether a stock will go up or down. You don't own the stock; you just get paid the difference in cash.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>The Danger</h4><p>They allow massive leverage (borrowing money). You can put down $100 and bet on $1,000 worth of stock. If the stock drops 10%, you lose your entire $100 instantly. They are banned in the USA for being too risky for average people.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="comm-fut">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Commodity Futures</h3></div><span class="ca-code">The Oil Contract</span></div>
+          <p class="ca-def">Contracts to buy physical goods in the future. Used by airlines to lock in the price of jet fuel, or by Starbucks to lock in the price of sugar.</p>
+        </article>
+
+        <article class="ca-card" id="comm-swap">
+          <div class="ca-head"><div><span class="ca-class">Linear</span><h3>Commodity Swaps</h3></div><span class="ca-code">The Multi-Month Lock</span></div>
+          <p class="ca-def">Instead of buying 12 different Futures contracts to cover every month of the year, a company signs one giant Swap contract that locks in their average fuel price for the whole year.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART III: OPTIONS ============ -->
+    <div class="part-heading"><h2>Part III — Options (Non-Linear)</h2><span class="part-count">Buying Insurance</span></div>
+    <section id="options-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> An Option is just an insurance policy. You pay an upfront fee (Premium). If things go wrong, the insurance kicks in. If things are fine, you just lose your fee.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card v-choice" id="vanilla">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Vanilla Options (Calls &amp; Puts)</h3></div><span class="ca-code">The Classic Insurance</span></div>
+          <p class="ca-def">The right, but not the obligation, to buy or sell something at a locked-in price.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>A "Call" (Right to Buy)</h4><p>You pay $5 for a ticket that lets you buy Apple stock for $150. If Apple skyrockets to $200, you use your magic ticket to buy it for $150. Huge win! If Apple drops to $100, you rip up the ticket and just lose your $5 fee.</p></div>
+            <div><h4>A "Put" (Right to Sell)</h4><p>You own Apple stock and fear a crash. You pay $5 for a ticket that guarantees you can sell it for $150. If the stock crashes to $50, you are safe! You force them to buy it from you at $150.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="cap-floor">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Caps &amp; Floors</h3></div><span class="ca-code">Mortgage Protection</span></div>
+          <p class="ca-def">Buying insurance against interest rates.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A property developer has a floating-rate loan. They buy a <strong>Cap</strong>. It guarantees their interest rate will never go above 6%. If rates hit 8%, the insurance pays the extra 2%. A <strong>Floor</strong> is the opposite, protecting banks if rates drop too low.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="collar">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Collars</h3></div><span class="ca-code">The Free Insurance Hack</span></div>
+          <p class="ca-def">Want to buy a "Cap" to protect yourself, but don't want to pay the expensive upfront fee? You use a Collar.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You buy the Cap (protection), but to pay for it, you sell someone else a Floor (giving up your right to benefit if rates drop). The two fees cancel each other out. You get "free" protection, but your rate is now stuck in a tight band.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="swaption">
+          <div class="ca-head"><div><span class="ca-class">Non-Linear</span><h3>Swaptions</h3></div><span class="ca-code">Optionception</span></div>
+          <p class="ca-def">It's an Option to buy a Swap. (Derivative inception).</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A company thinks they might need an Interest Rate Swap in 6 months, but aren't sure. They buy a Swaption. It gives them the right to force the bank into a Swap in 6 months at today's prices, but they can walk away if they don't need it.</p></div>
+          </div>
+        </article>
+
+        <!-- Exotic Options -->
+        <article class="ca-card v-choice" id="barrier">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Barrier Options</h3></div><span class="ca-code">The Booby Trap</span></div>
+          <p class="ca-def">A normal option that vanishes into thin air if a specific price is touched.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You buy cheap insurance on Apple stock, but it has a "Knock-Out" barrier at $200. If the stock touches $200 for even one second, your insurance is instantly shredded and you lose your coverage.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="asian">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Asian Options</h3></div><span class="ca-code">The Smoother</span></div>
+          <p class="ca-def">An option that pays out based on the <em>average</em> price over a month, rather than the price on the final day.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A coffee shop buys beans every day. They care about their average cost for the month. An Asian option ignores crazy one-day price spikes and protects their average monthly bill.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="digital">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Digital (Binary) Options</h3></div><span class="ca-code">All-or-Nothing</span></div>
+          <p class="ca-def">A pure yes/no bet. If the stock is above $100 on Friday, you win exactly $50. If it is $99.99, you get $0.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="lookback">
+          <div class="ca-head"><div><span class="ca-class">Exotic</span><h3>Lookback Options</h3></div><span class="ca-code">The Time Machine</span></div>
+          <p class="ca-def">The most expensive insurance you can buy. At the end of the year, it lets you look back and pretend you bought the stock on the absolute best, cheapest day of the entire year.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART IV: CREDIT ============ -->
+    <div class="part-heading"><h2>Part IV — Credit Insurance</h2><span class="part-count">Betting on bankruptcy</span></div>
+    <section id="credit-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="cds">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Single-Name CDS (Credit Default Swap)</h3></div><span class="ca-code">Bankruptcy Insurance</span></div>
+          <p class="ca-def">You pay a monthly fee to a bank. If a specific company (like Ford) goes bankrupt, the bank pays you millions of dollars.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>It's fire insurance for bonds. If you own $1 Million of Ford bonds, you buy a CDS so you don't lose your money if Ford dies. Strangely, you can buy a CDS on Ford even if you don't own their bonds (like buying fire insurance on your neighbor's house).</p></div>
+          </div>
+          <div class="ca-example">
+            <span class="ex-tag">Famous Example</span>
+            This is exactly what the characters in the movie "The Big Short" bought to bet against the housing market. They bought CDS insurance on bad mortgages.
+          </div>
+        </article>
+
+        <article class="ca-card" id="cds-index">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>CDS Indices (CDX)</h3></div><span class="ca-code">The Group Plan</span></div>
+          <p class="ca-def">Instead of buying bankruptcy insurance on one company, you buy a package that insures 100 different companies all at once. Much easier to trade.</p>
+        </article>
+
+        <article class="ca-card" id="credit-trs">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Credit Total Return Swaps</h3></div><span class="ca-code">Ghost Bonds</span></div>
+          <p class="ca-def">Exactly like the Equity TRS above. A hedge fund wants the profits from a risky corporate bond, but asks a bank to hold it for them so they can remain hidden.</p>
+        </article>
+
+        <article class="ca-card" id="cln">
+          <div class="ca-head"><div><span class="ca-class">Credit</span><h3>Credit Linked Notes (CLNs)</h3></div><span class="ca-code">The Hidden CDS</span></div>
+          <p class="ca-def">Some investors are legally banned from buying CDS insurance. A bank creates a normal-looking bond that has a CDS secretly stuffed inside it, allowing the investor to sneak past the rules.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART V: FX ============ -->
+    <div class="part-heading"><h2>Part V — Currency (FX)</h2><span class="part-count">Trading money</span></div>
+    <section id="fx-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="fx-fwd">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>FX Forwards</h3></div><span class="ca-code">The Currency Lock</span></div>
+          <p class="ca-def">An agreement to swap US Dollars for Euros in 3 months at a locked-in exchange rate.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A US company is buying a factory in Germany next year. If the Euro gets more expensive, the factory will cost them millions more. They use an FX Forward to lock in today's exchange rate, removing the risk.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="fx-swap">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>FX Swaps</h3></div><span class="ca-code">The Short-Term Loan</span></div>
+          <p class="ca-def">A bank needs Japanese Yen for 3 days, but only has US Dollars. They swap their Dollars for Yen today, and agree to swap them back on Friday. It's a quick, safe loan between banks using currencies.</p>
+        </article>
+
+        <article class="ca-card" id="ndf">
+          <div class="ca-head"><div><span class="ca-class">FX</span><h3>Non-Deliverable Forwards (NDFs)</h3></div><span class="ca-code">The Ghost Currency</span></div>
+          <p class="ca-def">Some countries (like Brazil or India) have strict laws preventing their currency from leaving the country. So, traders use an NDF. You bet on the Brazilian currency, but when it's time to pay out, you just settle the difference using US Dollars. The Brazilian money never actually moves.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fx-opt">
+          <div class="ca-head"><div><span class="ca-class">FX · Non-Linear</span><h3>FX Options</h3></div><span class="ca-code">Currency Insurance</span></div>
+          <p class="ca-def">You pay a fee to lock in an exchange rate, but you can walk away if you want.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A company bids on a project in London. If they win, they need Euros. If they lose, they don't. A Forward contract would force them to buy Euros no matter what. An Option lets them walk away if they lose the bid.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ COMPARISON ============ -->
+    <div class="part-heading"><h2>Reference</h2><span class="part-count">Cheat Sheets</span></div>
+    <section id="compare">
+      <h2 class="section-title">Cheat Sheets</h2>
+
+      <div class="table-wrap">
+      <table>
+        <caption>Summary by Category</caption>
+        <thead><tr><th>Category</th><th>What it does</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Linear (Fair Fights)</td><td>Locks in a price. You can win or lose equally.</td><td>Locking in the price of fuel.</td></tr>
+          <tr><td>Options (Insurance)</td><td>Protects your downside, but costs an upfront fee.</td><td>Protecting yourself from a stock crash.</td></tr>
+          <tr><td>Credit (Bankruptcy)</td><td>Pays out if a company fails.</td><td>Insuring a corporate bond.</td></tr>
+          <tr><td>FX (Currency)</td><td>Protects against exchange rates shifting.</td><td>Locking in the Euro vs Dollar rate.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ BLOWUPS ============ -->
+    <section id="blowups">
+      <h2 class="section-title">Famous Real-World Disasters</h2>
+      <p>Derivatives are safe when used for hedging, but dangerous when used for pure gambling.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>What happened</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Barings Bank (1995)</strong></td><td>A single 28-year-old trader named Nick Leeson gambled on Japanese stock market Futures. He hid his massive losses because he controlled both the trading desk and the back-office. He lost $1.3 Billion and collapsed a 233-year-old bank.</td></tr>
+          <tr><td><strong>The Big Short (2008)</strong></td><td>Hedge funds bought CDS (Credit Default Swaps) on housing market bonds. When the housing market collapsed, the insurance paid out billions.</td></tr>
+          <tr><td><strong>Archegos (2021)</strong></td><td>A rich investor used Total Return Swaps to secretly borrow billions of dollars to buy tech stocks. When the stocks dropped, the banks demanded their Margin money. He didn't have it, causing the banks to lose $10 Billion.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ GLOSSARY ============ -->
+    <section id="glossary">
+      <h2 class="section-title">Jargon Buster Glossary</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">Notional</span><p class="g-def">The massive, fake number representing the size of the bet (e.g., A $1 Million bet).</p></div>
+        <div class="g-item"><span class="g-term">Market Value (Mark-to-Market)</span><p class="g-def">The actual amount of money the contract is worth today.</p></div>
+        <div class="g-item"><span class="g-term">Premium</span><p class="g-def">The upfront fee you pay to buy an Option (Insurance).</p></div>
+        <div class="g-item"><span class="g-term">Strike Price</span><p class="g-def">The locked-in price you agree to buy or sell at.</p></div>
+        <div class="g-item"><span class="g-term">Margin</span><p class="g-def">The collateral (cash) you must put in a vault to prove you won't run away from your debts.</p></div>
+        <div class="g-item"><span class="g-term">ISDA Master Agreement</span><p class="g-def">The giant rulebook two banks sign so they can trade with each other quickly.</p></div>
+        <div class="g-item"><span class="g-term">CCP (Central Counterparty)</span><p class="g-def">The safe middleman that guarantees both sides of a trade will get paid.</p></div>
+        <div class="g-item"><span class="g-term">The Greeks (Delta, Gamma)</span><p class="g-def">Math formulas that tell traders exactly how much the price of an Option will change if the market moves.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Derivatives Explained Simply. Designed to help everyday investors, students, and beginners understand exactly how Wall Street manages risk, without needing a finance degree.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' instrument' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>
