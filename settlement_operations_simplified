@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settlement Operations Simplified — The Beginner's Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --bg:#f6f4ee;
+  --panel:#ffffff;
+  --ink:#1c2b2e;
+  --sub:#4b5b5e;
+  --line:#dcd6c8;
+  --navy:#16324f;
+  --teal:#0f6b64;
+  --gold:#a8792e;
+  --rose:#8c3a3a;
+  --tag-bg:#eef1e6;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  line-height:1.6;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 28px 120px;}
+header.hero{
+  padding:70px 28px 50px;
+  border-bottom:3px solid var(--navy);
+  background:linear-gradient(180deg,#fbfaf5,var(--bg));
+}
+header.hero .inner{max-width:980px;margin:0 auto;}
+.eyebrow{
+  font-family:'Courier New',monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:12.5px;
+  color:var(--teal);
+  margin-bottom:14px;
+}
+h1.title{
+  font-size:44px;
+  margin:0 0 12px;
+  color:var(--navy);
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+.subtitle{color:var(--sub);font-size:18px;max-width:640px;}
+nav.toc{
+  margin-top:36px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px 22px;
+  font-family:'Courier New',monospace;
+  font-size:13px;
+}
+nav.toc a{color:var(--navy);text-decoration:none;border-bottom:1px dotted var(--line);display:block;padding:4px 0;}
+nav.toc a:hover{color:var(--teal);}
+
+section{margin-top:64px; scroll-margin-top: 2rem;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--navy);padding-bottom:10px;margin-bottom:26px;}
+.sec-num{font-family:'Courier New',monospace;color:var(--gold);font-size:15px;}
+h2{font-size:28px;margin:0;color:var(--navy);}
+h3{font-size:20px;color:var(--teal);margin:30px 0 8px;}
+p{color:var(--ink);}
+.lede{color:var(--sub);font-size:17px;}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-left:4px solid var(--teal);
+  border-radius:4px;
+  padding:20px 24px;
+  margin:18px 0;
+}
+.card.gold{border-left-color:var(--gold);}
+.card.rose{border-left-color:var(--rose);}
+.card h4{margin:0 0 8px;color:var(--navy);font-size:16.5px;font-family:-apple-system,Helvetica,Arial,sans-serif;}
+.tag{
+  display:inline-block;
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  letter-spacing:.05em;
+  background:var(--tag-bg);
+  color:var(--navy);
+  padding:2px 8px;
+  border-radius:3px;
+  margin-right:6px;
+  text-transform:uppercase;
+}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:720px){.grid2{grid-template-columns:1fr;} nav.toc{grid-template-columns:1fr 1fr;} h1.title{font-size:32px;}}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:14.5px;}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;font-weight:600;}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+tr:nth-child(even) td{background:#faf9f3;}
+
+.flow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0;
+  align-items:stretch;
+  margin:22px 0;
+  font-family:-apple-system,Helvetica,Arial,sans-serif;
+}
+.flow .step{
+  background:var(--panel);
+  border:1.5px solid var(--navy);
+  padding:12px 16px;
+  font-size:13.5px;
+  min-width:130px;
+  flex:1;
+  text-align:center;
+  color:var(--navy);
+  font-weight:600;
+  border-radius: 4px;
+}
+.flow .arrow{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 6px;color:var(--gold);font-size:20px;
+}
+
+.example{
+  background:#fbfaf2;
+  border:1px dashed var(--gold);
+  border-radius:4px;
+  padding:16px 20px;
+  margin:14px 0;
+  font-family:-apple-system,Helvetica,Arial,sans-serif;
+  font-size:14.5px;
+}
+.example .lab{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+
+.def{font-family:-apple-system,Helvetica,Arial,sans-serif;}
+.def dt{font-weight:700;color:var(--navy);margin-top:14px;}
+.def dd{margin:4px 0 0;color:var(--sub);}
+
+.msg{font-family:'Courier New',monospace;background:#0f1f22;color:#d8e8de;padding:14px 16px;border-radius:4px;font-size:13px;overflow-x:auto;margin:12px 0;}
+.msg .field{color:#8fd6c0;}
+.msg .val{color:#f0d9a0;}
+
+.case{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:22px 26px;
+  margin:20px 0;
+  box-shadow:0 1px 3px rgba(20,40,40,.05);
+}
+.case .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.case .head h4{margin:0;color:var(--rose);font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:17px;}
+.case .sev{font-family:'Courier New',monospace;font-size:11px;background:var(--rose);color:#fff;padding:3px 9px;border-radius:3px;}
+.case .num{font-family:'Courier New',monospace;background:var(--tag-bg);padding:10px 14px;border-radius:4px;font-size:13.5px;margin:10px 0;}
+.case ol{padding-left:20px;}
+.case ol li{margin-bottom:6px;}
+
+.glossary dt{font-family:'Courier New',monospace;font-weight:700;color:var(--navy); margin-top: 10px;}
+.glossary dd{margin:4px 0 0;color:var(--sub);}
+
+footer{margin-top:80px;border-top:2px solid var(--navy);padding-top:24px;color:var(--sub);font-size:13.5px;font-family:-apple-system,Helvetica,Arial,sans-serif;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <div class="eyebrow">Finance Basics Explained Simply</div>
+    <h1 class="title">Settlement Operations</h1>
+    <p class="subtitle">A plain-English walkthrough of the invisible plumbing that moves stocks and cash after you click "Buy". Learn how the financial system actually transfers ownership, fixes mistakes, and keeps billions of dollars moving safely every single day.</p>
+    <nav class="toc">
+      <a href="#s1">01 · The House Buying Analogy</a>
+      <a href="#s2">02 · The Giant Digital Vault (DTC)</a>
+      <a href="#s3">03 · International Shipping (ICSDs)</a>
+      <a href="#s4">04 · Custodians & Nostro/Vostro</a>
+      <a href="#s5">05 · Amazon Addresses & Texting (SWIFT)</a>
+      <a href="#s6">06 · The Vending Machine (DvP)</a>
+      <a href="#s7">07 · Step-by-Step: Buying a Stock</a>
+      <a href="#s8">08 · Bond Quirks (Accrued Interest)</a>
+      <a href="#s9">09 · Derivatives (The Poker Game)</a>
+      <a href="#s10">10 · When Things Break (Case Studies)</a>
+      <a href="#s11">11 · Jargon Buster</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>The Big Picture: Buying a House</h2></div>
+  <p class="lede">Before we dive into the banking terms, let's look at the lifecycle of a trade. "Settlement" is the very last step. Everything before it is just paperwork and promises.</p>
+
+  <p>Think of trading a stock exactly like buying a house:</p>
+
+  <div class="flow">
+    <div class="step">1. Execution<br><span style="font-weight:400;font-size:12px;color:#555">Agreeing on the price with the seller.</span></div>
+    <div class="arrow">→</div>
+    <div class="step">2. Trade Capture<br><span style="font-weight:400;font-size:12px;color:#555">Writing down the agreed terms.</span></div>
+    <div class="arrow">→</div>
+    <div class="step">3. Confirmation<br><span style="font-weight:400;font-size:12px;color:#555">Lawyers ensuring the contracts match.</span></div>
+    <div class="arrow">→</div>
+    <div class="step">4. Clearing<br><span style="font-weight:400;font-size:12px;color:#555">Using an Escrow agent to hold the funds safely.</span></div>
+    <div class="arrow">→</div>
+    <div class="step">5. Settlement<br><span style="font-weight:400;font-size:12px;color:#555">Closing day. Keys and money change hands.</span></div>
+  </div>
+
+  <p><strong>Settlement Operations</strong> teams live in steps 3 to 5. Their job isn't to pick which stocks to buy. Their job is to make sure that on "Closing Day", the exact right amount of money moves to the right place, the correct shares are delivered, and if something goes wrong, they fix it before anyone loses money.</p>
+</section>
+
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>The US Plumbing: Vaults and Referees</h2></div>
+
+  <dl class="def">
+    <dt>DTC — The Giant Digital Vault (Depository Trust Company)</dt>
+    <dd>Back in the day, Wall Street used messengers to physically run paper stock certificates across town in briefcases. It was a nightmare. Today, <strong>nobody moves physical stocks</strong>. The DTC acts as one giant digital vault. All the shares live there. When you buy a stock, the DTC simply updates their spreadsheet: "Minus 100 shares from Seller, Plus 100 shares to Buyer."</dd>
+
+    <dt>CCP — The Trustworthy Middleman (Central Counterparty)</dt>
+    <dd>Imagine buying an expensive watch on eBay. You don't trust the stranger to send it, and they don't trust you to pay. So, you use PayPal. A <strong>CCP</strong> is Wall Street's PayPal. It steps perfectly in the middle of a trade. Legally, the seller sells to the CCP, and the buyer buys from the CCP. This means if a random hedge fund goes bankrupt halfway through a trade, you are safe because your contract is actually with the massive, ultra-safe CCP.</dd>
+
+    <dt>Omgeo / CTM — The Matchmaker</dt>
+    <dd>Think of this as Tinder for trades. Before money moves, the buyer's system and the seller's system upload their trade details to <strong>CTM</strong>. If both sides match perfectly (Price, Quantity, Date), it's a "Match". If they don't match, an alarm goes off so humans can fix the typo <em>before</em> Closing Day.</dd>
+  </dl>
+
+  <div class="example">
+    <div class="lab">The Bar Tab Analogy (Continuous Net Settlement - CNS)</div>
+    Imagine you are at a bar. You order a $5 beer and hand the bartender $5. Ten minutes later, you order a $7 wine and hand him $7. That is horribly inefficient. <br><br>
+    Instead, the bartender opens a <strong>Net Tab</strong>. You order 10 drinks, your friend buys you 3, and at the end of the night, you just hand the bartender one single $20 bill to settle the exact difference. This is what the <strong>NSCC (National Securities Clearing Corporation)</strong> does for millions of trades a day. Instead of banks sending money back and forth 100,000 times a day, they just pay one single "Net Tab" at the end of the day. This is the only way the stock market survives the sheer volume of daily trades.
+  </div>
+</section>
+
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Europe: The International Shipping Hubs</h2></div>
+
+  <p>The US has one giant vault (The DTC). Europe is much more fragmented because of different countries and laws. They have domestic vaults for local stocks, but they also use two massive "International Vaults" (ICSDs) for cross-border trades.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Euroclear</h4>
+      Based in Brussels. Think of them as FedEx for international bonds and European stocks. They own several local vaults (like the UK, France, and Belgium) and connect them all together.
+    </div>
+    <div class="card">
+      <h4>Clearstream</h4>
+      Based in Luxembourg. The direct rival to Euroclear. Think of them as UPS. They do the exact same job: keeping safe custody of international securities and settling trades.
+    </div>
+  </div>
+
+  <p>Euroclear and Clearstream are competitors, but they built a digital "bridge" between them. This means a buyer using Euroclear can smoothly buy a bond from a seller using Clearstream. If you are asked in an interview, simply say: <em>"Euroclear and Clearstream are the European equivalents to the DTC, but they specialize in international and cross-border trades."</em></p>
+</section>
+
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Custodians and the "Parking Garage" Analogy</h2></div>
+
+  <dl class="def">
+    <dt>Custodian</dt>
+    <dd>You don't hold your stocks on your laptop. You hire a massive bank (like BNY Mellon or State Street) to act as your personal safe deposit box. They hold your stocks, collect your dividends, and handle the settlement paperwork. They are your <strong>Custodian</strong>.</dd>
+
+    <dt>Sub-Custodian (The Local Guide)</dt>
+    <dd>If a US Custodian wants to buy shares in Japan, they might not speak the language or have a license in Tokyo. So, they hire a local Japanese bank to do the heavy lifting in that specific country. That local bank is the <strong>Sub-Custodian</strong>.</dd>
+  </dl>
+
+  <div class="example">
+    <div class="lab">Nostro and Vostro: The Parking Garage</div>
+    People get incredibly confused by "Nostro" and "Vostro" accounts, but it's very simple. <strong>It is the exact same account, just described from two different perspectives.</strong>
+    <br><br>
+    Imagine I rent a parking spot in <em>your</em> garage to keep my car safe.<br>
+    • To ME, I call it my <strong>Nostro</strong> (Latin for "Ours"). It means "Our car, sitting in your garage."<br>
+    • To YOU, you call it a <strong>Vostro</strong> (Latin for "Yours"). It means "Your car, sitting in our garage."<br><br>
+    Banks do this with cash. A UK bank needs to pay for things in US Dollars, so they open a USD cash account sitting inside a New York Bank. The UK bank calls it their Nostro. The New York bank calls it a Vostro.
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>SWIFT, BICs, and your Amazon Address (SSI)</h2></div>
+
+  <dl class="def">
+    <dt>SSI (Standing Settlement Instructions) = Your Default Address</dt>
+    <dd>When you buy something on Amazon, you don't type out your home address every single time. You save it as your default. Banks do the exact same thing. An <strong>SSI</strong> is a pre-saved profile that says: "Whenever I buy Apple stock, please deliver it to this specific digital vault account." <strong>Warning:</strong> If a bank forgets to update their SSI, millions of dollars of stock will be "shipped to their old apartment" causing massive settlement failures.</dd>
+
+    <dt>BIC (SWIFT Code) = The Zip Code</dt>
+    <dd>An 8 or 11-letter code that globally identifies a specific bank. If you want to wire money to a bank in Germany, you need their BIC so the global system knows exactly where to route the cash.</dd>
+
+    <dt>SWIFT MT Messages = WhatsApp for Banks</dt>
+    <dd>Banks don't email each other to move money. They use a highly secure messaging app called SWIFT. The messages have specific codes:</dd>
+  </dl>
+
+  <table>
+    <tr><th>Message Code</th><th>What it translates to in Plain English</th></tr>
+    <tr><td>MT541</td><td>"I am expecting to receive a stock. Here is the cash to pay for it."</td></tr>
+    <tr><td>MT543</td><td>"I am delivering a stock to you. Please give me my cash."</td></tr>
+    <tr><td>MT544 / MT547</td><td>"Success! The stock and cash have traded hands."</td></tr>
+    <tr><td>MT548</td><td>"Error! Something is wrong. The trade is failing."</td></tr>
+    <tr><td>MT103</td><td>A standard wire transfer of cash from one person to another.</td></tr>
+  </table>
+</section>
+
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>The Vending Machine (DvP vs FoP)</h2></div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>DvP (Delivery versus Payment) = The Vending Machine</h4>
+      Imagine a vending machine. You put your money in, and the candy bar falls out at the <strong>exact same time</strong>. If the candy gets stuck, your money is refunded. <br><br>
+      This is how 99% of stocks settle. The system holds the stock and the cash, and swaps them simultaneously. This guarantees that nobody can run away with the stock without paying for it.
+    </div>
+    <div class="card gold">
+      <h4>FoP (Free of Payment) = Sending a Birthday Gift</h4>
+      You mail your friend a birthday gift. No money changes hands. <br><br>
+      In banking, <strong>FoP</strong> is used when a client just wants to move their own stocks from their left pocket to their right pocket (moving from one custodian to another). There is no "buyer" or "seller", so no cash needs to move.
+    </div>
+  </div>
+
+  <h3>The Speed of Delivery (Settlement Cycles)</h3>
+  <p>When you trade, you don't get the stock instantly. There is a delay called the Settlement Cycle. It is measured in "T" (Trade Date) plus days.</p>
+  <table>
+    <tr><th>Market</th><th>Speed</th><th>What it means</th></tr>
+    <tr><td>US Stocks</td><td>T+1</td><td>If you buy on Monday, the stock is officially yours on Tuesday.</td></tr>
+    <tr><td>European Stocks</td><td>T+2</td><td>If you buy on Monday, the stock is officially yours on Wednesday.</td></tr>
+  </table>
+  <p><em>Note: The US recently sped up from T+2 to T+1. This is great for investors, but it means Operations teams have half the time to fix typos before Closing Day!</em></p>
+</section>
+
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Step-by-Step: What happens when you click "Buy"</h2></div>
+
+  <div class="example">
+    <div class="lab">The Scenario</div>
+    You buy 100 shares of Apple stock on your brokerage app on Monday at $150 a share.
+  </div>
+
+  <ol>
+    <li><strong>Monday 10:00 AM (Execution):</strong> You click Buy. The app finds a seller. You lock in the price of $15,000 total.</li>
+    <li><strong>Monday 2:00 PM (Matching):</strong> Your broker's computer and the seller's computer check with each other (via Omgeo/CTM). "Did we both agree to 100 shares of Apple at $150 settling tomorrow?" Yes. It's a match.</li>
+    <li><strong>Monday Night (Clearing):</strong> The trade is sent to the NSCC (The Net Tab Referee). The NSCC adds your trade to millions of others to figure out exactly who owes what.</li>
+    <li><strong>Tuesday Morning (Settlement T+1):</strong> Closing Day! The digital vault (DTC) steps in. Using the Vending Machine method (DvP), they simultaneously take 100 shares from the seller and give them to you, while taking $15,000 from you and giving it to the seller.</li>
+    <li><strong>Tuesday Afternoon:</strong> The MT544 "Success" text message is sent. The shares officially show up in your account. You are done!</li>
+  </ol>
+</section>
+
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Fixed Income (Bonds): Buying a Car with a Full Tank</h2></div>
+
+  <p>Bonds settle almost exactly like stocks, but with one major headache for Operations teams: <strong>Accrued Interest.</strong></p>
+
+  <p>Bonds pay interest (a coupon) every 6 months. If you buy a bond from someone exactly 3 months after their last payout, they deserve to keep half of that interest, because they owned it for half the time.</p>
+
+  <div class="example">
+    <div class="lab">The Used Car Analogy</div>
+    Imagine buying a used car. You agree to pay $5,000 for the car itself (This is the <strong>Clean Price</strong>). <br><br>
+    But, the seller just filled up the gas tank this morning. It's only fair that you reimburse them $50 for the gas (This is the <strong>Accrued Interest</strong>).<br><br>
+    So, at settlement, you actually hand the seller $5,050 (This is the <strong>Dirty Price</strong>).
+  </div>
+  
+  <p><strong>Why Ops hates this:</strong> If the buyer's computer calculates the "gas" at $50.00, but the seller's computer calculates the "gas" at $50.01 because they use a different calendar formula... the Vending Machine (DvP) will completely jam and fail over a 1-cent difference. Ops has to manually step in and agree on the math.</p>
+</section>
+
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Derivatives: The Poker Game (Margin)</h2></div>
+
+  <p>Derivatives are bets on the future (like betting oil prices will go up). Because they are bets, "Settlement" doesn't mean swapping shares. It means making sure nobody runs away without paying their debts.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Initial Margin = The Security Deposit</h4>
+      When you rent an apartment, you put down a security deposit just in case you trash the place. In derivatives, to enter a trade, you have to post <strong>Initial Margin</strong> to the CCP. If you go bankrupt, they use this deposit to cover your losses.
+    </div>
+    <div class="card rose">
+      <h4>Variation Margin = Cashing out poker chips daily</h4>
+      Imagine a week-long poker game. Instead of waiting until Sunday to see who owes a million dollars, the dealer makes everyone empty their pockets and settle their debts <strong>every single night</strong>. This is <strong>Variation Margin (VM)</strong>. If your oil bet lost $10,000 today, you must wire $10,000 cash to the winner tonight.
+    </div>
+  </div>
+</section>
+
+<section id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><h2>When Things Break: 4 Real-World Case Studies</h2></div>
+  <p class="lede">In the real world, things go wrong. A trade that fails to settle on time is called a "Break". Here is how Ops teams actually fix them.</p>
+
+  <div class="case">
+    <div class="head"><h4>Case 1 — "DK" (Don't Know)</h4><span class="sev">Pre-settlement</span></div>
+    <p><strong>What happened:</strong> A seller's computer sends a message saying "Hey, I'm selling you 10,000 shares." Your computer replies: "DK (Don't Know). I have no idea who you are or what this trade is."</p>
+    <p><strong>The Analogy:</strong> A package arrives at your door that you didn't order.</p>
+    <p><strong>How Ops fixes it:</strong> Ops immediately calls the trading desk. "Did you guys actually buy this?" Usually, it's a typo. A trader clicked the wrong client account. The trader cancels the typo and re-books it to the correct account before Closing Day.</p>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 2 — The SSI Mismatch</h4><span class="sev">Settlement date</span></div>
+    <p><strong>What happened:</strong> The trade was agreed upon, but the buyer recently changed banks. They forgot to update their SSI profile. The seller shipped the shares to the old, closed bank account.</p>
+    <p><strong>The Analogy:</strong> Shipping an Amazon package to your old apartment.</p>
+    <p><strong>How Ops fixes it:</strong> The system flashes an MT548 Error. Ops frantically emails the seller with the correct new address. If they are fast enough, they can re-route it the same day. If they are too late, the trade fails, and the buyer might sue for lost time/interest.</p>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 3 — The Short Fail (No Inventory)</h4><span class="sev">Settlement date</span></div>
+    <p><strong>What happened:</strong> The seller agreed to sell 5,000 shares, but when Closing Day arrives, their vault is empty. They don't actually have the shares to give you.</p>
+    <p><strong>The Analogy:</strong> A store sells you a PS5 online, but their warehouse is actually out of stock.</p>
+    <p><strong>How Ops fixes it:</strong> The system will auto-retry every day, hoping the seller finds the shares. But after a few days, the buyer gets angry. The buyer's broker will execute a <strong>"Buy-In"</strong>: They will force-buy the shares from a random third party at whatever the current market price is, and mail the massive bill/penalty to the original failing seller.</p>
+  </div>
+
+  <div class="case">
+    <div class="head"><h4>Case 4 — The Stolen Mail (Income Claim)</h4><span class="sev">Post-settlement</span></div>
+    <p><strong>What happened:</strong> You buy a stock, but because of a typo, the settlement is delayed by a week. During that delay week, the company pays a $500 dividend. Because the shares were still technically sitting in the seller's account, the seller gets your $500 dividend!</p>
+    <p><strong>The Analogy:</strong> Your mail is delivered to the old owner of your house because the deed transfer was delayed.</p>
+    <p><strong>How Ops fixes it:</strong> Ops files a formal <strong>Income Claim</strong>. They contact the seller and say, "Hey, because of the delay, you received $500 that economically belongs to us. Please wire us the cash." The seller checks the dates, agrees, and wires the money back.</p>
+  </div>
+</section>
+
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Jargon Buster</h2></div>
+  <dl class="glossary def">
+    <dt>Affirmation</dt><dd>The digital "thumbs up" where both parties agree the trade details are 100% correct before money moves.</dd>
+    <dt>Buy-in</dt><dd>A punishment for failing to deliver shares. The buyer force-buys them elsewhere and sends you the bill.</dd>
+    <dt>CNS (Continuous Net Settlement)</dt><dd>Settling the "bar tab" at the end of the day instead of paying for every single trade individually.</dd>
+    <dt>Custody</dt><dd>The service of keeping stocks safe in a vault and doing the paperwork (like collecting dividends) for the owner.</dd>
+    <dt>Fail</dt><dd>When closing day arrives and the cash or the stock doesn't show up.</dd>
+    <dt>ISIN</dt><dd>The global barcode/serial number that uniquely identifies a specific stock or bond.</dd>
+    <dt>Novation</dt><dd>The legal magic trick where the CCP steps in the middle, tearing up the original contract and replacing it with two new safe contracts.</dd>
+    <dt>Repo (Repurchase Agreement)</dt><dd>A pawn shop for banks. A bank gives a bond as collateral to get a quick cash loan, promising to buy the bond back tomorrow.</dd>
+  </dl>
+</section>
+
+<footer>
+  Settlement Operations Explained Simply. Designed to help everyday investors, students, and beginners understand exactly how the financial plumbing of Wall Street works, without needing a finance degree.
+</footer>
+</div>
+</body>
+</html>
