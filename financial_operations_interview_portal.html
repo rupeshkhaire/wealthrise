@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Operations & Capital Markets Interview Masterclass Hub</title>
-    <!-- Tailwind CSS CDN -->
+    <title>FinOps Masterclass Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -21,372 +19,265 @@
                     },
                     colors: {
                         brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            700: '#1e40af',
-                            900: '#0f172a',
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            900: '#134e4a',
                         }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 12px 30px -4px rgba(0, 0, 0, 0.08)',
                     }
                 }
             }
         }
     </script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            color: #f3f4f6;
+            background-color: #F8FAFC; /* Very light slate for contrast against white cards */
+            color: #0F172A;
+            -webkit-font-smoothing: antialiased;
         }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(99, 102, 241, 0.4);
-            box-shadow: 0 12px 30px -10px rgba(79, 70, 229, 0.25);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gradient-border {
-            position: relative;
-        }
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 1rem;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(96,165,250,0.5), rgba(167,139,250,0.5));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+
+        /* Custom minimal scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        /* Clean select styling */
+        select.status-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1em;
+            padding-right: 2rem;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-teal-100 selection:text-teal-900 relative">
 
-    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 font-bold text-white text-xl">
-                    FinOps
+                <div class="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center shadow-md">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </div>
                 <div>
-                    <h1 class="text-base font-bold text-white leading-tight">Capital Markets Hub</h1>
-                    <p class="text-xs text-indigo-400 font-medium">Interview Masterclass Series</p>
+                    <h1 class="text-sm font-bold text-slate-900 tracking-tight">FinOps Masterclass</h1>
+                    <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Interview Hub</p>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <button onclick="openCheatSheetModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-600/30 transition flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    Advanced Cheat Sheet
+            <div class="flex items-center space-x-4">
+                <button onclick="openCheatSheetModal()" class="px-4 py-2 rounded-md text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Cheat Sheet
                 </button>
-
-                <!-- Creator Ribbon / Credit -->
-                <div class="pl-3 border-l border-slate-800 flex items-center gap-2">
-                    <span class="text-xs text-slate-400 hidden md:inline">Curated by</span>
-                    <a href="#author-section" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1 hover:scale-105 transition">
-                        <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
-                        <span id="headerAuthorName">Rupesh Khaire</span>
-                    </a>
-                </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-
-        <section class="relative rounded-3xl overflow-hidden glass-panel p-8 md:p-12 border border-slate-800 shadow-2xl">
-            <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10 max-w-3xl space-y-4">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Complete Investment Banking & Operations Suite
-                </div>
-                
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                    Financial Operations <br>
-                    <span class="gradient-text">Interview Preparation Portal</span>
-                </h2>
-
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    A curated high-impact study suite covering Corporate Actions, Financial Derivatives, Fixed Income Securities, and Settlement Operations. Designed for quick revision, deep technical clarity, and interview success.
-                </p>
-
-                <!-- Creator Credit Highlight Card -->
-                <div class="pt-4 flex flex-wrap items-center gap-4 text-xs">
-                    <div class="flex items-center gap-2 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60">
-                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center font-bold text-slate-950 text-xs">
-                            ★
-                        </div>
-                        <div>
-                            <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Expert Guide</span>
-                            <span class="text-slate-200 font-semibold" id="heroAuthorName">Created by Finance Ops Pro</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 text-slate-300">
-                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        <span>5 Modules Included</span>
-                    </div>
-
-                    <div class="flex items-center gap-2 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 text-slate-300">
-                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>Interactive Reader & Progress Tracker</span>
-                    </div>
-                </div>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        
+        <section class="text-center max-w-3xl mx-auto pt-8 pb-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-semibold mb-6">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                </span>
+                Fully Simplified Curriculum
             </div>
+            
+            <h2 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+                Master Capital Markets <br>
+                <span class="text-slate-400">Without the Jargon.</span>
+            </h2>
+
+            <p class="text-slate-600 text-base sm:text-lg leading-relaxed mb-8">
+                A highly readable, plain-English study suite designed for quick revision and deep technical clarity. We've replaced the dense banking terminology with everyday analogies.
+            </p>
         </section>
 
-        <section class="space-y-4">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <!-- Search Input -->
-                <div class="relative flex-1 max-w-md">
-                    <svg class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" id="searchInput" oninput="filterModules()" placeholder="Search modules (e.g., SWIFT, Options, Duration, Ex-Date)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
-                </div>
+        <section class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <div class="relative flex-1 max-w-md">
+                <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" id="searchInput" oninput="filterModules()" placeholder="Search topics (e.g., SWIFT, Options, DvP)..." class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-slate-50 border-none text-sm text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-slate-200 transition">
+            </div>
 
-                <!-- Progress Tracker Bar -->
-                <div class="glass-panel px-4 py-2.5 rounded-xl flex items-center gap-4 text-xs min-w-[280px]">
-                    <span class="text-slate-400 font-medium">Your Progress:</span>
-                    <div class="flex-1 bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                        <div id="overallProgressBar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
-                    </div>
-                    <span id="overallProgressText" class="font-bold text-indigo-300">0%</span>
+            <div class="flex items-center gap-4 text-sm min-w-[280px] px-2">
+                <span class="text-slate-500 font-medium">Progress</span>
+                <div class="flex-1 bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="overallProgressBar" class="bg-slate-900 h-full w-0 transition-all duration-700 ease-out"></div>
                 </div>
+                <span id="overallProgressText" class="font-bold text-slate-900">0%</span>
             </div>
         </section>
 
         <section id="modulesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- Card 1: Corporate Actions -->
-            <article class="module-card glass-card rounded-2xl p-6 flex flex-col justify-between" data-title="corporate actions mandatory voluntary dividend stock split" data-file="corporate_actions.html">
-                <div class="space-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0V7m0 0h4"/></svg>
-                        </div>
-                        <select onchange="updateModuleStatus('corporate_actions.html', this.value)" class="status-select bg-slate-900/80 text-xs text-slate-300 border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500">
-                            <option value="todo">⏳ To Do</option>
-                            <option value="in_progress">🔄 Learning</option>
-                            <option value="mastered">✅ Mastered</option>
-                        </select>
+            <!-- Card 1: Trade Lifecycle -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="trade lifecycle execution capture clearing settlement front middle back office" data-file="trade_lifecycle_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-
-                    <div>
-                        <div class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider mb-1">Module 01</div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-indigo-300 transition">Corporate Actions Overview</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                            Comprehensive breakdown of mandatory, voluntary, and mandatory with choice corporate actions, stock splits, rights issues, and spin-offs.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Dividends</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Stock Splits</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Rights Issue</span>
-                    </div>
+                    <select onchange="updateModuleStatus('trade_lifecycle_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button onclick="previewFile('corporate_actions.html', 'Corporate Actions Overview')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        In-App View
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 01</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">The Trade Lifecycle</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">The big picture. Understand how a trade moves from Execution to Settlement using a simple "Buying a House" analogy.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('trade_lifecycle_simplified.html', 'The Trade Lifecycle')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
                     </button>
-                    <a href="corporate_actions.html" target="_blank" class="p-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 transition" title="Open in new tab">
+                    <a href="trade_lifecycle_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
             </article>
 
-            <!-- Card 2: Corporate Actions Lifecycle -->
-            <article class="module-card glass-card rounded-2xl p-6 flex flex-col justify-between" data-title="corporate actions lifecycle swift mt564 ex date record date payment date" data-file="corporate_actions_lifecycle.html">
-                <div class="space-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                        </div>
-                        <select onchange="updateModuleStatus('corporate_actions_lifecycle.html', this.value)" class="status-select bg-slate-900/80 text-xs text-slate-300 border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500">
-                            <option value="todo">⏳ To Do</option>
-                            <option value="in_progress">🔄 Learning</option>
-                            <option value="mastered">✅ Mastered</option>
-                        </select>
+            <!-- Card 2: Settlement Operations -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="settlement ops guide dtc clearstream euroclear swift mt540 dvp breaks" data-file="settlement_operations_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                     </div>
-
-                    <div>
-                        <div class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">Module 02</div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition">Corporate Actions Lifecycle</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                            End-to-end timeline operational lifecycle: Announcement, Ex-Date, Record Date, Payment Date, and SWIFT MT564/MT568 messages.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Ex-Date</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Record Date</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">MT564</span>
-                    </div>
+                    <select onchange="updateModuleStatus('settlement_operations_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button onclick="previewFile('corporate_actions_lifecycle.html', 'Corporate Actions Lifecycle')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        In-App View
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 02</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Settlement Operations</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">The plumbing of Wall Street. Learn about Digital Vaults (DTC), SWIFT messages, DvP, and how Ops teams fix real-world breaks.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('settlement_operations_simplified.html', 'Settlement Operations')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
                     </button>
-                    <a href="corporate_actions_lifecycle.html" target="_blank" class="p-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 transition" title="Open in new tab">
+                    <a href="settlement_operations_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
             </article>
 
-            <!-- Card 3: Derivatives -->
-            <article class="module-card glass-card rounded-2xl p-6 flex flex-col justify-between" data-title="derivatives futures options swaps forwards greeks hedging ISDA" data-file="derivatives.html">
-                <div class="space-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-                        </div>
-                        <select onchange="updateModuleStatus('derivatives.html', this.value)" class="status-select bg-slate-900/80 text-xs text-slate-300 border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500">
-                            <option value="todo">⏳ To Do</option>
-                            <option value="in_progress">🔄 Learning</option>
-                            <option value="mastered">✅ Mastered</option>
-                        </select>
+            <!-- Card 3: Corp Actions Overview -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="corporate actions mandatory voluntary dividend stock split merger" data-file="corporate_actions_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0V7m0 0h4"/></svg>
                     </div>
-
-                    <div>
-                        <div class="text-[11px] font-bold text-purple-400 uppercase tracking-wider mb-1">Module 03</div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition">Derivatives & Financial Engineering</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                            Deep dive into Options, Futures, Interest Rate Swaps, Forwards, Option Greeks (Delta, Gamma, Theta), ISDA Master Agreements, and Margining.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Options</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Swaps</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Greeks</span>
-                    </div>
+                    <select onchange="updateModuleStatus('corporate_actions_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button onclick="previewFile('derivatives.html', 'Derivatives & Financial Engineering')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        In-App View
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 03</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Corporate Actions: Events</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">A plain-English guide to the 38 different events. Understand Dividends, Splits, Mergers, and Buybacks without the jargon.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('corporate_actions_simplified.html', 'Corporate Actions: Events')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
                     </button>
-                    <a href="derivatives.html" target="_blank" class="p-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 transition" title="Open in new tab">
+                    <a href="corporate_actions_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
             </article>
 
-            <!-- Card 4: Fixed Income -->
-            <article class="module-card glass-card rounded-2xl p-6 flex flex-col justify-between" data-title="fixed income products bonds yield curve duration convexity macaulay accrued interest" data-file="fixed_income_products.html">
-                <div class="space-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <select onchange="updateModuleStatus('fixed_income_products.html', this.value)" class="status-select bg-slate-900/80 text-xs text-slate-300 border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500">
-                            <option value="todo">⏳ To Do</option>
-                            <option value="in_progress">🔄 Learning</option>
-                            <option value="mastered">✅ Mastered</option>
-                        </select>
+            <!-- Card 4: Corp Actions Lifecycle -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="corporate actions lifecycle announcement ex date record reconciliation" data-file="corporate_actions_lifecycle_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
-
-                    <div>
-                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1">Module 04</div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition">Fixed Income Products</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                            Bonds mathematics, Yield to Maturity (YTM), Duration, Convexity, Zero-Coupon Bonds, Accrued Interest calculations (30/360, Actual/Actual).
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Bonds</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">YTM</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Duration</span>
-                    </div>
+                    <select onchange="updateModuleStatus('corporate_actions_lifecycle_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button onclick="previewFile('fixed_income_products.html', 'Fixed Income Products')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        In-App View
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 04</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Corp Actions: Lifecycle</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">The Assembly Line. How an event is actually processed from Announcement to Ex-Date, Record Date, and Final Reconciliation.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('corporate_actions_lifecycle_simplified.html', 'Corporate Actions: Lifecycle')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
                     </button>
-                    <a href="fixed_income_products.html" target="_blank" class="p-2 rounded-xl bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/30 transition" title="Open in new tab">
+                    <a href="corporate_actions_lifecycle_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
             </article>
 
-            <!-- Card 5: Settlement Operations -->
-            <article class="module-card glass-card rounded-2xl p-6 flex flex-col justify-between" data-title="settlement ops guide trade lifecycle clearing dvp swift mt540 mt541 mt542 mt543 CSDR fails" data-file="settlement-ops-guide.html">
-                <div class="space-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <select onchange="updateModuleStatus('settlement-ops-guide.html', this.value)" class="status-select bg-slate-900/80 text-xs text-slate-300 border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500">
-                            <option value="todo">⏳ To Do</option>
-                            <option value="in_progress">🔄 Learning</option>
-                            <option value="mastered">✅ Mastered</option>
-                        </select>
+            <!-- Card 5: Fixed Income -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="fixed income bonds treasuries mortgage backed abs clo ratings" data-file="fixed_income_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     </div>
-
-                    <div>
-                        <div class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider mb-1">Module 05</div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-300 transition">Settlement Operations Guide</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                            Complete Trade Lifecycle: Matching, Clearing, Delivery vs Payment (DvP), Settlement Fails, SWIFT MT540-MT543, and CSDR penalties.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">Trade Lifecycle</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">DvP</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-mono">MT540-543</span>
-                    </div>
+                    <select onchange="updateModuleStatus('fixed_income_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button onclick="previewFile('settlement-ops-guide.html', 'Settlement Operations Guide')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        In-App View
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 05</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Fixed Income Products</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">Demystifying the Bond Market. From safe US Treasuries and Corporate debt to Mortgage-Backed Securities and Junk Bonds.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('fixed_income_simplified.html', 'Fixed Income Products')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
                     </button>
-                    <a href="settlement-ops-guide.html" target="_blank" class="p-2 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 border border-cyan-500/30 transition" title="Open in new tab">
+                    <a href="fixed_income_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Card 6: Derivatives -->
+            <article class="module-card bg-white rounded-2xl p-6 flex flex-col h-full border border-slate-200 shadow-soft hover:shadow-hover transition-shadow" data-title="derivatives futures options swaps forwards calls puts margin" data-file="derivatives_simplified.html">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    </div>
+                    <select onchange="updateModuleStatus('derivatives_simplified.html', this.value)" class="status-select bg-slate-50 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">Learning</option>
+                        <option value="mastered">Mastered</option>
+                    </select>
+                </div>
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Module 06</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Derivatives</h3>
+                    <p class="text-sm text-slate-600 line-clamp-3">Complex bets explained with everyday analogies. Understand Swaps, Futures, Options (Insurance), Margin, and Central Clearing.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button onclick="previewFile('derivatives_simplified.html', 'Derivatives')" class="flex-1 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors">
+                        Read Module
+                    </button>
+                    <a href="derivatives_simplified.html" target="_blank" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" title="Open in new tab">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
@@ -394,209 +285,199 @@
 
         </section>
 
-        <section id="author-section" class="glass-panel rounded-3xl p-8 border border-slate-800 relative overflow-hidden">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-                <div class="space-y-3 text-center md:text-left">
-                    <div class="inline-flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-widest">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        About The Author
-                    </div>
-                    <h3 class="text-2xl font-bold text-white" id="authorDisplayName">Curated with ❤️ by Rupesh Khaire</h3>
-                    <p class="text-sm text-slate-300 max-w-2xl leading-relaxed">
-                        This interview preparation guide was compiled and crafted to help peers, friends, and finance professionals master Capital Markets & Financial Operations concepts effortlessly. Built to transform heavy financial documentation into accessible, actionable insights.
-                    </p>
+        <section id="author-section" class="bg-white rounded-3xl p-8 md:p-12 border border-slate-200 shadow-sm mt-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-3 text-center md:text-left flex-1">
+                <div class="inline-flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-widest">
+                    About The Curriculum
                 </div>
+                <h3 class="text-2xl font-bold text-slate-900">Curated by Rupesh Khaire</h3>
+                <p class="text-sm text-slate-600 max-w-2xl leading-relaxed">
+                    This preparation guide was crafted to help peers and professionals master Capital Markets & Financial Operations effortlessly. Built to transform heavy, boring financial documentation into accessible, actionable insights you can actually use in an interview.
+                </p>
+            </div>
 
-                <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 flex items-center justify-center gap-4">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 to-emerald-400 p-0.5">
-                        <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-white font-bold text-xl">
-                            RK
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold text-white">Rupesh Khaire</div>
-                        <div class="text-xs text-indigo-400">Finance Operations Expert</div>
-                    </div>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center gap-4 shrink-0">
+                <div class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-xl">
+                    RK
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-slate-900">Rupesh Khaire</div>
+                    <div class="text-xs text-slate-500 font-medium">FinOps Professional</div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <div id="previewModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6">
-        <div class="w-full h-full max-w-6xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            <!-- Modal Header -->
-            <div class="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span id="modalFileBadge" class="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-mono font-semibold">
+    <div id="previewModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center p-2 sm:p-6 transition-opacity">
+        <div class="w-full h-full max-w-6xl bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
+            
+            <div class="px-5 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span id="modalFileBadge" class="px-2.5 py-1 rounded bg-slate-200 text-slate-700 text-xs font-mono font-semibold shrink-0">
                         filename.html
                     </span>
-                    <h4 id="modalTitle" class="text-sm font-bold text-white">Module Title</h4>
+                    <h4 id="modalTitle" class="text-sm font-bold text-slate-900 truncate">Module Title</h4>
                 </div>
-                <div class="flex items-center gap-2">
-                    <a id="modalExternalLink" href="#" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition flex items-center gap-1">
+                <div class="flex items-center gap-2 shrink-0">
+                    <a id="modalExternalLink" href="#" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition flex items-center gap-1.5">
                         Open Full Tab
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
-                    <button onclick="closePreviewModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-600/30 hover:text-rose-400 text-slate-400 transition">
+                    <button onclick="closePreviewModal()" class="p-1.5 rounded-lg bg-slate-200 hover:bg-rose-100 hover:text-rose-600 text-slate-600 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
             </div>
-            <!-- Iframe Container -->
-            <div class="flex-1 w-full bg-slate-950 relative">
-                <iframe id="previewIframe" class="w-full h-full border-0 bg-white" src="" title="Module Preview"></iframe>
+            
+            <div class="flex-1 w-full bg-white relative">
+                <div id="iframeLoader" class="absolute inset-0 flex items-center justify-center bg-slate-50">
+                    <div class="w-8 h-8 border-4 border-slate-300 border-t-slate-900 rounded-full animate-spin"></div>
+                </div>
+                <iframe id="previewIframe" class="w-full h-full border-0 absolute inset-0 z-10 opacity-0 transition-opacity duration-300" src="" title="Module Preview" onload="this.style.opacity='1'; document.getElementById('iframeLoader').style.display='none';"></iframe>
             </div>
         </div>
     </div>
 
-    <div id="cheatSheetModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 space-y-6 max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4 sticky top-0 bg-slate-900 z-10">
+    <div id="cheatSheetModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-5xl bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                    <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-white">Advanced FinOps Cheat Sheet</h3>
-                        <p class="text-xs text-slate-400">Quick-fire reference points curated directly from the masterclass files.</p>
+                        <h3 class="text-lg font-bold text-slate-900">Operations Cheat Sheet</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Quick-fire reference points for interviews.</p>
                     </div>
                 </div>
-                <button onclick="closeCheatSheetModal()" class="p-2 bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 rounded-lg transition">✕</button>
+                <button onclick="closeCheatSheetModal()" class="p-2 bg-slate-200 hover:bg-rose-100 hover:text-rose-600 text-slate-600 rounded-lg transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- Section 1: Settlements -->
-                <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                        <span class="text-cyan-400 font-bold uppercase tracking-wider text-xs">Settlements & Infra</span>
+            <div class="p-6 overflow-y-auto custom-scrollbar bg-white">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Section 1: Settlements -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span class="text-blue-700 font-bold uppercase tracking-widest text-xs">Settlements</span>
+                        </div>
+                        <ul class="space-y-3 text-slate-600 text-sm">
+                            <li>
+                                <b class="text-slate-900 block mb-1">DvP vs FoP</b>
+                                Delivery vs Payment (vending machine) vs Free of Payment (sending a gift).
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">Key Vaults</b>
+                                <span class="font-mono text-xs text-slate-700 bg-slate-200 px-1 rounded">DTC</span> (US), <span class="font-mono text-xs text-slate-700 bg-slate-200 px-1 rounded">Euroclear/Clearstream</span> (Europe).
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">SWIFT Messages</b>
+                                <div class="grid grid-cols-2 gap-2 mt-1 font-mono text-[11px] text-slate-700">
+                                    <span class="bg-slate-200 px-2 py-1 rounded">MT540: Rx Free</span>
+                                    <span class="bg-slate-200 px-2 py-1 rounded">MT541: Rx Pay</span>
+                                    <span class="bg-slate-200 px-2 py-1 rounded">MT542: Del Free</span>
+                                    <span class="bg-slate-200 px-2 py-1 rounded">MT543: Del Pay</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="space-y-2 text-slate-300 text-xs">
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">DvP vs FoP</b>
-                            Delivery vs Payment (cash/securities move conditionally) vs Free of Payment (no linked cash).
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Key CSDs</b>
-                            <span class="font-mono text-[10px] text-cyan-300">DTC</span> (US Domestic), <span class="font-mono text-[10px] text-cyan-300">Euroclear/Clearstream</span> (ICSDs for Eurobonds).
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">SWIFT Settlement (MT54x)</b>
-                            <div class="grid grid-cols-2 gap-1 mt-1 font-mono text-[10px]">
-                                <span>MT540: Rx Free</span><span>MT541: Rx vs Pay</span>
-                                <span>MT542: Del Free</span><span>MT543: Del vs Pay</span>
+
+                    <!-- Section 2: Corp Actions -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                            <span class="text-violet-700 font-bold uppercase tracking-widest text-xs">Corp Actions</span>
+                        </div>
+                        <ul class="space-y-3 text-slate-600 text-sm">
+                            <li>
+                                <b class="text-slate-900 block mb-1">Classification</b>
+                                <b class="text-violet-700">Mandatory</b> (Automatic), <b class="text-violet-700">Voluntary</b> (You must act), <b class="text-violet-700">Choice</b> (Happens anyway, pick how).
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">Dates</b>
+                                Record Date (VIP List) → Ex-Date (Ticket Cut-off) → Pay Date.
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">SWIFT CA Messages</b>
+                                <ul class="mt-1 font-mono text-[11px] space-y-1 text-slate-700">
+                                    <li class="bg-slate-200 px-2 py-1 rounded">MT564: Notification</li>
+                                    <li class="bg-slate-200 px-2 py-1 rounded">MT565: Client Instruction</li>
+                                    <li class="bg-slate-200 px-2 py-1 rounded">MT566: Pay Confirm</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Section 3: Derivatives -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                            <span class="text-rose-700 font-bold uppercase tracking-widest text-xs">Derivatives</span>
+                        </div>
+                        <ul class="space-y-3 text-slate-600 text-sm">
+                            <li>
+                                <b class="text-slate-900 block mb-1">Linear vs Non-Linear</b>
+                                Linear (Forwards, Swaps) are straight bets. Non-Linear (Options) act like insurance.
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">Margin</b>
+                                <b class="text-rose-700">Initial (IM):</b> Security deposit. <b class="text-rose-700">Variation (VM):</b> Daily settling up.
+                            </li>
+                            <li>
+                                <b class="text-slate-900 block mb-1">CCP (Middleman)</b>
+                                The Central Counterparty steps in the middle of trades to prevent bankruptcy contagion.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Section 4: Fixed Income & Recon -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 lg:col-span-3">
+                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span class="text-amber-700 font-bold uppercase tracking-widest text-xs">Bonds & Reconciliation</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-600 text-sm">
+                            <div>
+                                <b class="text-slate-900 block mb-2">Bond Pricing</b>
+                                <div class="font-mono text-[11px] text-slate-800 bg-white p-2.5 rounded-lg border border-slate-200 mb-2">
+                                    Dirty Price = Clean Price + Accrued Gas
+                                </div>
+                                <span class="text-xs text-slate-500">Buyer pays dirty price. Accrued interest is like paying for the gas left in a used car.</span>
                             </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Section 2: Corp Actions -->
-                <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                        <span class="text-indigo-400 font-bold uppercase tracking-wider text-xs">Corp Actions Lifecycle</span>
-                    </div>
-                    <ul class="space-y-2 text-slate-300 text-xs">
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Classification</b>
-                            <b class="text-indigo-300">Mandatory</b> (No action, e.g. Split), <b class="text-indigo-300">Voluntary</b> (Action required, e.g. Tender), <b class="text-indigo-300">Choice</b> (DRIP).
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Timeline</b>
-                            Record Date (snapshot) → Ex-Date (trades without entitlement) → Pay Date.
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">SWIFT Corporate Actions</b>
-                            <ul class="mt-1 font-mono text-[10px] space-y-0.5">
-                                <li>MT564: Notification</li>
-                                <li>MT565: Client Instruction</li>
-                                <li>MT567: Status/Ack</li>
-                                <li>MT566: Payment Confirm</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Section 3: Derivatives -->
-                <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                        <span class="text-purple-400 font-bold uppercase tracking-wider text-xs">Derivatives & ISDA</span>
-                    </div>
-                    <ul class="space-y-2 text-slate-300 text-xs">
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Linear vs Non-Linear</b>
-                            Linear (Forwards, Swaps, Futures) have symmetrical risk. Non-Linear (Options) have capped downside/unlimited upside.
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Option Greeks</b>
-                            <span class="text-purple-300 font-semibold">Δ</span> Delta (Price), <span class="text-purple-300 font-semibold">Γ</span> Gamma (Δ rate), <span class="text-purple-300 font-semibold">Θ</span> Theta (Time), <span class="text-purple-300 font-semibold">ν</span> Vega (Vol).
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Margin (ISDA/CSA)</b>
-                            <b class="text-purple-300">IM (Initial Margin):</b> Upfront to cover potential future exposure. <b class="text-purple-300">VM (Variation Margin):</b> Daily MTM cash movement.
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Section 4: Fixed Income -->
-                <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4 lg:col-span-2">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                        <span class="text-amber-400 font-bold uppercase tracking-wider text-xs">Fixed Income Mathematics</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300 text-xs">
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-1">Pricing Formula</b>
-                            <div class="font-mono text-[11px] text-amber-300 bg-slate-950 p-2 rounded border border-slate-800 mb-1">
-                                Dirty Price = Clean Price + Accrued Interest
+                            <div>
+                                <b class="text-slate-900 block mb-2">Credit Ratings Line</b>
+                                The cliff between Safe (Investment Grade) and Risky (Junk) sits at:
+                                <span class="block mt-2 font-bold text-slate-700 bg-slate-200 px-3 py-1.5 rounded-lg text-center">BBB- / Baa3</span>
                             </div>
-                            <span class="text-[10px]">Buyer pays dirty price at settlement. Accrued calculates days since last coupon.</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-1">Credit Ratings Floor</b>
-                            The line between Investment Grade (IG) and High Yield (HY) sits at:
-                            <span class="block mt-1 font-bold text-white bg-slate-800 px-2 py-1 rounded inline-block">BBB- (S&P/Fitch) / Baa3 (Moody's)</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 sm:col-span-2">
-                            <b class="text-white block mb-1">Duration vs Convexity</b>
-                            <b class="text-amber-300">Duration:</b> % price change for 1% yield change (linear estimate). 
-                            <b class="text-amber-300">Convexity:</b> Curvature correction (bond prices rise faster than they fall for identical yield shifts).
+                            <div>
+                                <b class="text-slate-900 block mb-2">3-Way Recon</b>
+                                To find out <i>who</i> made the mistake, Ops checks:<br>
+                                <ol class="list-decimal list-inside mt-2 text-xs space-y-1 text-slate-500">
+                                    <li>What we calculated (Expected)</li>
+                                    <li>What the mega-bank expected (MT564)</li>
+                                    <li>What actually landed (MT566)</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Section 5: Recon -->
-                <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span class="text-emerald-400 font-bold uppercase tracking-wider text-xs">Reconciliation</span>
-                    </div>
-                    <ul class="space-y-2 text-slate-300 text-xs">
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">Three-Way Recon</b>
-                            Compares: <br>1. Internal Expected Entitlement <br>2. Custodian Notification (MT564) <br>3. Actual Receipt (MT566)
-                        </li>
-                        <li class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                            <b class="text-white block mb-0.5">IBOR vs ABOR</b>
-                            <b class="text-emerald-300">IBOR:</b> Investment Book of Record (Real-time, includes unsettled). <b class="text-emerald-300">ABOR:</b> Accounting Book (Settled only).
-                        </li>
-                    </ul>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <footer class="mt-auto border-t border-slate-800/80 py-6 text-center text-xs text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <footer class="mt-auto border-t border-slate-200 py-8 text-center text-sm text-slate-500 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-                © 2026 Financial Operations Masterclass Hub • Curated by <span id="footerAuthorName" class="font-semibold text-slate-300">Rupesh Khaire</span>
+                © 2026 FinOps Masterclass Hub • Clean UI Edition
             </div>
-            <div class="flex items-center gap-4 text-slate-400">
-                <a href="#author-section" class="hover:text-indigo-400 transition">Author Details</a>
+            <div class="flex items-center gap-2">
+                Curated by <span class="font-bold text-slate-700">Rupesh Khaire</span>
             </div>
         </div>
     </footer>
@@ -619,7 +500,7 @@
 
         // Progress Tracking System
         function loadModuleStatuses() {
-            const savedStatuses = JSON.parse(localStorage.getItem('finops_module_statuses') || '{}');
+            const savedStatuses = JSON.parse(localStorage.getItem('finops_clean_module_statuses') || '{}');
             const cards = document.querySelectorAll('.module-card');
             
             cards.forEach(card => {
@@ -633,15 +514,15 @@
         }
 
         function updateModuleStatus(filename, status) {
-            const savedStatuses = JSON.parse(localStorage.getItem('finops_module_statuses') || '{}');
+            const savedStatuses = JSON.parse(localStorage.getItem('finops_clean_module_statuses') || '{}');
             savedStatuses[filename] = status;
-            localStorage.setItem('finops_module_statuses', JSON.stringify(savedStatuses));
+            localStorage.setItem('finops_clean_module_statuses', JSON.stringify(savedStatuses));
             calculateOverallProgress();
         }
 
         function calculateOverallProgress() {
             const cards = document.querySelectorAll('.module-card');
-            const savedStatuses = JSON.parse(localStorage.getItem('finops_module_statuses') || '{}');
+            const savedStatuses = JSON.parse(localStorage.getItem('finops_clean_module_statuses') || '{}');
             
             let total = cards.length;
             let completed = 0;
@@ -664,9 +545,14 @@
         function previewFile(filename, title) {
             const modal = document.getElementById('previewModal');
             const iframe = document.getElementById('previewIframe');
+            const loader = document.getElementById('iframeLoader');
             const modalTitle = document.getElementById('modalTitle');
             const modalBadge = document.getElementById('modalFileBadge');
             const modalExtLink = document.getElementById('modalExternalLink');
+
+            // Reset iframe state
+            iframe.style.opacity = '0';
+            loader.style.display = 'flex';
 
             modalTitle.innerText = title;
             modalBadge.innerText = filename;
@@ -674,6 +560,7 @@
             iframe.src = filename;
 
             modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closePreviewModal() {
@@ -681,11 +568,31 @@
             const iframe = document.getElementById('previewIframe');
             iframe.src = '';
             modal.classList.add('hidden');
+            document.body.style.overflow = ''; 
         }
 
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreviewModal();
+            }
+        });
+
+        document.getElementById('cheatSheetModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCheatSheetModal();
+            }
+        });
+
         // Modals Toggle Functions
-        function openCheatSheetModal() { document.getElementById('cheatSheetModal').classList.remove('hidden'); }
-        function closeCheatSheetModal() { document.getElementById('cheatSheetModal').classList.add('hidden'); }
+        function openCheatSheetModal() { 
+            document.getElementById('cheatSheetModal').classList.remove('hidden'); 
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCheatSheetModal() { 
+            document.getElementById('cheatSheetModal').classList.add('hidden'); 
+            document.body.style.overflow = '';
+        }
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
