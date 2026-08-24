@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Trade Lifecycle — The Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- Layout shell ---------- */
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  /* ---------- Sidebar contents ---------- */
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1rem 1.15rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.35rem; font-size:.95rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+
+  /* ---------- Flow steps ---------- */
+  .flow{display:flex; flex-wrap:wrap; gap:.4rem; align-items:stretch; margin:1.25rem 0;}
+  .flow .step{
+    background:var(--surface); border:1.5px solid var(--brass); padding:1rem; border-radius:8px;
+    font-size:.95rem; font-weight:600; flex:1 1 140px; text-align:center; color:var(--ink);
+  }
+  .flow .step span{display:block; font-weight:400; font-size:.8rem; color:var(--ink-soft); margin-top:.4rem;}
+  .flow .arrow{display:flex; align-items:center; justify-content:center; padding:0 .5rem; color:var(--brass); font-size:1.5rem; font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Card grid & CA cards ---------- */
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:.95rem;}
+  
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-top:.3rem;}
+  .ca-grid h4{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  .breaks-flag{
+    margin-top:1.25rem; padding:.8rem 1rem; background:var(--red-soft); border-radius:8px; font-size:.95rem; color:var(--ink);
+  }
+  .breaks-flag b{color:var(--red);}
+  .highlight-term { font-weight: 600; color: var(--ink); background: var(--surface-2); padding: 0.1rem 0.3rem; border-radius: 4px;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.87rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.65rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  /* ---------- Glossary ---------- */
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem;}
+  .g-item{padding:.85rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem; color:var(--brass); display:block; margin-bottom:.2rem;}
+  .g-def{font-size:.86rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.8rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+
+  .lifecycle-ol{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle-ol li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle-ol li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle-ol li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle-ol h4{margin-bottom:.25rem; font-size:1.1rem;}
+  .lifecycle-ol p{color:var(--ink-soft); font-size:.95rem;}
+
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Trade Lifecycle</p>
+        <p class="brand-sub">The Beginner's Guide</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search stages, terms…">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Overview</p>
+      <a href="#intro">The Big Picture</a>
+      <a href="#front-back">Front, Middle & Back Office</a>
+
+      <p class="toc-group-label">The 5 Stages</p>
+      <a href="#stage-1">1 · Execution (The Deal)</a>
+      <a href="#stage-2">2 · Capture (Writing it Down)</a>
+      <a href="#stage-3">3 · Matching (Checking the Receipt)</a>
+      <a href="#stage-4">4 · Clearing (The Escrow Agent)</a>
+      <a href="#stage-5">5 · Settlement (Closing Day)</a>
+
+      <p class="toc-group-label">Important Concepts</p>
+      <a href="#timelines">T+1 vs T+2 (The Clock)</a>
+      <a href="#fails">Fails (When Things Break)</a>
+      <a href="#dvp">DvP (The Vending Machine)</a>
+      <a href="#ssi">SSIs (Your Shipping Address)</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#glossary">Jargon Buster Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Investment Basics Explained Simply</span>
+      <h1>The Trade Lifecycle</h1>
+      <p class="lead">When you click "Buy" on your phone to purchase a stock, it feels like magic. The stock instantly appears in your account. But behind the scenes, a massive, highly coordinated machine kicks into gear. In this guide, we break down the invisible plumbing of Wall Street—explaining exactly how money and stocks move from a seller to a buyer—using everyday analogies.</p>
+      <div class="hero-tags">
+        <span>The 5 clear stages</span>
+        <span>Everyday analogies</span>
+        <span>Front vs Back Office</span>
+        <span>What happens when it breaks</span>
+      </div>
+    </header>
+
+    <!-- ============ INTRO ============ -->
+    <section id="intro">
+      <h2 class="section-title">The Big Picture: Buying a House</h2>
+      <p>To understand the trade lifecycle, don't think about confusing financial screens. Think about buying a house. It never happens instantly. There is a strict step-by-step process to make sure nobody gets scammed.</p>
+      
+      <div class="flow">
+        <div class="step">1. Execution<span>Agreeing on the price</span></div>
+        <div class="arrow">→</div>
+        <div class="step">2. Capture<span>Writing the contract</span></div>
+        <div class="arrow">→</div>
+        <div class="step">3. Matching<span>Lawyers check the details</span></div>
+        <div class="arrow">→</div>
+        <div class="step">4. Clearing<span>Using an Escrow agent</span></div>
+        <div class="arrow">→</div>
+        <div class="step">5. Settlement<span>Keys and money are swapped</span></div>
+      </div>
+      
+      <p>This exact 5-step journey happens millions of times a day for stocks, bonds, and derivatives.</p>
+    </section>
+
+    <section id="front-back">
+      <h2 class="section-title">Who does what? (Front, Middle, and Back Office)</h2>
+      <p>Banks divide their employees into three completely separate teams to ensure no one person has too much power (which prevents fraud).</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Team</th><th>The Restaurant Analogy</th><th>What they do in Finance</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Front Office</strong></td><td>The Waiter</td><td>The Traders and Salespeople. They talk to clients, negotiate prices, and make the deals. (Stage 1)</td></tr>
+          <tr><td><strong>Middle Office</strong></td><td>The Kitchen Manager</td><td>The Risk and Compliance teams. They make sure the trader didn't break any rules and check the math. (Stages 2 & 3)</td></tr>
+          <tr><td><strong>Back Office</strong></td><td>The Cashier</td><td>The Operations (Ops) and Settlement teams. They never trade. Their only job is to physically move the cash and the stocks, making sure everything balances perfectly. (Stages 4 & 5)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ THE 5 STAGES ============ -->
+    <div class="part-heading"><h2>The 5 Stages of a Trade</h2><span class="part-count">From Click to Cash</span></div>
+    <section id="stages">
+
+      <article class="ca-card" id="stage-1">
+        <div class="ca-head"><div><span class="ca-class">Stage 1</span><h3>Execution (The Deal)</h3></div><span class="ca-code">Front Office</span></div>
+        <p class="ca-def">A buyer and a seller agree to a trade. They agree on <em>what</em> they are trading, <em>how much</em>, and the <em>price</em>.</p>
+        <div class="ca-grid">
+          <div><h4>How it happens</h4><p>This can happen electronically (clicking a button on an app, or computers trading automatically) or over the phone (a hedge fund calling a bank to negotiate a massive, custom deal).</p></div>
+        </div>
+        <div class="breaks-flag"><b>At this stage:</b> No money or stocks have moved yet. It is just a promise.</div>
+      </article>
+
+      <article class="ca-card" id="stage-2">
+        <div class="ca-head"><div><span class="ca-class">Stage 2</span><h3>Trade Capture (Writing it Down)</h3></div><span class="ca-code">Middle Office</span></div>
+        <p class="ca-def">The trader types the details of the handshake deal into the bank's internal computer system so the rest of the bank knows about it.</p>
+        <div class="ca-grid">
+          <div><h4>How it happens</h4><p>The system records all the details: "We agreed to buy 10,000 shares of Apple from Bank XYZ for $150 a share."</p></div>
+        </div>
+        <div class="breaks-flag"><b>What can go wrong:</b> <strong>"Fat Finger" errors.</strong> The trader accidentally types 100,000 instead of 10,000. This is why the next step is so important.</div>
+      </article>
+
+      <article class="ca-card" id="stage-3">
+        <div class="ca-head"><div><span class="ca-class">Stage 3</span><h3>Matching & Confirmation (Checking the Receipt)</h3></div><span class="ca-code">Middle/Back Office</span></div>
+        <p class="ca-def">The buyer's computer and the seller's computer compare notes to make sure they both heard the exact same thing on the phone.</p>
+        <div class="ca-grid">
+          <div><h4>How it happens</h4><p>Both banks send their "receipt" to a central computer system. If Bank A says "10,000 shares at $150" and Bank B says "10,000 shares at $150", it's a perfect match!</p></div>
+        </div>
+        <div class="breaks-flag"><b>What can go wrong:</b> If Bank A says 10,000 shares and Bank B says 100,000 shares, alarms go off. This is called a <strong>"DK" (Don't Know)</strong> or an Unmatched Trade. Humans have to call each other and fix the typo before moving forward.</div>
+      </article>
+
+      <article class="ca-card" id="stage-4">
+        <div class="ca-head"><div><span class="ca-class">Stage 4</span><h3>Clearing (The Escrow Agent)</h3></div><span class="ca-code">Back Office</span></div>
+        <p class="ca-def">Figuring out exactly who owes what, and putting a safe middleman in between the two parties.</p>
+        <div class="ca-grid">
+          <div><h4>How it happens (Netting)</h4><p>Imagine you buy your friend 5 drinks at the bar, and he buys you 4. Instead of handing money back and forth 9 times, you just "Net" it out—he owes you for 1 drink. Clearing houses (like the NSCC in the US) do this for millions of stock trades a day, reducing chaos.</p></div>
+          <div><h4>The Middleman (CCP)</h4><p>The Clearing House legally steps in the middle. You are no longer trading with the stranger; you are trading with the ultra-safe Clearing House. If the stranger goes bankrupt tomorrow, you still get your money.</p></div>
+        </div>
+      </article>
+
+      <article class="ca-card" id="stage-5">
+        <div class="ca-head"><div><span class="ca-class">Stage 5</span><h3>Settlement (Closing Day)</h3></div><span class="ca-code">Back Office</span></div>
+        <p class="ca-def">The final step. The promises become reality. The cash leaves the buyer's account, and the stocks enter the buyer's account.</p>
+        <div class="ca-grid">
+          <div><h4>How it happens</h4><p>The giant digital vault that holds all the stocks (like the DTC in the US) simply updates its master spreadsheet. "Minus 10,000 shares from Seller. Plus 10,000 shares to Buyer."</p></div>
+        </div>
+        <div class="breaks-flag"><b>What can go wrong:</b> <strong>A Settlement Fail.</strong> If the seller doesn't actually have the shares in their vault, or the buyer doesn't have enough cash in their account, the trade crashes and fails.</div>
+      </article>
+
+    </section>
+
+    <!-- ============ CONCEPTS ============ -->
+    <div class="part-heading"><h2>Important Concepts</h2><span class="part-count">How things actually move</span></div>
+    
+    <section id="timelines">
+      <h2 class="section-title">The Clock: T+1 vs T+2</h2>
+      <p>When you buy a stock on Monday, you don't actually own it on Monday. There is a delay between Stage 1 (The Deal) and Stage 5 (Closing Day). This is called the <span class="highlight-term">Settlement Cycle</span>.</p>
+      
+      <p>It is measured as "T" (Trade Date) plus a certain number of days.</p>
+      
+      <ul class="lifecycle-ol">
+        <li><h4>T+1 (Tomorrow)</h4><p>This is the rule for US Stocks. If you buy a stock on Monday, the cash and the stock officially swap hands on Tuesday. (The US recently sped this up from T+2 to make the market safer).</p></li>
+        <li><h4>T+2 (Two Days Later)</h4><p>This is still the rule for many European stocks and international bonds. If you buy on Monday, you get the stock on Wednesday.</p></li>
+      </ul>
+      <div class="callout teal">
+        <h4>Why the delay?</h4>
+        <p>Back in the day, the delay was needed to physically put paper stock certificates in the mail. Today, it's digital, but the delay still exists to give the Back Office time to fix typos (Stage 3) and calculate exactly who owes what (Stage 4) before the money actually moves.</p>
+      </div>
+    </section>
+
+    <section id="fails">
+      <h2 class="section-title">When things break (Settlement Fails)</h2>
+      <p>A "Fail" is the ultimate nightmare for a Back Office team. It means Closing Day arrived, but the cash or the stocks didn't show up. Here are the two most common reasons:</p>
+      
+      <div class="card-grid">
+        <article class="ca-card v-choice">
+          <div class="ca-head"><div><span class="ca-class">Fail Type</span><h3>The Short Fail (Empty Warehouse)</h3></div></div>
+          <p class="ca-def">The seller agreed to sell 10,000 shares of Apple. But when Settlement Day arrives, they look in their vault and realize they only have 8,000 shares. They can't deliver.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>The Punishment</h4><p>If they can't find the shares after a few days, the buyer will execute a <strong>"Buy-In."</strong> The buyer will force-buy the shares from a random third party at whatever the current market price is, and mail the massive bill/penalty directly to the failing seller.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice">
+          <div class="ca-head"><div><span class="ca-class">Fail Type</span><h3>The Cash Fail (Empty Wallet)</h3></div></div>
+          <p class="ca-def">The buyer agreed to pay $1 Million. But when Settlement Day arrives, they forgot to wire the money from their savings account to their checking account. The bank account is empty.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>The Punishment</h4><p>The seller doesn't get paid on time, meaning the seller can't earn interest on that $1 Million. The seller will sue the buyer for "Interest Claims" to get back the money they lost out on.</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    
+    <section id="dvp">
+      <h2 class="section-title">The Vending Machine (DvP)</h2>
+      <p>How do you make sure someone doesn't take your stock and run away without paying you? You use a system called <strong>DvP (Delivery versus Payment)</strong>.</p>
+      <p>Think of a vending machine. You put your money in, and the candy bar falls out at the <em>exact same time</em>. If the candy bar gets stuck, the machine spits your money back out.</p>
+      <p>This is how 99% of stocks settle today. The digital vault holds the stock and the cash, and swaps them simultaneously. Neither side can run away. (The opposite of this is "FoP" or Free of Payment, which is like mailing a birthday gift with no expectation of money in return).</p>
+    </section>
+
+    <section id="ssi">
+      <h2 class="section-title">SSIs (Your Shipping Address)</h2>
+      <p>If you buy a book on Amazon, you don't type out your home address every single time. You save it as your default. Banks do the exact same thing.</p>
+      <p>An <strong>SSI (Standing Settlement Instruction)</strong> is a pre-saved profile that says: "Whenever I buy Apple stock, please deliver it to this specific digital vault account at JPMorgan."</p>
+      <div class="callout red">
+        <h4>The SSI Danger</h4>
+        <p>If a bank changes its vault address, but forgets to update its SSI profile, the seller will "ship the stocks to their old apartment." This is one of the leading causes of Settlement Fails worldwide.</p>
+      </div>
+    </section>
+
+    <!-- ============ GLOSSARY ============ -->
+    <section id="glossary">
+      <h2 class="section-title">Jargon Buster Glossary</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">Execution</span><p class="g-def">The handshake deal. Agreeing on the price and amount.</p></div>
+        <div class="g-item"><span class="g-term">Settlement</span><p class="g-def">Closing day. The actual physical movement of the cash and the stocks.</p></div>
+        <div class="g-item"><span class="g-term">DK (Don't Know)</span><p class="g-def">When the buyer's records and seller's records don't match, and the computer system rejects the trade.</p></div>
+        <div class="g-item"><span class="g-term">Netting</span><p class="g-def">Combining hundreds of trades into one single final payment to save time and reduce chaos.</p></div>
+        <div class="g-item"><span class="g-term">CCP (Central Counterparty)</span><p class="g-def">The ultra-safe middleman (like PayPal) that guarantees the trade will finish safely.</p></div>
+        <div class="g-item"><span class="g-term">DvP (Delivery versus Payment)</span><p class="g-def">Swapping the stock and the cash at the exact same instant to prevent theft.</p></div>
+        <div class="g-item"><span class="g-term">SSI (Standing Settlement Instruction)</span><p class="g-def">A bank's saved "default shipping address" for receiving stocks and cash.</p></div>
+        <div class="g-item"><span class="g-term">Buy-in</span><p class="g-def">A punishment for failing to deliver shares. The buyer force-buys them elsewhere and sends you the bill.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      The Trade Lifecycle Explained Simply. Designed to help everyday investors, students, and beginners understand exactly how the financial plumbing of Wall Street works, without needing a finance degree.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' event' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>
