@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Actions Simplified — The Ultimate Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1.25rem 1.5rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.5rem; font-size:1.05rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+  .highlight-term { font-weight: 600; color: var(--ink); background: var(--surface-2); padding: 0.1rem 0.3rem; border-radius: 4px;}
+
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1.1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.95rem;}
+
+  .chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .chain .node{
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; padding:.75rem 1rem;
+    font-size:.85rem; font-weight:600; flex:1 1 130px; text-align:center;
+  }
+  .chain .arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.9rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.75rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.85rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0; font-size: 1.25rem;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.08em; font-weight:600;
+    padding:.25rem .6rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.85rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:1rem;}
+  
+  .ca-dates{display:flex; flex-wrap:wrap; align-items:stretch; gap:.4rem; margin:1rem 0;}
+  .date-chip{
+    background:var(--surface-2); border-radius:8px; padding:.6rem .8rem; min-width:110px; flex:1 1 130px;
+  }
+  .dc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .v-voluntary .dc-label{color:var(--teal);}
+  .v-choice .dc-label{color:var(--red);}
+  .dc-desc{display:block; font-size:.85rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35;}
+  .dc-arrow{align-self:center; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+  
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:.5rem;}
+  .ca-grid h4{font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.95rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.25rem; padding:1rem; background:var(--surface-2); border-radius:8px;
+    font-size:.95rem; color:var(--ink-soft); border-left: 3px solid var(--brass);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.5rem; display: block; margin-bottom: 0.25rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.25rem 2rem;}
+  .g-item{padding:1rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.95rem; color:var(--brass); display:block; margin-bottom:.3rem;}
+  .g-def{font-size:.95rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.9rem; color:var(--ink-soft); font-weight: 500;}
+  .legend-dot{width:14px; height:14px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.85rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Corp Actions 101</p>
+        <p class="brand-sub">The Beginner's Field Manual</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search a term (e.g., Split, Dividend)...">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Foundations</p>
+      <a href="#intro">What is a Corporate Action?</a>
+      <a href="#classification">The 3 Types of Events</a>
+      <a href="#lifecycle">The 5 Key Dates (The Party)</a>
+      <a href="#players">How the News Reaches You</a>
+      <a href="#claims">Fixing Mistakes (Market Claims)</a>
+
+      <p class="toc-group-label">Equity (Stocks)</p>
+      <a href="#eq-dvca">Cash Dividend</a>
+      <a href="#eq-dvse">Stock Dividend / Bonus Issue</a>
+      <a href="#eq-drip">Reinvesting Dividends (DRIP)</a>
+      <a href="#eq-splf">Stock Split</a>
+      <a href="#eq-splr">Reverse Stock Split</a>
+      <a href="#eq-rhts">Rights Issue</a>
+      <a href="#eq-tend">Tender Offer (Buyback)</a>
+      <a href="#eq-dtch">Dutch Auction</a>
+      <a href="#eq-mrgr-cash">Merger — Cash</a>
+      <a href="#eq-mrgr-stock">Merger — Stock-for-Stock</a>
+      <a href="#eq-mrgr-choice">Merger — You Choose</a>
+      <a href="#eq-soff">Spin-off</a>
+      <a href="#eq-exof">Exchange Offer</a>
+      <a href="#eq-exwa">Warrant Exercise</a>
+      <a href="#eq-dlst">Name Change / Delisting</a>
+      <a href="#eq-meet">Voting (AGM/EGM)</a>
+      <a href="#eq-liqu">Liquidation (Bankruptcy)</a>
+
+      <p class="toc-group-label">Fixed Income (Bonds)</p>
+      <a href="#fi-intr">Interest Payment (Coupon)</a>
+      <a href="#fi-redm">Maturity (Loan Paid Off)</a>
+      <a href="#fi-mcal">Full Call (Early Repayment)</a>
+      <a href="#fi-pcal">Partial Call / Paydown</a>
+      <a href="#fi-put">Put Option (You Demand Pay)</a>
+      <a href="#fi-draw">Sinking Fund (Lottery)</a>
+      <a href="#fi-conv">Convertible Bond</a>
+      <a href="#fi-cons">Consent Solicitation</a>
+      <a href="#fi-exof">Debt Restructuring</a>
+      <a href="#fi-frn">Interest Rate Reset</a>
+      <a href="#fi-redo">Redenomination</a>
+      <a href="#fi-default">Default</a>
+
+      <p class="toc-group-label">Funds (Mutual/ETFs)</p>
+      <a href="#fu-dist">Income Distribution</a>
+      <a href="#fu-capg">Capital Gains</a>
+      <a href="#fu-drip">Growth Option (DRIP)</a>
+      <a href="#fu-accu">Accumulation Units (Ghost Tax)</a>
+      <a href="#fu-mrgr">Fund Merger</a>
+      <a href="#fu-liqu">Fund Closing</a>
+      <a href="#fu-switch">Share Class Switch</a>
+      <a href="#fu-bonus">Bonus Units</a>
+      <a href="#fu-rhts">Rights Issue (Closed Funds)</a>
+
+      <p class="toc-group-label">Cheat Sheets</p>
+      <a href="#compare">Cash vs. Stock Events</a>
+      <a href="#deals">Famous Real World Deals</a>
+      <a href="#glossary">Jargon Buster Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Investment Basics Explained Simply</span>
+      <h1>Corporate Actions, Demystified</h1>
+      <p class="lead">From getting paid dividends to companies merging together, here is every event that can happen to the stocks, bonds, and funds you own. We've stripped out the heavy Wall Street jargon and replaced it with simple analogies, clear examples, and easy-to-understand timelines.</p>
+      <div class="hero-tags">
+        <span>No finance degree required</span>
+        <span>Clear everyday analogies</span>
+        <span>38 exact event types explained</span>
+        <span>Real-world examples</span>
+      </div>
+    </header>
+
+    <!-- ============ INTRO ============ -->
+    <section id="intro">
+      <h2 class="section-title">What is a corporate action?</h2>
+      <p>Imagine you own a piece of a pizza shop. A <strong>corporate action</strong> is simply a decision made by the shop's management that affects you as an owner.</p>
+      <p>If the shop makes a huge profit and decides to mail every owner a $50 check, that's a corporate action (a <em>Dividend</em>). If the management decides to merge with a burger joint across the street, that's a corporate action (a <em>Merger</em>). If they decide to cut every slice of pizza into two smaller slices so it's easier to sell, that's a corporate action (a <em>Stock Split</em>).</p>
+      
+      <div class="callout">
+        <h4>Why does this matter?</h4>
+        <p>As an investor, corporate actions change the makeup of your portfolio. Sometimes they just put free cash in your pocket. Other times, if you don't pay attention and miss a deadline, you could lose money. Financial professionals (the "Ops" or Operations teams) spend their whole days making sure these actions process smoothly so your account balances are perfectly correct.</p>
+      </div>
+    </section>
+
+    <!-- ============ CLASSIFICATION ============ -->
+    <section id="classification">
+      <h2 class="section-title">The 3 Types of Events</h2>
+      <p>Every corporate action falls into one of three buckets. To understand them, ask one simple question: <strong>"Do I need to do anything?"</strong></p>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot"></span> Mandatory (No action needed)</div>
+        <div class="legend-item"><span class="legend-dot"></span> Voluntary (You must act)</div>
+        <div class="legend-item"><span class="legend-dot"></span> Choice (Happens anyway, but you pick how)</div>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Do I need to do anything?</th><th>What if I do nothing?</th><th>Simple Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mandatory</strong></td><td><strong>No.</strong> It happens automatically to everyone who owns the stock.</td><td>Nothing changes. You get the cash or shares automatically.</td><td>A regular cash dividend. The money just shows up in your account.</td></tr>
+          <tr><td><strong>Voluntary</strong></td><td><strong>Yes.</strong> You have to tell your broker if you want to participate.</td><td>You miss out. Nothing happens to your account.</td><td>The company offers to buy back your shares at a premium price. You have to say "Yes, take them!"</td></tr>
+          <tr><td><strong>Mandatory with Choice</strong></td><td><strong>Optional.</strong> The event is happening, but you get to choose how you are paid.</td><td>The company applies their "default" choice (usually cash).</td><td>A company is bought out. They ask: "Do you want $100 cash, or $100 worth of our new stock?"</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="font-size:.9rem;color:var(--ink-soft)"><em>Note: Keep an eye on the colors above. Throughout this guide, events are color-coded: <span class="mono" style="color:var(--brass)">brass</span> for Mandatory, <span class="mono" style="color:var(--teal)">teal</span> for Voluntary, and <span class="mono" style="color:var(--red)">red</span> for Mandatory with Choice.</em></p>
+    </section>
+
+    <!-- ============ LIFECYCLE ============ -->
+    <section id="lifecycle">
+      <h2 class="section-title">The 5 Key Dates (The VIP Party Analogy)</h2>
+      <p>Almost every corporate action uses the same 5 dates. To make this easy, think of a corporate action like a company throwing a highly exclusive VIP party where they hand out cash at the door.</p>
+      <ol class="lifecycle">
+        <li>
+          <h4>1. Announcement Date <span style="font-weight:400; font-size:0.9rem; color:var(--ink-faint);">(The Invitations go out)</span></h4>
+          <p>The company publicly announces the event. "We are throwing a party and giving everyone $1 per share!" The banks and brokers rush to capture this data and put it in their systems.</p>
+        </li>
+        <li>
+          <h4>2. Record Date <span style="font-weight:400; font-size:0.9rem; color:var(--ink-faint);">(The VIP Guest List is finalized)</span></h4>
+          <p>This is the moment the company takes a snapshot of their books. If your name is on the company's register at the end of this day, you are officially on the guest list to get the money.</p>
+        </li>
+        <li>
+          <h4>3. Ex-Date <span style="font-weight:400; font-size:0.9rem; color:var(--ink-faint);">(The Cut-off to buy a ticket)</span></h4>
+          <p>Because it takes a day or two for paperwork to process when you buy a stock, the stock exchange sets an <span class="highlight-term">Ex-Date</span> (Ex means "without"). If you buy the stock <em>on or after</em> the Ex-Date, you are too late—you won't make it onto the VIP Guest List in time. The stock price usually drops on the morning of the Ex-Date to reflect that new buyers aren't getting the bonus.</p>
+        </li>
+        <li>
+          <h4>4. Election Deadline <span style="font-weight:400; font-size:0.9rem; color:var(--ink-faint);">(The RSVP Deadline)</span></h4>
+          <p><em>(Only for Voluntary or Choice events).</em> This is the absolute last moment you can tell your broker what you want to do. Brokers usually set their internal deadline a few days <em>before</em> the official market deadline so they have time to process your paperwork.</p>
+        </li>
+        <li>
+          <h4>5. Payment Date <span style="font-weight:400; font-size:0.9rem; color:var(--ink-faint);">(The Party!)</span></h4>
+          <p>The day the cash or new shares actually show up in your brokerage account.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ PLAYERS ============ -->
+    <section id="players">
+      <h2 class="section-title">How the news reaches you (The Chain)</h2>
+      <p>When a company announces an event, they don't email you directly. The information has to travel down a long chain of financial institutions. Information travels down the chain, and if you need to make a choice, your vote travels back up the chain.</p>
+      <div class="chain">
+        <div class="node">The Company</div><span class="arrow">→</span>
+        <div class="node">Central Depository<br><span style="font-weight:400;font-size:.75rem;color:var(--ink-faint)">(The Giant Vault)</span></div><span class="arrow">→</span>
+        <div class="node">Global Custodians<br><span style="font-weight:400;font-size:.75rem;color:var(--ink-faint)">(Mega Banks)</span></div><span class="arrow">→</span>
+        <div class="node">Your Broker<br><span style="font-weight:400;font-size:.75rem;color:var(--ink-faint)">(Robinhood, Fidelity)</span></div><span class="arrow">→</span>
+        <div class="node">You<br><span style="font-weight:400;font-size:.75rem;color:var(--ink-faint)">(The Investor)</span></div>
+      </div>
+      <p><em>Jargon Alert: </em> Banks communicate with each other using a highly secure, coded messaging system called <strong>SWIFT</strong>. When an event is announced, a message called an <code>MT564</code> is blasted out to all the banks.</p>
+    </section>
+
+    <!-- ============ MARKET CLAIMS ============ -->
+    <section id="claims">
+      <h2 class="section-title">Fixing Mistakes: Market Claims</h2>
+      <p>Sometimes, the timing of buying a stock and the corporate action dates overlap weirdly, causing the wrong person to get the money. Banks have automated systems to fix this.</p>
+
+      <div class="callout">
+        <h4>Market Claims (Passing the cash)</h4>
+        <p>Imagine you bought a stock <em>before</em> the Ex-Date (meaning you rightfully deserve the dividend). But, due to a paperwork delay, the seller was still listed on the VIP Guest List on Record Date. The company pays the seller your dividend! <br><br>A <strong>Market Claim</strong> is an automated fix where the central banking system forcefully reaches into the seller's account, grabs the dividend cash, and hands it to you.</p>
+      </div>
+    </section>
+
+    <!-- ============ PART I EQUITY ============ -->
+    <div class="part-heading"><h2>Part 1: Equity (Stocks)</h2><span class="part-count">17 events</span></div>
+    <section id="equity-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="eq-dvca">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Cash Dividend</h3></div><span class="ca-code">Jargon: DVCA</span></div>
+          <p class="ca-def">The company made a profit and decides to share a portion of it with you in cold, hard cash.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">"We will pay $1 per share"</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span><span class="dc-desc">Who owns the stock today?</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span><span class="dc-desc">Cut-off to buy in</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span><span class="dc-desc">Cash hits your account</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If you own 100 shares, and the dividend is $1.00, you get $100. Taxes are usually taken out automatically before the cash reaches you (Withholding Tax).</p></div>
+            <div><h4>What happens to my account?</h4><p>Your share amount stays exactly the same, but your cash balance goes up.</p></div>
+          </div>
+          <div class="ca-example">
+            <span class="ex-tag">Everyday Example</span>
+            Apple (AAPL) pays a cash dividend every quarter. It's the most common and simple event to process.
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-dvse">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Stock Dividend / Bonus Issue</h3></div><span class="ca-code">Jargon: DVSE / BONU</span></div>
+          <p class="ca-def">Instead of giving you cash, the company gives you <em>free bonus shares</em> of their stock.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">"Get 1 free share for every 10 you own"</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span><span class="dc-desc">Stock price adjusts down</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Credit Date</span><span class="dc-desc">Shares appear</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If the ratio is 1-for-10 and you own 100 shares, you get 10 new shares. Because there are now more shares existing in the world, the value of each individual share drops slightly to balance it out.</p></div>
+            <div><h4>What happens to my account?</h4><p>No cash changes hands. You just see your total number of shares increase.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="eq-drip">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Dividend Reinvestment (DRIP)</h3></div><span class="ca-code">Jargon: DRIP</span></div>
+          <p class="ca-def">The company is paying a cash dividend, but they give you a choice: take the cash, or use that cash to automatically buy more shares (often at a slight discount).</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">RSVP Deadline</span><span class="dc-desc">Make your choice</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If you don't say anything, they usually give you cash. If you elect to "DRIP", the broker takes your $100 dividend and instantly buys $100 worth of stock for you.</p></div>
+            <div><h4>What happens to my account?</h4><p>Great for long-term investing because it auto-compounds your wealth without you paying broker fees to buy more stock.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-splf">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Stock Split</h3></div><span class="ca-code">Jargon: SPLF</span></div>
+          <p class="ca-def">The company thinks its stock price is too expensive for normal people to buy, so they slice it into smaller, cheaper pieces. <strong>Think of it like cutting a pizza into more slices.</strong></p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">"10-for-1 Split"</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective Date</span><span class="dc-desc">Price drops, shares multiply</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If a stock is $1000 and they do a 10-for-1 split, the price drops to $100. But if you owned 1 share, you now own 10. Your total investment is still worth $1000.</p></div>
+            <div><h4>What happens to my account?</h4><p>Your quantity of shares shoots up, the price per share shoots down. No money is lost or gained.</p></div>
+          </div>
+          <div class="ca-example">
+            <span class="ex-tag">Everyday Example</span>
+            Nvidia (NVDA) did a 10-for-1 split in June 2024 because their stock was over $1,000, making it hard for retail investors to buy a single share.
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-splr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Reverse Stock Split</h3></div><span class="ca-code">Jargon: SPLR</span></div>
+          <p class="ca-def">The exact opposite of a normal split. The company glues small shares together to make one big, expensive share.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">"1-for-10 Reverse Split"</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>Usually done when a company's stock falls below $1 and the stock exchange threatens to kick them out (delist them) for being a "penny stock." They merge 10 shares of $1 into 1 share of $10.</p></div>
+            <div><h4>What happens to my account?</h4><p>Your share quantity drops dramatically, but the price per share jumps up. Again, total value remains the same.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-rhts">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Rights Issue</h3></div><span class="ca-code">Jargon: RHTS</span></div>
+          <p class="ca-def">The company needs to raise money. Instead of asking strangers, they give you (a loyal shareholder) a VIP coupon to buy new shares at a steep discount.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Ex-Rights Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">RSVP Deadline</span><span class="dc-desc">Use coupon or lose it</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Allotment</span><span class="dc-desc">Get your discounted shares</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>You have 3 choices: 1) Use the coupon and spend cash to buy the cheap shares. 2) Sell the coupon itself to someone else. 3) Do nothing (bad idea, you lose out).</p></div>
+            <div><h4>What happens to my account?</h4><p>If you participate, cash leaves your account, and you get new shares at a bargain price.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-tend">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Tender Offer (Buyback)</h3></div><span class="ca-code">Jargon: TEND</span></div>
+          <p class="ca-def">The company has too much cash and wants to buy shares back from investors at a premium price. They ask: "Who wants to sell their shares to us for $120?" (when the market price is only $100).</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Tender Deadline</span><span class="dc-desc">Tell them how many you want to sell</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement</span><span class="dc-desc">They take shares, give cash</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>You tell them how many shares you want to sell. If too many people say yes, they will "prorate" it (meaning they might only buy 50% of what you offered them, so it's fair to everyone).</p></div>
+            <div><h4>What happens to my account?</h4><p>Shares disappear, cash appears at the premium price.</p></div>
+          </div>
+        </article>
+        
+        <article class="ca-card v-voluntary" id="eq-dtch">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Dutch Auction Buyback</h3></div><span class="ca-code">Jargon: DTCH</span></div>
+          <p class="ca-def">A unique type of Buyback. Instead of setting one price, the company says: "We will buy shares between $45 and $50. You tell us the lowest price you're willing to accept."</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span><span class="dc-desc">Price range set</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Deadline</span><span class="dc-desc">Submit your bid</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Clearing Price Set</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Settlement</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>The company lines up all the bids from lowest to highest. They figure out the lowest price they can pay to get all the shares they need. This becomes the "Clearing Price." Everyone who bid at or below this price gets paid the exact same Clearing Price.</p></div>
+            <div><h4>What happens to my account?</h4><p>If you bid too high, you keep your shares. If you bid low enough, they take your shares and give you the clearing price cash.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-mrgr-cash">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Merger — Cash</h3></div><span class="ca-code">Jargon: MRGR</span></div>
+          <p class="ca-def">A larger company buys the company you own stock in. They force-buy your shares for cash.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Approvals</span><span class="dc-desc">Govt & Shareholder OK</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Effective Date</span><span class="dc-desc">Deal closes</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>You have no choice. The company ceases to exist on the stock market. You get a set amount of cash per share.</p></div>
+            <div><h4>What happens to my account?</h4><p>Your shares are deleted. A pile of cash takes their place.</p></div>
+          </div>
+          <div class="ca-example">
+            <span class="ex-tag">Everyday Example</span>
+            Elon Musk bought Twitter for $54.20 a share. All Twitter shareholders had their shares deleted and got $54.20 per share in cash.
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-mrgr-stock">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Merger — Stock-for-Stock</h3></div><span class="ca-code">Jargon: MRGR</span></div>
+          <p class="ca-def">Company A buys Company B. But instead of paying cash, Company A gives you shares in their own company.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>They use an "Exchange Ratio" (e.g., 0.5 shares of A for every 1 share of B). Your old shares vanish, and new shares of the buying company appear in your account.</p></div>
+            <div><h4>What happens to my account?</h4><p>You essentially became a shareholder of the bigger, combined company without doing anything.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-choice" id="eq-mrgr-choice">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Merger — You Choose (Cash or Stock)</h3></div><span class="ca-code">Jargon: MRGR</span></div>
+          <p class="ca-def">Company A buys Company B and asks you: "Do you want cash to walk away, or do you want our stock to stay for the ride?"</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You pick your preference. However, the buyer usually sets a limit (e.g., "We will only pay 50% in cash total"). If everyone asks for cash, you will get a mix of cash and stock to keep it fair.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-soff">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Spin-off</h3></div><span class="ca-code">Jargon: SOFF</span></div>
+          <p class="ca-def">A company decides one of its divisions would be better off as its own independent company. They "spin it off" and give you free shares in the new baby company.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Announcement</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Distribution Date</span><span class="dc-desc">Baby company is born</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If you own the parent company, you automatically get shares in the new spun-off company. The parent company's stock price will drop to reflect that a piece of its business left.</p></div>
+            <div><h4>What happens to my account?</h4><p>You wake up to find a brand new stock ticker in your portfolio that you didn't buy, alongside your original stock.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-exof">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Exchange Offer</h3></div><span class="ca-code">Jargon: EXOF</span></div>
+          <p class="ca-def">The company asks if you want to trade your current shares for a different type of asset (like a different class of stock, or shares in a subsidiary).</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Entirely up to you. If you say yes, you swap the old for the new. If you say no, nothing happens.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-exwa">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Warrant Exercise</h3></div><span class="ca-code">Jargon: EXWA</span></div>
+          <p class="ca-def">A Warrant is a ticket that gives you the right to buy stock at a locked-in price. Exercising it means you are cashing in the ticket.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If your warrant lets you buy stock at $10, and the stock is trading at $50, you should definitely exercise it! You pay $10, and the company gives you a $50 share.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-dlst">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Name Change / Delisting</h3></div><span class="ca-code">Jargon: CHAN / DLST</span></div>
+          <p class="ca-def">The company changes its legal name or stock ticker symbol (e.g., Facebook changing to Meta). Or, it gets removed from the stock exchange entirely.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>For a name change, only the letters on your screen change. Your money is identical. For a delisting, your shares become very hard to sell because they aren't on the public market anymore.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="eq-meet">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Voting (AGM / EGM)</h3></div><span class="ca-code">Jargon: MEET</span></div>
+          <p class="ca-def">Not a money event. The company is holding an Annual General Meeting and wants you to vote on things like who is on the Board of Directors, or CEO pay.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You get an email with a link to vote. If you don't vote, it doesn't affect your money, but it affects how the company is run.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="eq-liqu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Liquidation (Bankruptcy)</h3></div><span class="ca-code">Jargon: LIQU</span></div>
+          <p class="ca-def">The company has failed and is closing down. They sell all their desks, computers, and factories to pay off debts.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>As a stock owner, you are at the very back of the line. The banks and bondholders get paid first. If there is any money left over (rarely), you get a few pennies per share. Then the stock is deleted.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART II FIXED INCOME ============ -->
+    <div class="part-heading"><h2>Part 2: Fixed Income (Bonds)</h2><span class="part-count">12 events</span></div>
+    <section id="fi-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> Think of a Bond not as a piece of a company, but as a <strong>loan</strong> you gave to the company. They promise to pay you regular interest, and eventually pay you your main money (principal) back.</p>
+      <div class="card-grid">
+
+        <article class="ca-card" id="fi-intr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Interest Payment (Coupon)</h3></div><span class="ca-code">Jargon: INTR</span></div>
+          <p class="ca-def">Just like a bank pays you interest on a savings account, the company pays you "rent" for borrowing your money.</p>
+          <div class="ca-dates">
+            <div class="date-chip"><span class="dc-label">Accrual Period</span><span class="dc-desc">Time money was borrowed</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Record Date</span></div><span class="dc-arrow">→</span>
+            <div class="date-chip"><span class="dc-label">Payment Date</span><span class="dc-desc">Cash hits account</span></div>
+          </div>
+          <div class="ca-grid">
+            <div><h4>How it works</h4><p>If you lent them $1,000 at 5% interest a year, they pay you $50 a year (usually split into two $25 payments).</p></div>
+            <div><h4>What happens to my account?</h4><p>Cash is deposited. Your bond stays exactly as it is.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="fi-redm">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Maturity (Loan Paid Off)</h3></div><span class="ca-code">Jargon: REDM</span></div>
+          <p class="ca-def">The loan has reached its final end date. The company pays back the original amount you lent them, plus the final interest payment.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>The company hands over the final cash. The bond is then cancelled because the debt is settled.</p></div>
+            <div><h4>What happens to my account?</h4><p>The bond vanishes from your portfolio, replaced by a large chunk of principal cash.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="fi-mcal">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Full Call (Early Repayment)</h3></div><span class="ca-code">Jargon: MCAL</span></div>
+          <p class="ca-def">The company decides to pay off the loan early. Think of it like you refinancing your house when mortgage rates drop.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If general interest rates drop, a company doesn't want to keep paying you 8% interest. They use their right to "call" (cancel) the bond, hand your original money back, and go borrow money from someone else at 4%.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="fi-pcal">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Partial Call / Paydown</h3></div><span class="ca-code">Jargon: PCAL / PRED</span></div>
+          <p class="ca-def">Instead of paying off the whole loan at once, they pay off a chunk of it early.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Very common in mortgages. When homeowners pay extra on their mortgage, that money trickles down to bondholders as a partial return of principal. The face value of your bond shrinks a little bit.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-put">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Put Option (You Demand Pay)</h3></div><span class="ca-code">Jargon: Put Redemption</span></div>
+          <p class="ca-def">The mirror image of a Call. This is a special bond that gives <em>you</em> the right to say, "I want my money back right now."</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If interest rates skyrocket, you don't want to be stuck earning a measly 2%. You use your "Put" option to force the company to pay you back early, so you can go invest that money at the new higher rates.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="fi-draw">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Sinking Fund (The Lottery)</h3></div><span class="ca-code">Jargon: DRAW</span></div>
+          <p class="ca-def">The company is forced to pay off a little bit of its total debt every year, so they don't go broke trying to pay it all at the very end. They literally draw numbers out of a hat to decide whose bonds get paid off.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If your bond's serial number is drawn, you get your cash back early. If not, you just keep earning interest.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-conv">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Convertible Bond</h3></div><span class="ca-code">Jargon: CONV</span></div>
+          <p class="ca-def">A magic bond that you can transform into stock if you want to.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You start as a lender earning safe interest. But if the company becomes wildly successful and its stock price moons, you can exercise your right to convert your boring bond into exciting shares of stock.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-cons">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Consent Solicitation</h3></div><span class="ca-code">Jargon: CONS</span></div>
+          <p class="ca-def">The company wants to change the rules of the loan contract (maybe they want an extra year to pay you back). They ask you to vote on it, and usually offer a cash bribe (Consent Fee) to get you to say yes.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fi-exof">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Debt Restructuring (Exchange Offer)</h3></div><span class="ca-code">Jargon: EXOF</span></div>
+          <p class="ca-def">The company is in deep financial trouble and can't pay its debts. They offer a deal: "Trade in your $1000 bond for a new $700 bond, or we go bankrupt and you get nothing."</p>
+        </article>
+
+        <article class="ca-card" id="fi-frn">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Interest Rate Reset</h3></div><span class="ca-code">Jargon: INTR (rate reset)</span></div>
+          <p class="ca-def">If you have a "Floating Rate" bond, the interest rate changes every few months based on the economy. This event is just the system officially updating your new rate for the next period.</p>
+        </article>
+
+        <article class="ca-card" id="fi-redo">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Redenomination</h3></div><span class="ca-code">Jargon: REDO</span></div>
+          <p class="ca-def">The currency of the bond is changed. (For example, when European countries switched from Francs and Marks to the Euro, all bonds were converted to Euros).</p>
+        </article>
+
+        <article class="ca-card" id="fi-default">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Default</h3></div><span class="ca-code">Status Event</span></div>
+          <p class="ca-def">The worst case scenario. The company missed a payment. The bond stops trading normally and lawyers get involved.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART III FUNDS ============ -->
+    <div class="part-heading"><h2>Part 3: Funds (Mutual Funds & ETFs)</h2><span class="part-count">9 events</span></div>
+    <section id="funds-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> A Fund is just a giant pool of money from thousands of investors, managed by a professional who buys a basket of stocks or bonds with it. The price of a fund is called its <span class="highlight-term">NAV (Net Asset Value)</span>.</p>
+      
+      <div class="card-grid">
+
+        <article class="ca-card" id="fu-dist">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Income Distribution</h3></div><span class="ca-code">Jargon: DVCA (Fund)</span></div>
+          <p class="ca-def">The stocks inside the fund's basket paid dividends. The fund manager gathers all that cash and passes it down to you.</p>
+        </article>
+
+        <article class="ca-card" id="fu-capg">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Capital Gains Distribution</h3></div><span class="ca-code">Jargon: CAPG</span></div>
+          <p class="ca-def">The fund manager sold some stocks inside the basket for a massive profit. By law, they have to pass those profits down to you. (Warning: This means you have to pay taxes on those profits, even if you didn't sell your fund shares!).</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fu-drip">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Growth Option (DRIP)</h3></div><span class="ca-code">Jargon: DRIP</span></div>
+          <p class="ca-def">Instead of taking the fund's income as cash, you instruct the broker to automatically reinvest it into buying more slices of the fund to grow your wealth faster.</p>
+        </article>
+
+        <article class="ca-card" id="fu-accu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Accumulation Units (The Ghost Tax)</h3></div><span class="ca-code">Jargon: INFO</span></div>
+          <p class="ca-def">In some countries (like the UK), the fund keeps the income to grow the NAV instead of paying it out. However, the government still wants their tax money! You are taxed on income you never actually touched in cash.</p>
+        </article>
+
+        <article class="ca-card v-choice" id="fu-mrgr">
+          <div class="ca-head"><div><span class="ca-class">Mandatory with Choice</span><h3>Fund Merger</h3></div><span class="ca-code">Jargon: MRGR</span></div>
+          <p class="ca-def">The management company has two similar funds (e.g., "Tech Fund A" and "Tech Fund B") and decides to combine them into one giant fund to save on admin costs. You are given a window to cash out if you don't like it.</p>
+        </article>
+
+        <article class="ca-card" id="fu-liqu">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Fund Closing (Liquidation)</h3></div><span class="ca-code">Jargon: LIQU</span></div>
+          <p class="ca-def">Not enough people invested in the fund, so it's not making enough money to stay open. The manager sells everything in the basket, shuts down the fund, and hands you back whatever cash is left.</p>
+        </article>
+
+        <article class="ca-card v-voluntary" id="fu-switch">
+          <div class="ca-head"><div><span class="ca-class">Voluntary</span><h3>Share Class Switch</h3></div><span class="ca-code">Jargon: Class Switch</span></div>
+          <p class="ca-def">Funds often have "Retail" versions (higher fees) and "VIP/Institutional" versions (lower fees but requires a huge minimum investment). If your account grows big enough, you can switch to the VIP class to save on fees.</p>
+        </article>
+
+        <article class="ca-card" id="fu-bonus">
+          <div class="ca-head"><div><span class="ca-class">Mandatory</span><h3>Bonus Units</h3></div><span class="ca-code">Jargon: BONU / SPLF</span></div>
+          <p class="ca-def">Exactly like a Stock Split, but for a fund. They chop the fund into more pieces to lower the price per unit, making it psychologically cheaper for new investors to buy.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ COMPARISON TABLES ============ -->
+    <div class="part-heading"><h2>Cheat Sheets</h2><span class="part-count">tables & glossary</span></div>
+    <section id="compare">
+      <h2 class="section-title">Cash Events vs. Stock Events</h2>
+      <p>A quick rule of thumb for how events affect your account:</p>
+
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Cash Event (Dividends, Mergers)</th><th>Stock Event (Splits, Bonus)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>What happens to my account?</strong></td><td>Your cash balance goes up.</td><td>Your amount of shares goes up (or down).</td></tr>
+          <tr><td><strong>What happens to the price?</strong></td><td>Price drops by the exact amount of the cash paid out.</td><td>Price adjusts mathematically (e.g. gets cut in half on a 2-for-1 split).</td></tr>
+          <tr><td><strong>Taxes?</strong></td><td>Usually taxed immediately.</td><td>Usually deferred until you sell the stock years later.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="deals">
+      <h2 class="section-title">Famous Real-World Examples</h2>
+      <p>Use these if you ever need to explain a concept using a real headline.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event Type</th><th>The Company</th><th>What happened</th></tr></thead>
+        <tbody>
+          <tr><td>Stock Split</td><td>Nvidia (2024)</td><td>Their stock hit over $1,000. They did a 10-for-1 split, dropping the price to $100 so normal people could buy it.</td></tr>
+          <tr><td>Reverse Split</td><td>Citigroup (2011)</td><td>After the 2008 crash, Citi was trading at $4. They glued 10 shares together to make the price $40 so they looked like a "respectable" bank again.</td></tr>
+          <tr><td>Cash Merger</td><td>Twitter (2022)</td><td>Elon Musk bought Twitter for $54.20. All shareholders received $54.20 in cash and Twitter was removed from the stock market.</td></tr>
+          <tr><td>Spin-off</td><td>Kellogg's (2023)</td><td>The cereal giant spun off its snack business (Cheez-It, Pringles) into a new company called Kellanova. Shareholders got shares in both.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <h2 class="section-title">Jargon Buster Glossary</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">ISIN / CUSIP / Ticker</span><p class="g-def">The unique barcode / serial number for a specific stock or bond. Apple's ticker is AAPL.</p></div>
+        <div class="g-item"><span class="g-term">Ex-Date</span><p class="g-def">The deadline. If you buy a stock on this date or after, you are too late to get the upcoming dividend or split.</p></div>
+        <div class="g-item"><span class="g-term">Record Date</span><p class="g-def">The day the company looks at their ledger to see exactly who owns the stock, finalizing the VIP guest list for payouts.</p></div>
+        <div class="g-item"><span class="g-term">STP (Straight-Through Processing)</span><p class="g-def">When a corporate action is so simple (like a dividend) that computers handle it 100% automatically without a human touching it.</p></div>
+        <div class="g-item"><span class="g-term">Proration</span><p class="g-def">When too many people want a deal (like a Buyback), the company reduces everyone's slice proportionally to keep it fair.</p></div>
+        <div class="g-item"><span class="g-term">Fractional Shares / Cash in Lieu</span><p class="g-def">If a stock split leaves you with 2.5 shares, exchanges can't process half a share. They give you 2 shares and pay you cash for the 0.5 (Cash in Lieu).</p></div>
+        <div class="g-item"><span class="g-term">Withholding Tax</span><p class="g-def">The government taking their cut of your dividend before it even reaches your account.</p></div>
+        <div class="g-item"><span class="g-term">NAV (Net Asset Value)</span><p class="g-def">The price of a single unit of a Mutual Fund or ETF.</p></div>
+        <div class="g-item"><span class="g-term">Custodian</span><p class="g-def">The giant mega-bank that actually holds the physical electronic records of your stock (Your broker, like Robinhood, just acts as a middleman for you).</p></div>
+        <div class="g-item"><span class="g-term">SWIFT</span><p class="g-def">The secure messaging system banks use to text each other about corporate actions.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Corporate Actions Explained Simply. Designed to help everyday investors, students, and beginners understand exactly what happens to their portfolios without needing a finance degree.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  // respect system preference on first load
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  // mobile nav
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  // scrollspy
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  // search filter (filters CA cards + glossary items)
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' event' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>
