@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fixed Income Products — The Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#E8EBE4;
+    --ink:#1B2430;
+    --ink-soft:#4B5563;
+    --ink-faint:#7C8794;
+    --rule:#D7DBD2;
+    --brass:#A97A2F;
+    --brass-soft:#EFE3CC;
+    --red:#A23B33;
+    --red-soft:#F3DEDB;
+    --teal:#2F6E5C;
+    --teal-soft:#DCEAE4;
+    --shadow:rgba(27,36,48,0.10);
+    --sidebar-w:300px;
+  }
+  html[data-theme="dark"]{
+    --bg:#10151A;
+    --surface:#171E25;
+    --surface-2:#1D252D;
+    --ink:#E7EBEE;
+    --ink-soft:#AEB8C2;
+    --ink-faint:#7D8790;
+    --rule:#2A333B;
+    --brass:#D6A44E;
+    --brass-soft:#332A16;
+    --red:#E08476;
+    --red-soft:#39221F;
+    --teal:#5FC2A6;
+    --teal-soft:#182D27;
+    --shadow:rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0 0 .5rem 0;
+  }
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 .85rem 0;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- Layout shell ---------- */
+  .app{display:flex; min-height:100vh;}
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+    background:var(--surface); border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; z-index:40;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .content{
+    margin-left:var(--sidebar-w);
+    flex:1; min-width:0;
+    padding:2.5rem clamp(1.25rem,4vw,4rem) 6rem;
+    max-width:920px;
+  }
+  .nav-toggle{
+    display:none; position:fixed; top:14px; left:14px; z-index:60;
+    width:42px; height:42px; border-radius:9px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); font-size:1.1rem; cursor:pointer;
+  }
+
+  /* ---------- Sidebar contents ---------- */
+  .brand{display:flex; align-items:center; gap:.65rem; padding:1.35rem 1.25rem 1rem;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:7px; background:var(--brass);
+    color:var(--surface); display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; font-size:1.15rem; flex-shrink:0;
+  }
+  .brand-title{margin:0; font-family:'Source Serif 4',serif; font-weight:600; font-size:1rem; color:var(--ink);}
+  .brand-sub{margin:0; font-size:.72rem; color:var(--ink-faint); letter-spacing:.02em;}
+
+  .search-wrap{padding:0 1.25rem .85rem;}
+  #searchBox{
+    width:100%; padding:.55rem .7rem; border-radius:7px; border:1px solid var(--rule);
+    background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:.83rem;
+  }
+  #searchBox:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  #searchStatus{font-size:.7rem; color:var(--ink-faint); padding:0 1.25rem .4rem; min-height:1em;}
+
+  .toc{flex:1; overflow-y:auto; padding:0 .6rem 1rem; border-top:1px solid var(--rule);}
+  .toc-group-label{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass); margin:1.1rem .65rem .3rem; font-weight:600;
+  }
+  .toc a{
+    display:block; padding:.32rem .65rem; border-radius:6px; font-size:.83rem;
+    color:var(--ink-soft); text-decoration:none; margin:1px 0;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.active{background:var(--brass-soft); color:var(--brass); font-weight:600;}
+  .toc a[data-hidden="1"]{display:none;}
+
+  .theme-toggle-wrap{padding:.85rem 1.25rem 1.15rem; border-top:1px solid var(--rule);}
+  .theme-toggle{
+    width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface-2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+    font-size:.82rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .theme-toggle:hover{border-color:var(--brass);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:.6rem; display:block;
+  }
+  .hero h1{font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:.6rem;}
+  .hero p.lead{font-size:1.02rem; color:var(--ink-soft); max-width:62ch;}
+  .hero-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.1rem;}
+  .hero-tags span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.3rem .6rem; border-radius:20px;
+    border:1px solid var(--rule); color:var(--ink-soft);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:3.2rem; scroll-margin-top:1.5rem;}
+  .part-heading{
+    display:flex; align-items:baseline; gap:.75rem; margin:3.5rem 0 1.5rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .part-heading h2{font-size:1.55rem; margin:0;}
+  .part-heading .part-count{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-faint);}
+  h2.section-title{font-size:1.3rem; margin-top:0;}
+  h3{font-size:1.05rem;}
+
+  .callout{
+    background:var(--surface); border:1px solid var(--rule); border-left:4px solid var(--brass);
+    border-radius:8px; padding:1rem 1.15rem; margin:1rem 0;
+  }
+  .callout h4{margin-bottom:.35rem; font-size:.95rem; font-family:'IBM Plex Sans',sans-serif; font-weight:700; color:var(--brass);}
+  .callout.teal{border-left-color:var(--teal);}
+  .callout.teal h4{color:var(--teal);}
+  .callout.red{border-left-color:var(--red);}
+  .callout.red h4{color:var(--red);}
+
+  /* ---------- Lifecycle steps ---------- */
+  .lifecycle{list-style:none; margin:1.5rem 0; padding:0; counter-reset:step;}
+  .lifecycle li{
+    counter-increment:step; position:relative; padding:0 0 1.4rem 3rem; border-left:2px solid var(--rule); margin-left:.9rem;
+  }
+  .lifecycle li:last-child{border-left-color:transparent; padding-bottom:0;}
+  .lifecycle li::before{
+    content:counter(step); position:absolute; left:-1.15rem; top:-.15rem; width:2.3rem; height:2.3rem;
+    border-radius:50%; background:var(--brass); color:var(--surface); font-family:'IBM Plex Mono',monospace;
+    font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .lifecycle h4{margin-bottom:.25rem; font-size:1rem;}
+  .lifecycle p{color:var(--ink-soft); font-size:.92rem;}
+
+  /* ---------- Player chain ---------- */
+  .chain{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:1.25rem 0;}
+  .chain .node{
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; padding:.55rem .8rem;
+    font-size:.82rem; font-weight:600; flex:1 1 130px; text-align:center;
+  }
+  .chain .arrow{color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:.87rem;}
+  caption{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:.5rem;}
+  th,td{text-align:left; padding:.65rem .75rem; border-bottom:1px solid var(--rule); vertical-align:top;}
+  thead th{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); border-bottom:2px solid var(--ink);
+  }
+  tbody tr:hover{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem;}
+
+  /* ---------- Card grid & CA cards ---------- */
+  .card-grid{display:flex; flex-direction:column; gap:1.4rem;}
+  .ca-card{
+    background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:1.4rem 1.5rem;
+    box-shadow:0 1px 2px var(--shadow); border-left:5px solid var(--brass); scroll-margin-top:1.25rem;
+  }
+  .ca-card.v-voluntary{border-left-color:var(--teal);}
+  .ca-card.v-choice{border-left-color:var(--red);}
+  .ca-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;}
+  .ca-head h3{margin:.3rem 0 0;}
+  .ca-class{
+    font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; font-weight:600;
+    padding:.2rem .5rem; border-radius:4px; background:var(--brass-soft); color:var(--brass);
+  }
+  .v-voluntary .ca-class{background:var(--teal-soft); color:var(--teal);}
+  .v-choice .ca-class{background:var(--red-soft); color:var(--red);}
+  .ca-code{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:600; color:var(--ink-faint);
+    border:1px solid var(--rule); border-radius:6px; padding:.3rem .55rem; white-space:nowrap;
+  }
+  .ca-def{margin-top:.7rem; color:var(--ink-soft); font-size:.95rem;}
+  .ca-dates{display:flex; flex-wrap:wrap; align-items:stretch; gap:.4rem; margin:1rem 0;}
+  .date-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 130px;
+  }
+  .dc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .v-voluntary .dc-label{color:var(--teal);}
+  .v-choice .dc-label{color:var(--red);}
+  .dc-desc{display:block; font-size:.78rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35;}
+  .dc-arrow{align-self:center; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+  .ca-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-top:.3rem;}
+  .ca-grid h4{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); margin-bottom:.35rem;}
+  .ca-grid p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+  .ca-example{
+    margin-top:1.1rem; padding:.75rem .95rem; background:var(--surface-2); border-radius:8px;
+    font-size:.86rem; color:var(--ink-soft);
+  }
+  .ex-tag{font-family:'IBM Plex Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brass); font-weight:600; margin-right:.4rem;}
+  @media (max-width:680px){.ca-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Glossary ---------- */
+  .glossary-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem;}
+  .g-item{padding:.85rem 0; border-bottom:1px solid var(--rule);}
+  .g-term{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem; color:var(--brass); display:block; margin-bottom:.2rem;}
+  .g-def{font-size:.86rem; color:var(--ink-soft); margin:0;}
+  @media (max-width:680px){.glossary-grid{grid-template-columns:1fr;}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:1rem; margin:1rem 0;}
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--ink-soft);}
+  .legend-dot{width:12px; height:12px; border-radius:3px; background:var(--brass); flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-dot{background:var(--teal);}
+  .legend-item:nth-child(3) .legend-dot{background:var(--red);}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.8rem;}
+
+  @media (max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0); box-shadow:0 0 40px var(--shadow);}
+    .content{margin-left:0; padding-top:4.5rem;}
+    .nav-toggle{display:flex; align-items:center; justify-content:center;}
+  }
+
+  /* ---------- Additions for Fixed Income Products doc ---------- */
+  .fact-chip{
+    background:var(--surface-2); border-radius:8px; padding:.5rem .7rem; min-width:110px; flex:1 1 140px;
+  }
+  .fc-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brass);}
+  .fc-desc{display:block; font-size:.8rem; color:var(--ink-soft); margin-top:.15rem; line-height:1.35; font-weight:600;}
+  .fact-row{display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0;}
+
+  .waterfall{list-style:none; margin:1.25rem 0; padding:0; counter-reset:wf;}
+  .waterfall li{
+    counter-increment:wf; position:relative; padding:.7rem 1rem .7rem 3rem; margin-bottom:.5rem;
+    background:var(--surface); border:1px solid var(--rule); border-radius:8px; font-size:.9rem;
+  }
+  .waterfall li::before{
+    content:counter(wf); position:absolute; left:.9rem; top:50%; transform:translateY(-50%);
+    width:1.6rem; height:1.6rem; border-radius:50%; background:var(--brass); color:var(--surface);
+    font-family:'IBM Plex Mono',monospace; font-weight:600; display:flex; align-items:center; justify-content:center; font-size:.8rem;
+  }
+  .waterfall li b{display:block; color:var(--ink);}
+  .waterfall li span{color:var(--ink-soft); font-size:.82rem;}
+  
+  .highlight-term { font-weight: 600; color: var(--ink); background: var(--surface-2); padding: 0.1rem 0.3rem; border-radius: 4px;}
+
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <div>
+        <p class="brand-title">Fixed Income</p>
+        <p class="brand-sub">The Beginner's Guide</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="searchBox" placeholder="Search a bond type...">
+    </div>
+    <div id="searchStatus"></div>
+    <nav class="toc" id="tocNav">
+      <p class="toc-group-label">Foundations</p>
+      <a href="#anatomy">What is a Bond?</a>
+      <a href="#ratings">Credit Scores (Ratings)</a>
+      <a href="#primary">How Bonds are Sold</a>
+      <a href="#settlement">Closing Day (Settlement)</a>
+
+      <p class="toc-group-label">I · Government Debt</p>
+      <a href="#tbill">Treasury Bills</a>
+      <a href="#tnote">Treasury Notes &amp; Bonds</a>
+      <a href="#tips">TIPS (Inflation Protection)</a>
+      <a href="#intl-sov">International Bonds</a>
+      <a href="#agency">Agency Bonds</a>
+      <a href="#muni">Municipal Bonds</a>
+
+      <p class="toc-group-label">II · Corporate Debt</p>
+      <a href="#ig-corp">Safe Corporate (IG)</a>
+      <a href="#hy-corp">Junk Bonds (High-Yield)</a>
+      <a href="#conv">Convertible Bonds</a>
+      <a href="#frn">Floating Rate Notes</a>
+      <a href="#zero">Zero-Coupon Bonds</a>
+      <a href="#perp">Perpetual Bonds</a>
+      <a href="#mtn">Medium-Term Notes</a>
+      <a href="#covered">Covered Bonds</a>
+      <a href="#subdebt">Subordinated Debt</a>
+      <a href="#coco">CoCo Bonds (Bank Bailouts)</a>
+
+      <p class="toc-group-label">III · Asset-Backed (Mortgages & More)</p>
+      <a href="#agency-mbs">Mortgage-Backed (MBS)</a>
+      <a href="#cmo">CMOs (Sliced Mortgages)</a>
+      <a href="#cmbs">Commercial Mortgages</a>
+      <a href="#abs">Asset-Backed (Auto/Credit)</a>
+      <a href="#clo">CLOs (Corporate Loans)</a>
+      <a href="#structured">Structured Notes</a>
+
+      <p class="toc-group-label">IV · Short-Term (Money Market)</p>
+      <a href="#cp">Commercial Paper</a>
+      <a href="#cd">Certificates of Deposit</a>
+      <a href="#repo">Repo (Pawn Shop Loans)</a>
+      <a href="#ba">Bankers' Acceptances</a>
+
+      <p class="toc-group-label">V · Specialized</p>
+      <a href="#green">Green Bonds</a>
+      <a href="#sukuk">Sukuk (Islamic Bonds)</a>
+      <a href="#euro">Eurobonds</a>
+
+      <p class="toc-group-label">Reference</p>
+      <a href="#compare">Who Gets Paid First?</a>
+      <a href="#glossary">Jargon Buster Glossary</a>
+    </nav>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle">🌙 &nbsp;Switch to dark mode</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <span class="eyebrow">Investment Basics Explained Simply</span>
+      <h1>Fixed Income, Demystified</h1>
+      <p class="lead">Forget the Wall Street jargon. A "fixed income product" is just a fancy word for a <strong>loan</strong>. In this guide, we break down every type of loan you can buy—from lending money to the US Government, to funding a stranger's car loan—using plain English and everyday analogies.</p>
+      <div class="hero-tags">
+        <span>29 bond types explained</span>
+        <span>Clear everyday analogies</span>
+        <span>No finance degree required</span>
+        <span>Real-world examples</span>
+      </div>
+    </header>
+
+    <!-- ============ ANATOMY ============ -->
+    <section id="anatomy">
+      <h2 class="section-title">Bond Anatomy 101: The Basics of a Loan</h2>
+      <p>Before we dive into the different types, let's understand the basic vocabulary. If you lend your friend $1,000 for a year, and ask for $50 in interest, you have created a bond.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Term</th><th>What it means in Plain English</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Face Value / Principal</strong></td><td>The $1,000 you lent your friend. It's the original amount that must be paid back at the end.</td></tr>
+          <tr><td><strong>Coupon Rate</strong></td><td>The "Rent" your friend pays you for borrowing your money. If they pay you $50 a year on a $1,000 loan, your coupon rate is 5%.</td></tr>
+          <tr><td><strong>Maturity</strong></td><td>The exact date your friend promised to hand back the $1,000. Once paid, the bond is finished.</td></tr>
+          <tr><td><strong>Yield</strong></td><td>The actual return you get. If you decide to sell your friend's $1,000 IOU to a stranger for only $900 (because you need cash now), that stranger will eventually get the full $1,000. The stranger's <em>yield</em> is much higher than the original 5% coupon because they bought the loan on sale.</td></tr>
+          <tr><td><strong>Accrued Interest</strong></td><td>Imagine your friend pays you interest every 6 months. If you sell the bond to a stranger exactly 3 months in, that stranger owes you half the interest, because you owned the loan for half the time. (This is like making the buyer of a used car pay you for the full tank of gas you just put in).</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ============ RATINGS ============ -->
+    <section id="ratings">
+      <h2 class="section-title">Credit Scores: Safe vs. Junk</h2>
+      <p>Just like you have a personal credit score (like FICO) that tells banks how likely you are to pay back a loan, companies and countries have credit scores too. These are called <strong>Credit Ratings</strong>.</p>
+      
+      <p>There is a massive, invisible line in the financial world that separates "Safe" loans from "Risky" loans. </p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>The Score (S&P)</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">AAA to A-</td><td><strong>Super Safe (Investment Grade).</strong> Huge, stable companies like Apple or Microsoft. They pay very low interest because everyone knows they are good for the money.</td></tr>
+          <tr><td class="mono" style="border-bottom: 2px solid var(--red);">BBB+ to BBB-</td><td style="border-bottom: 2px solid var(--red);"><strong>The Borderline.</strong> Still considered safe, but right on the edge. This is the "Investment Grade Floor".</td></tr>
+          <tr><td class="mono" style="color:var(--red)">BB+ to B-</td><td style="color:var(--red)"><strong>Junk Bonds (High Yield).</strong> Risky. These companies might struggle to pay you back if the economy crashes. To convince you to lend them money, they have to offer you a high interest rate.</td></tr>
+          <tr><td class="mono">CCC to D</td><td><strong>Danger / Default.</strong> The company is basically bankrupt and skipping payments.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout red">
+        <h4>The "Fallen Angel" Trap</h4>
+        <p>Many giant pension funds have strict rules: <em>"We are legally only allowed to hold safe (Investment Grade) bonds."</em> If a company is rated BBB- and gets downgraded just one notch to BB+, they cross the line into "Junk" territory. <br><br>This company is now a <strong>Fallen Angel</strong>. All those pension funds are forced to immediately sell the bond, causing its price to crash, even if the company isn't actually bankrupt yet.</p>
+      </div>
+    </section>
+
+    <!-- ============ PRIMARY MARKET ============ -->
+    <section id="primary">
+      <h2 class="section-title">How Bonds are Sold (No Stock Exchanges!)</h2>
+      <p>When you want to buy a stock, you go to a public exchange like the New York Stock Exchange. Bonds are totally different.</p>
+      <p>Most bonds never touch a public exchange. Instead, they are traded <strong>Over-The-Counter (OTC)</strong>. Think of it like buying a used car. There is no central "Used Car Exchange" with one official price. You have to call different dealerships (Banks) and ask, "Hey, how much will you sell me this Ford bond for?"</p>
+      <p>This makes the bond market much harder for average people to trade in, which is why most people buy bonds through Mutual Funds or ETFs instead.</p>
+    </section>
+
+    <!-- ============ SETTLEMENT ============ -->
+    <section id="settlement">
+      <h2 class="section-title">Closing Day (Settlement)</h2>
+      <p>When you agree to buy a bond, you don't get it instantly. There is a delay called the Settlement Cycle, measured in "T" (Trade Date) plus days.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>The Loan Type</th><th>How fast you get it</th></tr></thead>
+        <tbody>
+          <tr><td>US Government Bonds</td><td class="mono">T+1 (Tomorrow)</td></tr>
+          <tr><td>Corporate Bonds</td><td class="mono">T+1 (Tomorrow)*</td></tr>
+          <tr><td>International Bonds</td><td class="mono">T+2 (Two days from now)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="font-size: .85rem; color: var(--ink-soft)">*Note: In May 2024, the US financial system went through a massive upgrade to speed up Corporate bond settlement from T+2 down to T+1.</p>
+    </section>
+
+    <!-- ============ PART I: GOVERNMENT ============ -->
+    <div class="part-heading"><h2>Part I — Government Debt</h2><span class="part-count">The safest loans in the world</span></div>
+    <section id="gov-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> When you buy a US Government bond, you are lending money to Uncle Sam. Because the US Government can literally print its own money to pay you back, these are considered the safest investments on earth.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card" id="tbill">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>Treasury Bills (T-Bills)</h3></div><span class="ca-code">Less than 1 Year</span></div>
+          <p class="ca-def">A super short-term loan to the government. They don't pay you monthly interest. Instead, you buy them "on sale".</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You pay the government $950 today. In 6 months, they hand you a $1,000 bill. You made $50 profit without ever receiving a formal "interest" check.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="tnote">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>Treasury Notes &amp; Bonds</h3></div><span class="ca-code">2 to 30 Years</span></div>
+          <p class="ca-def">Long-term loans to the government. They pay you a steady, fixed interest check every 6 months until the loan ends.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>"Notes" are loans that last 2 to 10 years. "Bonds" are loans that last 20 to 30 years. The 10-Year Treasury Note is the most famous loan in the world; every bank watches its interest rate to decide how much to charge you for a home mortgage.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="tips">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>TIPS (Inflation Protection)</h3></div><span class="ca-code">Protects your buying power</span></div>
+          <p class="ca-def">Treasury Inflation-Protected Securities (TIPS) are magic bonds where the principal amount grows if the cost of living goes up.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If you lend the government $1,000, and inflation spikes by 5%, the government magically bumps your loan balance up to $1,050. This guarantees that your money will always buy the same amount of groceries, no matter how bad inflation gets.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="intl-sov">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>International Bonds</h3></div><span class="ca-code">Gilts, Bunds, JGBs</span></div>
+          <p class="ca-def">Lending money to foreign governments.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>UK government bonds are called <strong>Gilts</strong>. German bonds are called <strong>Bunds</strong>. Japanese bonds are <strong>JGBs</strong>. Be careful: lending money to Germany is safe, but lending money to a struggling emerging country carries a real risk they might not pay you back.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="agency">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>Agency Bonds</h3></div><span class="ca-code">The Government's Cousins</span></div>
+          <p class="ca-def">Loans to special companies created by the government (like Fannie Mae or Freddie Mac) to help people get home mortgages.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>The government doesn't <em>legally</em> guarantee these loans, but everyone knows the government would never let them fail (an "implicit" guarantee). Because they are slightly riskier than pure Treasuries, they pay you a slightly higher interest rate.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="muni">
+          <div class="ca-head"><div><span class="ca-class">Government</span><h3>Municipal Bonds</h3></div><span class="ca-code">Tax-Free Local Loans</span></div>
+          <p class="ca-def">Lending money to your city or state to build a new high school, toll road, or hospital.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>To encourage people to invest locally, the government makes the interest on these bonds <strong>tax-free</strong>. If you are in a high tax bracket, a tax-free 4% Municipal bond might put more cash in your pocket than a normal 6% Corporate bond.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART II: CORPORATE & BANK CAPITAL ============ -->
+    <div class="part-heading"><h2>Part II — Corporate &amp; Bank Debt</h2><span class="part-count">Lending to companies</span></div>
+    <section id="corp-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> Companies need cash to build factories or buy out rivals. Instead of getting a loan from one bank, they borrow a little bit of money from thousands of investors at once.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card" id="ig-corp">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Investment Grade Corporate</h3></div><span class="ca-code">Safe Companies</span></div>
+          <p class="ca-def">Lending money to massive, stable companies like Disney, Apple, or Johnson & Johnson.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>These companies have high credit scores. You won't get rich off the interest, but you can sleep well knowing they are highly likely to pay you back.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="hy-corp">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>High-Yield ("Junk") Bonds</h3></div><span class="ca-code">Risky Companies</span></div>
+          <p class="ca-def">Lending money to struggling companies, startups, or companies with massive amounts of debt.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Because there is a real chance the company might go bankrupt, they have to bribe you with a very high interest rate (High Yield). Wall Street calls them "Junk Bonds".</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="conv">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Convertible Bonds</h3></div><span class="ca-code">The Shapeshifter</span></div>
+          <p class="ca-def">A normal bond that can magically transform into shares of stock.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You lend a tech startup $1,000 at a low 2% interest rate. But, if the startup becomes the next Amazon and their stock price skyrockets, you can tear up your bond and trade it in for shares of stock instead, sharing in the massive profits.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="frn">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Floating Rate Notes</h3></div><span class="ca-code">Adjustable Interest</span></div>
+          <p class="ca-def">A bond where the interest rate changes every 3 months based on what the economy is doing.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If you buy a normal bond at 3% and the economy's rates jump to 6%, you are stuck with a bad deal. A Floating Rate bond automatically adjusts, meaning you always get paid the current fair market rate.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="zero">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Zero-Coupon Bonds</h3></div><span class="ca-code">The Long Game</span></div>
+          <p class="ca-def">A bond that pays absolutely zero interest along the way. Instead, you buy it at a massive discount.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You pay a company $600 today. You get zero checks in the mail. But in 10 years, they hand you $1,000. It's great if you are trying to lock in a specific amount of money for a child's future college tuition.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="perp">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Perpetual Bonds</h3></div><span class="ca-code">The Never-Ending Loan</span></div>
+          <p class="ca-def">A loan that literally has no end date.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>The company promises to pay you interest forever, but they never technically have to pay back the original principal amount. (Though usually, they buy it back after 5 or 10 years anyway).</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="mtn">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Medium-Term Notes (MTNs)</h3></div><span class="ca-code">Custom Loans</span></div>
+          <p class="ca-def">Instead of throwing a massive launch party to borrow $1 Billion at once, a company sets up a program to borrow smaller amounts ($10 million here, $20 million there) continuously over time, customizing the loans to whatever investors want that day.</p>
+        </article>
+
+        <article class="ca-card" id="covered">
+          <div class="ca-head"><div><span class="ca-class">Corporate</span><h3>Covered Bonds</h3></div><span class="ca-code">The Double Safety Net</span></div>
+          <p class="ca-def">Super-safe loans issued by banks, mostly in Europe.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If the bank goes bankrupt, you don't just lose your money. The loan is "covered" by a specific pile of the bank's assets (like home mortgages). If the bank dies, you get to keep the pile of assets to pay yourself back.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="subdebt">
+          <div class="ca-head"><div><span class="ca-class">Bank Capital</span><h3>Subordinated Debt</h3></div><span class="ca-code">Back of the Line</span></div>
+          <p class="ca-def">A loan where you agree to stand at the back of the line if the company goes bankrupt.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If the company runs out of money, the "Senior" bondholders get paid back first. If there's any money left over, you get paid. To take on this extra risk, you get paid a higher interest rate.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="coco">
+          <div class="ca-head"><div><span class="ca-class">Bank Capital</span><h3>CoCo Bonds (AT1s)</h3></div><span class="ca-code">The Bailout Bond</span></div>
+          <p class="ca-def">The riskiest type of bank debt. These were created after the 2008 financial crisis to stop taxpayers from having to bail out failing banks.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>You earn a massive interest rate. But, if the bank starts running out of money, your bond is automatically destroyed (or turned into cheap stock) to help save the bank. You lose everything. (This famously happened to Credit Suisse investors in 2023).</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART III: SECURITIZED ============ -->
+    <div class="part-heading"><h2>Part III — Securitized (Asset-Backed)</h2><span class="part-count">Chopping up loans</span></div>
+    <section id="sec-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> Imagine a bank gives out 1,000 home mortgages. Instead of waiting 30 years to get paid back, the bank throws all 1,000 mortgages into a giant blender, blends them into a smoothie, and sells cups of the smoothie to investors. As the 1,000 homeowners pay their monthly bills, that cash flows directly to the smoothie buyers.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card" id="agency-mbs">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>Mortgage-Backed Securities (MBS)</h3></div><span class="ca-code">The Mortgage Smoothie</span></div>
+          <p class="ca-def">Buying a cup of the home mortgage smoothie.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Every month, you receive a check. Part of it is interest, and part of it is principal (because homeowners pay down a little bit of their debt every month). </p></div>
+            <div><h4>The Risk</h4><p>If interest rates drop, homeowners will refinance their houses. You will suddenly get a massive chunk of your money back early, right when interest rates are terrible, so you have nowhere good to reinvest it.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="cmo">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>CMOs (Sliced Mortgages)</h3></div><span class="ca-code">The Water Filter</span></div>
+          <p class="ca-def">Instead of just selling the smoothie as-is, banks use a filter (a CMO) to slice the mortgages into different "Buckets" based on risk.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>All the cash from the homeowners pours into Bucket A first. Once Bucket A is full, the cash overflows into Bucket B, and so on. If you buy Bucket A, you get a super safe, short-term investment. If you buy Bucket C, you have to wait years to see your money.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="cmbs">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>Commercial MBS (CMBS)</h3></div><span class="ca-code">Mall & Office Loans</span></div>
+          <p class="ca-def">The exact same concept as a home mortgage smoothie, but made out of loans for shopping malls, office skyscrapers, and hotels.</p>
+        </article>
+
+        <article class="ca-card" id="abs">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>Asset-Backed Securities (ABS)</h3></div><span class="ca-code">Car & Credit Card Loans</span></div>
+          <p class="ca-def">The smoothie concept, but made out of everyday consumer debt.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Banks bundle up 10,000 Ford F-150 car loans, or 50,000 student loans, or credit card debt, and sell the income stream to investors.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="clo">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>CLOs (Corporate Loans)</h3></div><span class="ca-code">Junk Bond Smoothie</span></div>
+          <p class="ca-def">A smoothie made entirely out of risky loans to struggling or indebted corporations (High-Yield debt).</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>It sounds dangerous, but they slice it into buckets like a CMO. The top bucket (AAA rated) is actually incredibly safe because the bottom buckets are designed to absorb all the losses if the companies go bankrupt.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="structured">
+          <div class="ca-head"><div><span class="ca-class">Securitized</span><h3>Structured Notes</h3></div><span class="ca-code">The Casino Bond</span></div>
+          <p class="ca-def">A complex hybrid created by a bank that acts like a bond, but pays out like a casino bet.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>The bank says: "Give us $1,000. If the S&P 500 stock market goes up, we will pay you 8% interest. But if the stock market drops by 20%, you lose half your money." They are highly complex bets disguised as bonds.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART IV: MONEY MARKET ============ -->
+    <div class="part-heading"><h2>Part IV — Short-Term (Money Market)</h2><span class="part-count">Parking cash safely</span></div>
+    <section id="mm-section">
+      <p style="margin-bottom: 2rem; font-size: 1.05rem; color: var(--ink-soft);"><strong>Mental Model:</strong> "Money Market" is just finance-speak for loans that last less than a year. If a giant corporation has $50 million sitting around, they don't leave it in a checking account. They buy these short-term instruments to earn a little interest while keeping the cash safe and accessible.</p>
+
+      <div class="card-grid">
+
+        <article class="ca-card" id="cp">
+          <div class="ca-head"><div><span class="ca-class">Money Market</span><h3>Commercial Paper</h3></div><span class="ca-code">The Corporate Payday Loan</span></div>
+          <p class="ca-def">A super short loan (usually 30 to 90 days) given to a massive corporation so they can make payroll or buy inventory this month.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Like a T-Bill, it pays no monthly interest. You buy it at a discount. It's a quick, cheap way for big companies to borrow cash without going to a bank.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="cd">
+          <div class="ca-head"><div><span class="ca-class">Money Market</span><h3>Certificates of Deposit (CDs)</h3></div><span class="ca-code">The Locked Bank Account</span></div>
+          <p class="ca-def">You give the bank your money and promise not to touch it for 6 months. In return, they pay you a much higher interest rate than a normal savings account.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If you break the promise and pull the money out early, you have to pay a penalty fee. It's very safe because it's usually insured by the government (FDIC).</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="repo">
+          <div class="ca-head"><div><span class="ca-class">Money Market</span><h3>Repurchase Agreements (Repo)</h3></div><span class="ca-code">The Pawn Shop</span></div>
+          <p class="ca-def">A pawn shop for billionaires and banks.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>A hedge fund needs $10 million in cash today. They go to a bank and hand over $10 million worth of safe Treasury Bonds as collateral. The bank gives them the cash. Tomorrow, the hedge fund returns the cash (plus a tiny bit of interest) and gets their bonds back.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="ba">
+          <div class="ca-head"><div><span class="ca-class">Money Market</span><h3>Bankers' Acceptances</h3></div><span class="ca-code">The Bank Guarantee</span></div>
+          <p class="ca-def">A short-term loan used for international trade, where a bank steps in and promises to pay the bill if the buyer flakes out.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If you are shipping $1 million of computers to a stranger overseas, you don't trust them to pay. But if their Bank stamps a guarantee on the loan (accepts it), you know it's safe.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ PART V: SPECIALIZED ============ -->
+    <div class="part-heading"><h2>Part V — Specialized</h2><span class="part-count">Unique situations</span></div>
+    <section id="spec-section">
+      <div class="card-grid">
+
+        <article class="ca-card" id="green">
+          <div class="ca-head"><div><span class="ca-class">Thematic</span><h3>Green Bonds</h3></div><span class="ca-code">Saving the Planet</span></div>
+          <p class="ca-def">A completely normal bond, but the company legally promises to only use your money to build wind farms, clean up water, or do something good for the environment.</p>
+        </article>
+
+        <article class="ca-card" id="sukuk">
+          <div class="ca-head"><div><span class="ca-class">Thematic</span><h3>Sukuk (Islamic Bonds)</h3></div><span class="ca-code">No Interest Allowed</span></div>
+          <p class="ca-def">Under Islamic law, it is illegal to charge "interest" on a loan. Sukuks are a clever workaround.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>Instead of lending money, you buy a piece of an asset (like a hospital building). The hospital pays you "rent" for using your building. It looks and feels exactly like a bond, but is legally structured as ownership and rent.</p></div>
+          </div>
+        </article>
+
+        <article class="ca-card" id="euro">
+          <div class="ca-head"><div><span class="ca-class">Thematic</span><h3>Eurobonds</h3></div><span class="ca-code">The Expat Bond</span></div>
+          <p class="ca-def">A bond issued in a currency that doesn't match the country it's sold in.</p>
+          <div class="ca-grid" style="margin-top: 1rem;">
+            <div><h4>How it works</h4><p>If a British company issues a bond in Japan, but asks for US Dollars, that is a Eurobond. (It has nothing to do with the actual "Euro" currency!). It's just a way for companies to borrow foreign money.</p></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ COMPARISON ============ -->
+    <div class="part-heading"><h2>Reference</h2><span class="part-count">Cheat Sheets</span></div>
+    <section id="compare">
+      <h2 class="section-title">The Waterfall: Who Gets Paid First?</h2>
+      <p>If a company goes bankrupt, there isn't enough money to pay everyone back. The law creates a strict "Waterfall" order. The people at the top get all their money back first. The people at the bottom usually get nothing.</p>
+
+      <ul class="waterfall">
+        <li><b>1. Secured Debt (Covered Bonds, Mortgages)</b><span>They literally get to take the company's buildings and equipment to pay themselves back.</span></li>
+        <li><b>2. Senior Unsecured Debt (Normal Corporate Bonds)</b><span>They get whatever cash is left over.</span></li>
+        <li><b>3. Subordinated Debt</b><span>They agree to stand in the back of the bond line.</span></li>
+        <li><b>4. CoCo / AT1 Bonds</b><span>Specifically designed to be wiped out if a bank struggles.</span></li>
+        <li><b>5. Shareholders (Stock Owners)</b><span>They own the company, so they take the biggest risk. In a bankruptcy, shareholders almost always lose 100% of their money.</span></li>
+      </ul>
+    </section>
+
+    <!-- ============ GLOSSARY ============ -->
+    <section id="glossary">
+      <h2 class="section-title">Jargon Buster Glossary</h2>
+      <div class="glossary-grid">
+        <div class="g-item"><span class="g-term">Par / Face Value</span><p class="g-def">The original amount of the loan that will be paid back at the end.</p></div>
+        <div class="g-item"><span class="g-term">Duration</span><p class="g-def">A math formula that tells you exactly how much your bond's price will drop if the economy's interest rates go up.</p></div>
+        <div class="g-item"><span class="g-term">Spread</span><p class="g-def">The extra interest a company has to pay you compared to a safe Government bond. If a Govt bond pays 4% and a risky company pays 6%, the "spread" is 2%.</p></div>
+        <div class="g-item"><span class="g-term">Basis Point (BPS)</span><p class="g-def">Wall Street slang for 0.01%. So, 100 basis points equals 1%.</p></div>
+        <div class="g-item"><span class="g-term">Tranche</span><p class="g-def">French for "slice". It refers to the different risk buckets used when chopping up mortgages into CMOs.</p></div>
+        <div class="g-item"><span class="g-term">Fallen Angel</span><p class="g-def">A good company that got downgraded into "Junk Bond" status.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Fixed Income Explained Simply. Designed to help everyday investors, students, and beginners understand exactly how the bond market works, without needing a finance degree.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyThemeLabel(){
+    const dark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = dark ? '☀️ &nbsp;Switch to light mode' : '🌙 &nbsp;Switch to dark mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyThemeLabel();
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+  applyThemeLabel();
+
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+  const targets = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = '#' + entry.target.id;
+      const link = tocLinks.find(a => a.getAttribute('href') === id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
+
+  const searchBox = document.getElementById('searchBox');
+  const searchStatus = document.getElementById('searchStatus');
+  const allCards = Array.from(document.querySelectorAll('.ca-card'));
+  const allGlossary = Array.from(document.querySelectorAll('.g-item'));
+  searchBox.addEventListener('input', () => {
+    const q = searchBox.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+      const link = tocLinks.find(a => a.getAttribute('href') === '#' + card.id);
+      if (link) link.dataset.hidden = match ? '0' : '1';
+    });
+    allGlossary.forEach(item => {
+      const match = !q || item.innerText.toLowerCase().includes(q);
+      item.style.display = match ? '' : 'none';
+    });
+    searchStatus.textContent = q ? (shown + ' instrument' + (shown===1?'':'s') + ' match') : '';
+  });
+</script>
+</body>
+</html>
